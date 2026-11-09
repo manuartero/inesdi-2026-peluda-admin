@@ -8,14 +8,15 @@ import { HANDWRITTEN } from './handwritten.data.ts'
 import { dataError } from './json-row.reader.ts'
 import { LABELS } from './model.labels.ts'
 import { parseContractAnswerKey, parseList, parseReviewAnswerKey, parseTicketAnswerKey } from './model.parse.ts'
-import type { Contract, ContractTrap } from './model.types.ts'
+import type { ContractTrap } from './model.types.ts'
 
 const HANDWRITTEN_DIR = new URL('../../data/handwritten/', import.meta.url)
 
-function readContractText(contract: Pick<Contract, 'id' | 'file'>) {
-  const text = readFileSync(new URL(contract.file, HANDWRITTEN_DIR), 'utf8')
+// readHandwrittenText('brand-voice.md') fails the build if the file is missing or empty.
+function readHandwrittenText(file: string) {
+  const text = readFileSync(new URL(file, HANDWRITTEN_DIR), 'utf8')
   if (text.trim() === '') {
-    throw dataError(`${contract.id} › file: ${contract.file} is empty`)
+    throw dataError(`${file} is empty`)
   }
   return text
 }
@@ -39,7 +40,7 @@ function checkTrap({ contractId, text, trap }: { contractId: string; text: strin
 function checkContracts() {
   const answerKeys = parseList({ json: contractsJson, file: 'contracts.handwritten.json', parse: parseContractAnswerKey })
   HANDWRITTEN.contracts.forEach((contract, index) => {
-    const text = readContractText(contract)
+    const text = readHandwrittenText(contract.file)
     for (const trap of answerKeys[index].traps) {
       checkTrap({ contractId: contract.id, text, trap })
     }
@@ -50,6 +51,7 @@ function checkContracts() {
 const ticketAnswerKeys = parseList({ json: ticketsJson, file: 'tickets.handwritten.json', parse: parseTicketAnswerKey })
 const reviewAnswerKeys = parseList({ json: reviewsJson, file: 'reviews.handwritten.json', parse: parseReviewAnswerKey })
 const contractAnswerKeys = checkContracts()
+readHandwrittenText('brand-voice.md')
 const trapCount = contractAnswerKeys.reduce((total, answerKey) => total + answerKey.traps.length, 0)
 const { customers, pets, tickets, reviews, products, suppliers, contracts, plans } = HANDWRITTEN
 
@@ -61,6 +63,7 @@ console.log(
     `${contracts.length} contracts (${trapCount} traps),`,
     `${customers.length} customers, ${pets.length} pets,`,
     `${plans.length} plans, ${products.length} products, ${suppliers.length} suppliers,`,
+    'the brand voice guide,',
     `${Object.keys(LABELS).length} label groups.`,
   ].join(' '),
 )

@@ -4,5 +4,5 @@
   { "path": "/customers", "label": "Clientes", "icon": "users", "comingSoon": true },
   { "path": "/suppliers", "label": "Proveedores y contratos", "icon": "contract" },
   { "path": "/reviews", "label": "Reseñas", "icon": "star" },
-  { "path": "/brand", "label": "Marca", "icon": "brand", "comingSoon": true }
+  { "path": "/brand", "label": "Marca", "icon": "brand" }
 ]

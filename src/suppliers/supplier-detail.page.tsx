@@ -2,13 +2,13 @@ import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { CopyPromptButton } from '@/app/copy-prompt-button.component.tsx'
 import { Field } from '@/app/field.component.tsx'
+import { MarkdownText } from '@/app/markdown-text.component.tsx'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDate } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import { ContractExpiry } from './contract-expiry.component.tsx'
-import { ContractText } from './contract-text.component.tsx'
 import { findSupplier } from './suppliers.data.ts'
 import type { ShownContract, SupplierWithContract } from './suppliers.data.ts'
 
@@ -65,7 +65,7 @@ function ContractTextCard({ contract }: { contract: ShownContract }) {
   return (
     <Card>
       <CardContent>
-        <ContractText markdown={contract.text} />
+        <MarkdownText markdown={contract.text} />
       </CardContent>
     </Card>
   )
