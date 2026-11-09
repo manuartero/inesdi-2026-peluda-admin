@@ -1,0 +1,5 @@
+[
+  { "id": "basic", "name": "Básico", "includes": "Pienso a medida", "prices": { "ES": 29, "MX": 549, "CO": 129000, "PE": 119, "AR": 42000 } },
+  { "id": "complete", "name": "Completo", "includes": "Pienso + snacks + un juguete al trimestre", "prices": { "ES": 45, "MX": 849, "CO": 199000, "PE": 179, "AR": 65000 } },
+  { "id": "care", "name": "Cuidado", "includes": "Dieta especial (piel sensible, senior, control de peso) + revisión anual con un veterinario colaborador", "prices": { "ES": 52, "MX": 979, "CO": 229000, "PE": 209, "AR": 75000 } }
+]

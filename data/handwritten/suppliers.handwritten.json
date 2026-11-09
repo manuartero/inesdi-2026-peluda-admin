@@ -1,0 +1,7 @@
+[
+  { "id": "SUP-NUTRICAN", "legalName": "NutriCan Ibérica S.L.", "taxId": "B00000001", "country": "ES", "city": "Lleida", "service": "Fabricación de pienso con la receta de Peluda", "contact": { "name": "Departamento comercial", "email": "comercial@nutrican.example.com" }, "contractId": "CTR-NUTRICAN-2024" },
+  { "id": "SUP-BAJIO", "legalName": "Alimentos del Bajío S.A. de C.V.", "taxId": "ABC000000XX0", "country": "MX", "city": "Querétaro", "service": "Fabricación de pienso para México, Colombia y Perú", "contact": { "name": "Ventas institucionales", "email": "ventas@bajio.example.com" } },
+  { "id": "SUP-PAMPA", "legalName": "Pampa Nutrición S.A.", "taxId": "30-00000000-0", "country": "AR", "city": "Córdoba", "service": "Fabricación de pienso para Argentina", "contact": { "name": "Atención a empresas", "email": "empresas@pampa.example.com" } },
+  { "id": "SUP-RUTAS-LEVANTE", "legalName": "Rutas Levante S.L.", "taxId": "B00000002", "country": "ES", "city": "Valencia", "service": "Transporte y última milla", "contact": { "name": "Cuentas clave", "email": "clientes@rutaslevante.example.com" }, "contractId": "CTR-RUTAS-LEVANTE-2023" },
+  { "id": "SUP-VETAMIGA", "legalName": "Red VetAmiga", "taxId": "G00000003", "country": "ES", "city": "Madrid", "service": "Clínicas veterinarias colaboradoras (plan Cuidado), España y México", "contact": { "name": "Coordinación de la red", "email": "red@vetamiga.example.com" }, "contractId": "CTR-VETAMIGA-2025" }
+]

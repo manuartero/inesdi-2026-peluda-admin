@@ -1,0 +1,10 @@
+{
+  "subscribers": { "ES": 10000, "MX": 4000, "CO": 1800, "PE": 1500, "AR": 700 },
+  "annualRevenueEur": 8000000,
+  "monthlyChurnPct": 4.5,
+  "ticketsPerDay": 150,
+  "firstResponseHours": { "current": 26, "target": 4 },
+  "reviewsPerMonth": 400,
+  "reviewsAnsweredPct": 30,
+  "averageRating": 4.3
+}

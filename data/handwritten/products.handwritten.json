@@ -1,0 +1,17 @@
+[
+  { "id": "PRD-KIBBLE-ADULT-DOG-2024", "name": "Pienso Adulto Perro · Receta 2024", "kind": "kibble", "species": "dog", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2024-01-15" },
+  { "id": "PRD-KIBBLE-ADULT-DOG", "name": "Pienso Adulto Perro · Receta 2026", "kind": "kibble", "species": "dog", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2026-10-01", "replaces": "PRD-KIBBLE-ADULT-DOG-2024" },
+  { "id": "PRD-KIBBLE-PUPPY-DOG", "name": "Pienso Cachorro Perro", "kind": "kibble", "species": "dog", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2022-03-01" },
+  { "id": "PRD-KIBBLE-ADULT-CAT", "name": "Pienso Adulto Gato", "kind": "kibble", "species": "cat", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2021-09-01" },
+  { "id": "PRD-KIBBLE-ADULT-DOG-LATAM", "name": "Croquetas Adulto Perro", "kind": "kibble", "species": "dog", "manufacturerId": "SUP-BAJIO", "markets": ["MX", "CO", "PE"], "availableFrom": "2023-04-01" },
+  { "id": "PRD-KIBBLE-ADULT-CAT-LATAM", "name": "Croquetas Adulto Gato", "kind": "kibble", "species": "cat", "manufacturerId": "SUP-BAJIO", "markets": ["MX", "CO", "PE"], "availableFrom": "2023-04-01" },
+  { "id": "PRD-KIBBLE-ADULT-DOG-AR", "name": "Alimento Adulto Perro", "kind": "kibble", "species": "dog", "manufacturerId": "SUP-PAMPA", "markets": ["AR"], "availableFrom": "2026-03-01" },
+  { "id": "PRD-KIBBLE-ADULT-CAT-AR", "name": "Alimento Adulto Gato", "kind": "kibble", "species": "cat", "manufacturerId": "SUP-PAMPA", "markets": ["AR"], "availableFrom": "2026-03-01" },
+  { "id": "PRD-DIET-SENSITIVE-SKIN", "name": "Dieta Piel Sensible", "kind": "special_diet", "species": "both", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2022-06-01" },
+  { "id": "PRD-DIET-SENIOR", "name": "Dieta Senior", "kind": "special_diet", "species": "both", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2022-06-01" },
+  { "id": "PRD-DIET-WEIGHT", "name": "Dieta Control de Peso", "kind": "special_diet", "species": "both", "manufacturerId": "SUP-NUTRICAN", "markets": ["ES"], "availableFrom": "2023-02-01" },
+  { "id": "PRD-DIET-LATAM", "name": "Dieta Especial (piel, senior o peso)", "kind": "special_diet", "species": "both", "manufacturerId": "SUP-BAJIO", "markets": ["MX", "CO", "PE"], "availableFrom": "2024-01-01" },
+  { "id": "PRD-TREAT-DOG", "name": "Snacks de pollo deshidratado", "kind": "treat", "species": "dog", "markets": ["ES", "MX", "CO", "PE", "AR"], "availableFrom": "2021-09-01" },
+  { "id": "PRD-TREAT-CAT", "name": "Snacks de salmón", "kind": "treat", "species": "cat", "markets": ["ES", "MX", "CO", "PE", "AR"], "availableFrom": "2021-09-01" },
+  { "id": "PRD-TOY-QUARTERLY", "name": "Juguete del trimestre", "kind": "toy", "species": "both", "markets": ["ES", "MX", "CO", "PE", "AR"], "availableFrom": "2021-09-01" }
+]
