@@ -9,5 +9,10 @@ All companies, people and data are made up. The UI and the content are in Spanis
 
 ```sh
 pnpm install
-pnpm dev
+pnpm dev          # http://localhost:5173
+pnpm check:data   # validates data/ and the UI labels (also run by pnpm build)
+pnpm build
+pnpm lint
 ```
+
+The CMS "today" is fixed at 24/11/2026. Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`), so the deployed site never ships the workshop's solutions.
