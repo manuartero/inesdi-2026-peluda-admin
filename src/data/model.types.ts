@@ -165,22 +165,32 @@ export type Contract = {
   answerKey: { traps: ContractTrap[] }
 }
 
+export const REVIEW_CHANNELS = ['web', 'app', 'google'] as const
+export const REVIEW_STATUSES = ['unanswered', 'answered'] as const
+export const REVIEW_KINDS = ['positive', 'negative', 'mixed', 'troll', 'personal_data'] as const
+export const STARS = [1, 2, 3, 4, 5] as const
+
+export type ReviewAnswerKey = {
+  kind: (typeof REVIEW_KINDS)[number]
+  trap?: string
+  handwritten: boolean
+}
+
 export type Review = {
   id: string
   date: IsoDate
-  channel: 'web' | 'app' | 'google'
+  channel: (typeof REVIEW_CHANNELS)[number]
   country: Country
   customerId?: string
   author: string
-  stars: 1 | 2 | 3 | 4 | 5
+  stars: (typeof STARS)[number]
+  // Google reviews have no title.
   title?: string
   text: string
-  status: 'unanswered' | 'answered'
+  status: (typeof REVIEW_STATUSES)[number]
+  // Only when answered: real examples of the brand voice.
   reply?: string
-  answerKey: {
-    kind: 'positive' | 'negative' | 'mixed' | 'troll' | 'personal_data'
-    handwritten: boolean
-  }
+  answerKey: ReviewAnswerKey
 }
 
 export type Company = {

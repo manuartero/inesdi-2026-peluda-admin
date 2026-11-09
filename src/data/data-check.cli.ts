@@ -2,11 +2,12 @@
 // The browser never sees the answer keys (the build strips them), so they can only be checked here.
 import { readFileSync } from 'node:fs'
 import contractsJson from '../../data/handwritten/contracts.handwritten.json' with { type: 'json' }
+import reviewsJson from '../../data/handwritten/reviews.handwritten.json' with { type: 'json' }
 import ticketsJson from '../../data/handwritten/tickets.handwritten.json' with { type: 'json' }
 import { HANDWRITTEN } from './handwritten.data.ts'
 import { dataError } from './json-row.reader.ts'
 import { LABELS } from './model.labels.ts'
-import { parseContractAnswerKey, parseList, parseTicketAnswerKey } from './model.parse.ts'
+import { parseContractAnswerKey, parseList, parseReviewAnswerKey, parseTicketAnswerKey } from './model.parse.ts'
 import type { Contract, ContractTrap } from './model.types.ts'
 
 const HANDWRITTEN_DIR = new URL('../../data/handwritten/', import.meta.url)
@@ -47,14 +48,16 @@ function checkContracts() {
 }
 
 const ticketAnswerKeys = parseList({ json: ticketsJson, file: 'tickets.handwritten.json', parse: parseTicketAnswerKey })
+const reviewAnswerKeys = parseList({ json: reviewsJson, file: 'reviews.handwritten.json', parse: parseReviewAnswerKey })
 const contractAnswerKeys = checkContracts()
 const trapCount = contractAnswerKeys.reduce((total, answerKey) => total + answerKey.traps.length, 0)
-const { customers, pets, tickets, products, suppliers, contracts, plans } = HANDWRITTEN
+const { customers, pets, tickets, reviews, products, suppliers, contracts, plans } = HANDWRITTEN
 
 console.log(
   [
     'Data OK:',
     `${tickets.length} tickets (${ticketAnswerKeys.length} answer keys),`,
+    `${reviews.length} reviews (${reviewAnswerKeys.length} answer keys),`,
     `${contracts.length} contracts (${trapCount} traps),`,
     `${customers.length} customers, ${pets.length} pets,`,
     `${plans.length} plans, ${products.length} products, ${suppliers.length} suppliers,`,

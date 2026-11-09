@@ -1,6 +1,14 @@
 import { rowReader } from './json-row.reader.ts'
 import labelsJson from './model.labels.json' with { type: 'json' }
-import { COUNTRIES, PET_ACTIVITIES, SPECIES, TICKET_CHANNELS, TICKET_STATUSES } from './model.types.ts'
+import {
+  COUNTRIES,
+  PET_ACTIVITIES,
+  REVIEW_CHANNELS,
+  REVIEW_STATUSES,
+  SPECIES,
+  TICKET_CHANNELS,
+  TICKET_STATUSES,
+} from './model.types.ts'
 
 // Every enum value needs its Spanish label: a missing `PE` in `country` fails the build.
 function labelsFor<T extends string>({ key, values }: { key: string; values: readonly T[] }) {
@@ -14,4 +22,7 @@ export const LABELS = {
   ticketStatus: labelsFor({ key: 'ticketStatus', values: TICKET_STATUSES }),
   species: labelsFor({ key: 'species', values: SPECIES }),
   petActivity: labelsFor({ key: 'petActivity', values: PET_ACTIVITIES }),
+  reviewChannel: labelsFor({ key: 'reviewChannel', values: REVIEW_CHANNELS }),
+  reviewStatus: labelsFor({ key: 'reviewStatus', values: REVIEW_STATUSES }),
+  reviewStatusPlural: labelsFor({ key: 'reviewStatusPlural', values: REVIEW_STATUSES }),
 }

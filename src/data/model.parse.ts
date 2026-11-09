@@ -1,11 +1,15 @@
-import { asList, rowReader } from './json-row.reader.ts'
+import { asList, dataError, rowReader } from './json-row.reader.ts'
 import {
   CONTRACT_TRAP_KINDS,
   COUNTRIES,
   PET_ACTIVITIES,
   PLAN_IDS,
   PRODUCT_KINDS,
+  REVIEW_CHANNELS,
+  REVIEW_KINDS,
+  REVIEW_STATUSES,
   SPECIES,
+  STARS,
   TICKET_CATEGORIES,
   TICKET_CHANNELS,
   TICKET_STATUSES,
@@ -18,6 +22,8 @@ import type {
   Pet,
   Plan,
   Product,
+  Review,
+  ReviewAnswerKey,
   Supplier,
   Ticket,
   TicketAnswerKey,
@@ -129,6 +135,38 @@ export const parseTicketAnswerKey: Parse<TicketAnswerKey> = (ticketRow) => {
   return {
     category: row.oneOf({ key: 'category', values: TICKET_CATEGORIES }),
     urgency: row.oneOf({ key: 'urgency', values: URGENCIES }),
+    trap: row.optional({ key: 'trap', read: row.text }),
+    handwritten: row.flag('handwritten'),
+  }
+}
+
+function readStars(row: RowReader) {
+  const value = row.number('stars')
+  const stars = STARS.find((candidate) => candidate === value)
+  if (stars === undefined) {
+    throw dataError(`${row.text('id')} › stars: expected 1 to 5, got ${value}`)
+  }
+  return stars
+}
+
+export const parseReview: Parse<WithoutAnswerKey<Review>> = (row) => ({
+  id: row.text('id'),
+  date: row.date('date'),
+  channel: row.oneOf({ key: 'channel', values: REVIEW_CHANNELS }),
+  country: row.oneOf({ key: 'country', values: COUNTRIES }),
+  customerId: row.optional({ key: 'customerId', read: row.text }),
+  author: row.text('author'),
+  stars: readStars(row),
+  title: row.optional({ key: 'title', read: row.text }),
+  text: row.text('text'),
+  status: row.oneOf({ key: 'status', values: REVIEW_STATUSES }),
+  reply: row.optional({ key: 'reply', read: row.text }),
+})
+
+export const parseReviewAnswerKey: Parse<ReviewAnswerKey> = (reviewRow) => {
+  const row = reviewRow.child('answerKey')
+  return {
+    kind: row.oneOf({ key: 'kind', values: REVIEW_KINDS }),
     trap: row.optional({ key: 'trap', read: row.text }),
     handwritten: row.flag('handwritten'),
   }

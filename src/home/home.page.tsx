@@ -7,6 +7,7 @@ import { HANDWRITTEN } from '@/data/handwritten.data.ts'
 import { formatLongDate } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import { COUNTRIES, REFERENCE_DATE } from '@/data/model.types.ts'
+import { UNANSWERED } from '@/reviews/reviews.data.ts'
 import { UNCLASSIFIED_TODAY } from '@/tickets/tickets.data.ts'
 
 const { company } = HANDWRITTEN
@@ -48,20 +49,18 @@ function SubscribersByCountry() {
   )
 }
 
-function TodayCard() {
+function TodayCard({ to, label, count, detail }: { to: string; label: string; count: number; detail: string }) {
   return (
-    <Link to="/tickets" className="group block">
+    <Link to={to} className="group block">
       <Card className="transition-colors group-hover:bg-muted/40">
         <CardHeader>
-          <CardDescription>Tickets sin clasificar hoy</CardDescription>
+          <CardDescription>{label}</CardDescription>
           <CardTitle className="flex items-center justify-between text-3xl font-semibold tabular-nums">
-            {UNCLASSIFIED_TODAY.length}
+            {count}
             <ArrowRight className="size-5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-xs text-muted-foreground">
-          Media diaria: unos {formatNumber(company.ticketsPerDay)} tickets.
-        </CardContent>
+        <CardContent className="text-xs text-muted-foreground">{detail}</CardContent>
       </Card>
     </Link>
   )
@@ -75,7 +74,18 @@ export function HomePage() {
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-muted-foreground">Hoy</h2>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            <TodayCard />
+            <TodayCard
+              to="/tickets"
+              label="Tickets sin clasificar hoy"
+              count={UNCLASSIFIED_TODAY.length}
+              detail={`Media diaria: unos ${formatNumber(company.ticketsPerDay)} tickets.`}
+            />
+            <TodayCard
+              to="/reviews?status=unanswered"
+              label="Reseñas sin responder"
+              count={UNANSWERED.length}
+              detail={`Solo se responde el ${company.reviewsAnsweredPct} % de las reseñas.`}
+            />
           </div>
         </section>
         <section className="space-y-3">

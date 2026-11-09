@@ -163,9 +163,9 @@ A ticket's `answerKey`: `category` (`shipping` · `billing` · `plan_change` · 
 | `stars` | `2` | 1–5, overall average ≈ 4.3 |
 | `title` | | Optional (Google has none) |
 | `text` | | |
-| `status` | `unanswered` | or `answered` (~30 %, almost all positive) |
+| `status` | `unanswered` | or `answered` (~30 %, almost all positive). `pnpm check:data` fails if an unanswered review has a `reply` or an answered one lacks it |
 | `reply` | | Only when answered: real examples of the brand voice |
-| `answerKey` | `{ kind, handwritten }` | `kind`: `positive` · `negative` · `mixed` · `troll` · `personal_data` |
+| `answerKey` | `{ kind, trap, handwritten }` | `kind`: `positive` · `negative` · `mixed` · `troll` · `personal_data`. `trap` (optional) is a note in Spanish for the presenter, as in tickets |
 
 ### Company (1, handwritten)
 
