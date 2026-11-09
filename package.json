@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "check:data": "node src/data/data-check.cli.ts",
+    "generate": "node src/generate/generate.cli.ts && pnpm check:data",
     "build": "pnpm check:data && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"

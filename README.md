@@ -10,6 +10,7 @@ All companies, people and data are made up. The UI and the content are in Spanis
 ```sh
 pnpm install
 pnpm dev          # http://localhost:5173
+pnpm generate     # rewrites data/generated/ (fixed seed: same output every run), then check:data
 pnpm check:data   # validates data/ and the UI labels (also run by pnpm build)
 pnpm build
 pnpm lint

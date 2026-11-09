@@ -4,11 +4,14 @@ import { readFileSync } from 'node:fs'
 import contractsJson from '../../data/handwritten/contracts.handwritten.json' with { type: 'json' }
 import reviewsJson from '../../data/handwritten/reviews.handwritten.json' with { type: 'json' }
 import ticketsJson from '../../data/handwritten/tickets.handwritten.json' with { type: 'json' }
-import { HANDWRITTEN } from './handwritten.data.ts'
+import generatedReviewsJson from '../../data/generated/reviews.generated.json' with { type: 'json' }
+import generatedTicketsJson from '../../data/generated/tickets.generated.json' with { type: 'json' }
 import { dataError } from './json-row.reader.ts'
 import { LABELS } from './model.labels.ts'
 import { parseContractAnswerKey, parseList, parseReviewAnswerKey, parseTicketAnswerKey } from './model.parse.ts'
+import type { Parse } from './model.parse.ts'
 import type { ContractTrap } from './model.types.ts'
+import { DATA } from './peluda.data.ts'
 
 const HANDWRITTEN_DIR = new URL('../../data/handwritten/', import.meta.url)
 
@@ -39,7 +42,7 @@ function checkTrap({ contractId, text, trap }: { contractId: string; text: strin
 
 function checkContracts() {
   const answerKeys = parseList({ json: contractsJson, file: 'contracts.handwritten.json', parse: parseContractAnswerKey })
-  HANDWRITTEN.contracts.forEach((contract, index) => {
+  DATA.contracts.forEach((contract, index) => {
     const text = readHandwrittenText(contract.file)
     for (const trap of answerKeys[index].traps) {
       checkTrap({ contractId: contract.id, text, trap })
@@ -48,12 +51,33 @@ function checkContracts() {
   return answerKeys
 }
 
-const ticketAnswerKeys = parseList({ json: ticketsJson, file: 'tickets.handwritten.json', parse: parseTicketAnswerKey })
-const reviewAnswerKeys = parseList({ json: reviewsJson, file: 'reviews.handwritten.json', parse: parseReviewAnswerKey })
+// The `handwritten` flag tells the case tickets from the filler: a filler row flagged `true` would land in the answer key.
+function checkHandwrittenFlag({ answerKeys, file, expected }: { answerKeys: { handwritten: boolean }[]; file: string; expected: boolean }) {
+  const index = answerKeys.findIndex((answerKey) => answerKey.handwritten !== expected)
+  if (index !== -1) {
+    throw dataError(`${file} #${index} › answerKey › handwritten: expected ${expected}`)
+  }
+  return answerKeys
+}
+
+function readAnswerKeys<T extends { handwritten: boolean }>(input: { handwritten: unknown; generated: unknown; kind: string; parse: Parse<T> }) {
+  const { kind, parse } = input
+  const handwrittenFile = `${kind}.handwritten.json`
+  const generatedFile = `${kind}.generated.json`
+  const handwritten = parseList({ json: input.handwritten, file: handwrittenFile, parse })
+  const generated = parseList({ json: input.generated, file: generatedFile, parse })
+  return [
+    ...checkHandwrittenFlag({ answerKeys: handwritten, file: handwrittenFile, expected: true }),
+    ...checkHandwrittenFlag({ answerKeys: generated, file: generatedFile, expected: false }),
+  ]
+}
+
+const ticketAnswerKeys = readAnswerKeys({ handwritten: ticketsJson, generated: generatedTicketsJson, kind: 'tickets', parse: parseTicketAnswerKey })
+const reviewAnswerKeys = readAnswerKeys({ handwritten: reviewsJson, generated: generatedReviewsJson, kind: 'reviews', parse: parseReviewAnswerKey })
 const contractAnswerKeys = checkContracts()
 readHandwrittenText('brand-voice.md')
 const trapCount = contractAnswerKeys.reduce((total, answerKey) => total + answerKey.traps.length, 0)
-const { customers, pets, tickets, reviews, products, suppliers, contracts, plans } = HANDWRITTEN
+const { customers, pets, subscriptions, orders, tickets, reviews, products, suppliers, contracts, plans } = DATA
 
 console.log(
   [
@@ -61,7 +85,7 @@ console.log(
     `${tickets.length} tickets (${ticketAnswerKeys.length} answer keys),`,
     `${reviews.length} reviews (${reviewAnswerKeys.length} answer keys),`,
     `${contracts.length} contracts (${trapCount} traps),`,
-    `${customers.length} customers, ${pets.length} pets,`,
+    `${customers.length} customers, ${pets.length} pets, ${subscriptions.length} subscriptions, ${orders.length} orders,`,
     `${plans.length} plans, ${products.length} products, ${suppliers.length} suppliers,`,
     'the brand voice guide,',
     `${Object.keys(LABELS).length} label groups.`,

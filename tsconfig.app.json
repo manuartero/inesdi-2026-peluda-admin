@@ -25,5 +25,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "exclude": ["src/**/*.cli.ts"]
+  "exclude": ["src/**/*.cli.ts", "src/generate"]
 }

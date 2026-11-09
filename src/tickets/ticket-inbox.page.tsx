@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { formatTime } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { COUNTRIES } from '@/data/model.types.ts'
 import type { Country } from '@/data/model.types.ts'
 import { INBOX } from './tickets.data.ts'
@@ -29,7 +29,7 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
   return (
     <TableRow className="cursor-pointer" onClick={() => navigate(`/tickets/${ticket.id}`)}>
       <TableCell className="tabular-nums text-muted-foreground">{formatTime(ticket.receivedAtMadrid)}</TableCell>
-      <TableCell>{LABELS.country[ticket.country]}</TableCell>
+      <TableCell>{countryWithFlag(ticket.country)}</TableCell>
       <TableCell>{LABELS.ticketChannel[ticket.channel]}</TableCell>
       <TableCell className="max-w-44 truncate">{ticket.sender}</TableCell>
       <TableCell className="max-w-0 w-full">
@@ -66,7 +66,7 @@ export function TicketInboxPage() {
           <ToggleGroupItem value={ALL}>Todos · {INBOX.length}</ToggleGroupItem>
           {COUNTRIES.map((code) => (
             <ToggleGroupItem key={code} value={code}>
-              {LABELS.country[code]} · {countIn(code)}
+              {countryWithFlag(code)} · {countIn(code)}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>

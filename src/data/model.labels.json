@@ -6,5 +6,8 @@
   "petActivity": { "low": "Baja", "medium": "Media", "high": "Alta" },
   "reviewChannel": { "web": "Web", "app": "App", "google": "Google" },
   "reviewStatus": { "unanswered": "Sin responder", "answered": "Respondida" },
-  "reviewStatusPlural": { "unanswered": "Sin responder", "answered": "Respondidas" }
+  "reviewStatusPlural": { "unanswered": "Sin responder", "answered": "Respondidas" },
+  "subscriptionStatus": { "active": "Activa", "paused": "En pausa", "cancelled": "Cancelada" },
+  "orderStatus": { "preparing": "En preparación", "shipped": "Enviado", "delivered": "Entregado", "issue": "Incidencia", "returned": "Devuelto" },
+  "chargeStatus": { "charged": "Cobrado", "refunded": "Devuelto", "failed": "Fallido" }
 }

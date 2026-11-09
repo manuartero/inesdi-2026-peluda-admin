@@ -1,0 +1,137 @@
+{
+  "reviews": [
+    { "stars": 5, "region": "any", "title": "Puntuales siempre", "text": "Llega siempre puntual y se nota la calidad. En casa estamos encantados." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "Adiós a cargar sacos", "text": "Se acabó cargar sacos de pienso desde el súper. Llega a casa, a mi perro le encanta y la ración viene calculada." },
+    { "stars": 5, "region": "es", "species": "cat", "title": "Por fin un pienso que le gusta", "text": "Mi gata es muy exigente y este pienso se lo come sin dejar nada. Repetiremos seguro." },
+    { "stars": 5, "region": "es", "title": "Muy recomendable", "text": "Servicio de diez. La app es fácil, los avisos de envío llegan a tiempo y atención al cliente responde con mucho cariño." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "Más energía", "text": "Desde que come este pienso mi perro tiene el pelo más brillante y más energía. Muy contentos." },
+    { "stars": 5, "region": "es", "title": "Comodísimo", "text": "Comodísimo. No tengo que acordarme de comprar pienso y nunca nos quedamos sin. Lo recomiendo." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "Le sienta genial", "text": "Mi perro tenía el estómago delicado y con la ración que nos calcularon está mucho mejor. Gracias." },
+    { "stars": 5, "region": "es", "title": "Encantados", "text": "Llevamos más de un año y ni una queja. El pienso huele bien, viene bien cerrado y tiene buen precio para la calidad." },
+    { "stars": 5, "region": "es", "species": "cat", "title": "Dos gatos felices", "text": "Tengo dos gatos y los dos se pelean por el plato. Envío rápido y bien empaquetado." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "El juguete del trimestre", "text": "El juguete del trimestre es lo mejor del plan Completo: mi perro ya reconoce la caja y se vuelve loco." },
+    { "stars": 5, "region": "es", "title": "Atención de diez", "text": "Tuve un problema con un envío y me lo solucionaron en el día, con muy buen trato. Así da gusto." },
+    { "stars": 5, "region": "es", "title": "Fácil y práctico", "text": "Muy fácil darse de alta y ajustar la ración. El repartidor, siempre amable." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "Perro senior contento", "text": "Mi perro ya tiene 11 años y con la dieta senior se le ve más ágil. Muy recomendable." },
+    { "stars": 5, "region": "es", "title": "Gran descubrimiento", "text": "Me lo recomendó un amigo y ha sido un acierto. Calidad, comodidad y buen precio." },
+    { "stars": 5, "region": "es", "title": "Me ha cambiado la vida", "text": "Con dos niños y un perro, que el pienso llegue solo a casa me ha cambiado la vida. Gracias." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "El mejor pienso", "text": "Hemos probado muchos piensos y este es el único que mi perro come con ganas y sin problemas de estómago." },
+    { "stars": 5, "region": "es", "species": "cat", "title": "Gato castrado", "text": "Mi gato está castrado y le costaba mantener el peso. Con la ración ajustada está perfecto." },
+    { "stars": 5, "region": "es", "species": "dog", "title": "Trato cercano", "text": "Me encanta el trato cercano: hasta preguntan por el nombre de mi perra en los correos." },
+    { "stars": 5, "region": "es", "title": "Repetiremos", "text": "Primera caja y muy contentos. Llegó antes de lo que esperaba y todo muy bien presentado." },
+    { "stars": 5, "region": "latam", "species": "dog", "title": "Excelente", "text": "Excelente servicio. Mi perro come feliz y la caja llega siempre a tiempo." },
+    { "stars": 5, "region": "latam", "species": "cat", "title": "Mi gatita lo ama", "text": "Mi gatita es muy delicada para comer y esta comida le encantó desde el primer día." },
+    { "stars": 5, "region": "latam", "title": "Muy práctico", "text": "Muy práctico, ya no tengo que ir a la tienda. La atención por WhatsApp es rapidísima." },
+    { "stars": 5, "region": "latam", "species": "dog", "title": "Se nota la diferencia", "text": "Se nota la diferencia en el pelo de mi perro. Además la porción viene calculada y ya no come de más." },
+    { "stars": 5, "region": "latam", "title": "Puntuales", "text": "Siempre llega en la fecha que dicen. Muy buena comunicación con los avisos de envío." },
+    { "stars": 5, "region": "latam", "title": "Lo mejor", "text": "Lo mejor que pude encontrar para mis peludos. Calidad y buen trato." },
+    { "stars": 5, "region": "latam", "species": "dog", "title": "Feliz con el plan", "text": "Tenemos el plan Completo y los snacks son un éxito. Mi perro espera la caja en la puerta." },
+    { "stars": 5, "region": "latam", "title": "Súper recomendado", "text": "Súper recomendado. Fácil de usar, buenos precios y la comida es de muy buena calidad." },
+    { "stars": 5, "region": "latam", "species": "cat", "title": "Dos gatos contentos", "text": "Tengo dos gatos y por fin encontré una comida que les gusta a los dos. ¡Gracias!" },
+    { "stars": 5, "region": "latam", "title": "Gran atención", "text": "Tuve una duda con la porción y me respondieron rápido y con mucha paciencia. Gracias." },
+    { "stars": 5, "region": "latam", "species": "dog", "title": "Mi perrita feliz", "text": "Mi perrita tenía problemas de digestión y con esta comida está mucho mejor. La recomiendo." },
+    { "stars": 5, "region": "latam", "title": "Muy cumplidos", "text": "Muy cumplidos con las entregas y la comida es de excelente calidad. Mis mascotas, felices." },
+    { "stars": 5, "region": "latam", "species": "dog", "title": "Creció sano", "text": "Empezamos con Peluda cuando mi perro era chiquito y ha crecido sano y fuerte." },
+    { "stars": 5, "region": "latam", "title": "Vale la pena", "text": "Vale totalmente la pena. Calidad, puntualidad y una atención muy amable." },
+    { "stars": 5, "region": "ar", "title": "Un golazo", "text": "Un golazo. Llega puntual, la comida es buenísima y te atienden bárbaro." },
+    { "stars": 5, "region": "ar", "species": "dog", "title": "Recomendadísimo", "text": "Mi perro está re contento con el alimento. Súper práctico que te llegue a casa." },
+    { "stars": 5, "region": "any", "species": "dog", "title": "Gracias", "text": "Gracias por cuidar tan bien de mi perro. Se nota que lo hacen con cariño." },
+    { "stars": 5, "region": "any", "title": "Cinco estrellas", "text": "Cinco estrellas. Todo bien desde el primer pedido." },
+    { "stars": 5, "region": "any", "species": "cat", "title": "Gata feliz", "text": "Mi gata ya sabe cuándo llega la caja. Comida de calidad y envío rápido." },
+    { "stars": 5, "region": "any", "title": "Muy buen servicio", "text": "Muy buen servicio, buena comida y buena atención. Nada que mejorar." },
+    { "stars": 5, "region": "any", "species": "dog", "title": "Perro feliz", "text": "Perro feliz, casa feliz. Así de simple." },
+
+    { "stars": 4, "region": "es", "title": "Muy bien, pero…", "text": "Muy buen pienso y buen servicio. Le quito una estrella porque el envío a veces tarda un día más de lo previsto." },
+    { "stars": 4, "region": "es", "title": "Bien", "text": "Todo bien, aunque me gustaría poder elegir el día de entrega desde la app." },
+    { "stars": 4, "region": "es", "species": "dog", "title": "Contentos", "text": "A mi perro le encanta. El precio es algo alto, pero compensa por la comodidad." },
+    { "stars": 4, "region": "es", "species": "cat", "title": "Buen pienso", "text": "A mi gata le gusta mucho. Echo en falta más variedad de snacks para gatos." },
+    { "stars": 4, "region": "es", "title": "Casi perfecto", "text": "Casi perfecto. La caja es demasiado grande para lo que trae; se podría ahorrar cartón." },
+    { "stars": 4, "region": "es", "title": "Recomendable", "text": "Recomendable. Atención al cliente es muy amable, aunque a veces tardan en contestar." },
+    { "stars": 4, "region": "es", "title": "Buen servicio", "text": "Buen servicio. La primera caja tardó un poco, pero desde entonces todo perfecto." },
+    { "stars": 4, "region": "latam", "title": "Muy bueno", "text": "Muy buen servicio. Solo me gustaría que hubiera más métodos de pago." },
+    { "stars": 4, "region": "latam", "species": "dog", "title": "Buena comida", "text": "A mi perro le encanta la comida. A veces la entrega se retrasa un día, pero avisan." },
+    { "stars": 4, "region": "latam", "title": "Bien en general", "text": "Bien en general. La app podría ser más fácil para cambiar la dirección." },
+    { "stars": 4, "region": "latam", "species": "cat", "title": "Le gusta", "text": "A mi gato le gusta mucho. Ojalá tuvieran comida húmeda también." },
+    { "stars": 4, "region": "latam", "title": "Buen servicio", "text": "Buen servicio y buena calidad. El precio subió un poco, pero sigue valiendo la pena." },
+    { "stars": 4, "region": "latam", "title": "Lo recomiendo", "text": "Lo recomiendo. Solo mejoraría el empaque: la bolsa llegó un poco aplastada." },
+    { "stars": 4, "region": "ar", "title": "Muy bueno", "text": "Muy bueno el servicio. Los aumentos se notan, pero la calidad está." },
+    { "stars": 4, "region": "any", "title": "Cumple", "text": "Cumple con lo que promete. Le falta algo de variedad en los juguetes." },
+    { "stars": 4, "region": "any", "species": "dog", "title": "Bien", "text": "Mi perro se lo come muy bien. Me gustaría que avisaran con más antelación del envío." },
+
+    { "stars": 3, "region": "es", "title": "Regular", "text": "El pienso está bien, pero dos envíos seguidos han llegado tarde. Si se repite, me lo pensaré." },
+    { "stars": 3, "region": "es", "species": "cat", "title": "Ni fu ni fa", "text": "A mi gata no le termina de convencer: se lo come, pero sin ganas. El servicio, correcto." },
+    { "stars": 3, "region": "latam", "title": "Más o menos", "text": "La comida es buena, pero me costó mucho pausar un envío que no necesitaba." },
+    { "stars": 3, "region": "latam", "title": "Puede mejorar", "text": "Buena comida, pero la atención tarda mucho en responder por correo." },
+
+    { "stars": 2, "region": "es", "title": "Envíos lentos", "text": "Últimamente los envíos llegan tarde y nadie avisa. El pienso está bien, pero así no compensa." },
+    { "stars": 2, "region": "latam", "title": "Mala experiencia", "text": "Me cobraron un envío que pedí pausar. Lo resolvieron, pero tardaron una semana." },
+
+    { "stars": 1, "region": "es", "title": "Publicidad sin parar", "text": "Me di de baja hace meses y me siguen llegando correos de publicidad todos los días. Muy pesados." },
+    { "stars": 1, "region": "latam", "title": "Pésima atención", "text": "Llevo cinco días esperando respuesta por un pedido incompleto. Nadie contesta." }
+  ],
+  "replies": {
+    "ES": {
+      "withPet": [
+        "¡Qué alegría leer esto, {name}! Dale a {pet} una caricia de nuestra parte.",
+        "¡Gracias, {name}! Nos encanta saber que {pet} deja el plato limpio. Aquí seguimos para lo que necesites.",
+        "Mil gracias, {name}. Que {pet} disfrute tanto de cada caja es justo lo que buscamos. ¡Un achuchón de nuestra parte!",
+        "¡Bien por {pet}! Gracias por contárnoslo, {name}: reseñas así nos alegran el día."
+      ],
+      "withoutPet": [
+        "¡Qué alegría leer esto, {name}! Gracias por tomarte un momento para contarlo.",
+        "Gracias, {name}. Nos alegra mucho que todo llegue bien y que tu peludo disfrute. Aquí estamos para lo que necesites.",
+        "¡Mil gracias, {name}! Mensajes así le alegran el día a todo el equipo."
+      ],
+      "mixed": ["Gracias por contarlo, {name}, lo bueno y lo que no tanto. Sentimos lo que nos cuentas: escríbenos a hola@peluda.example.com y lo miramos contigo."],
+      "signers": ["Marta", "Sergio", "Laura"]
+    },
+    "MX": {
+      "withPet": [
+        "¡Hola, {name}! Nos da muchísimo gusto saber que a {pet} le encanta su comida. Mándale un abrazo de nuestra parte.",
+        "¡Gracias, {name}! Qué gusto que {pet} disfrute tanto cada caja. Aquí estamos para lo que necesites."
+      ],
+      "withoutPet": [
+        "¡Muchas gracias, {name}! Nos da mucho gusto leer esto. Aquí estamos para lo que necesites.",
+        "Gracias por tus palabras, {name}. Nos alegra mucho que todo llegue a tiempo y que tu peludo lo disfrute."
+      ],
+      "mixed": ["Gracias por contarnos, {name}. Nos da gusto que la comida les guste y sentimos lo que no salió bien: escríbenos a hola@peluda.example.com y lo revisamos contigo."],
+      "signers": ["Alejandra", "Diego"]
+    },
+    "CO": {
+      "withPet": [
+        "Qué buena noticia, {name}. Mándele un saludo a {pet} de nuestra parte.",
+        "Muchas gracias, {name}. Nos alegra mucho que a {pet} le guste tanto su comida. Aquí estamos para lo que necesite."
+      ],
+      "withoutPet": [
+        "Muchas gracias por sus palabras, {name}. Nos alegra mucho que todo le llegue bien.",
+        "Qué alegría leer esto, {name}. Para lo que necesite, aquí estamos."
+      ],
+      "mixed": ["Gracias por contarnos, {name}. Qué bueno que la comida le guste a su peludo; lo que no salió bien, lo sentimos. Escríbanos a hola@peluda.example.com y lo revisamos."],
+      "signers": ["Catalina", "Juliana"]
+    },
+    "PE": {
+      "withPet": [
+        "¡Gracias, {name}! Qué gusto saber que a {pet} le encanta su comida. Un abrazo de nuestra parte.",
+        "¡Muchas gracias, {name}! Nos alegra un montón que {pet} disfrute cada caja."
+      ],
+      "withoutPet": [
+        "¡Muchas gracias, {name}! Nos alegra mucho que todo llegue bien.",
+        "Gracias por tus palabras, {name}. Aquí estamos para lo que necesites."
+      ],
+      "mixed": ["Gracias por contarnos, {name}. Nos alegra que la comida les guste y sentimos lo que no salió bien: escríbenos a hola@peluda.example.com y lo vemos contigo."],
+      "signers": ["Fiorella", "Renzo"]
+    },
+    "AR": {
+      "withPet": [
+        "¡Qué lindo leer esto, {name}! Mandale un abrazo grande a {pet} de nuestra parte.",
+        "¡Gracias, {name}! Nos alegra mucho que {pet} disfrute cada caja. Cualquier cosa, escribinos."
+      ],
+      "withoutPet": [
+        "¡Gracias, {name}! Nos alegra un montón leer esto. Cualquier cosa que necesites, escribinos.",
+        "¡Qué lindo mensaje, {name}! Gracias por tomarte el tiempo."
+      ],
+      "mixed": ["Gracias por contarnos, {name}. Nos alegra que la comida les guste y sentimos lo que no anduvo bien: escribinos a hola@peluda.example.com y lo vemos juntos."],
+      "signers": ["Catalina", "Agustina"]
+    }
+  }
+}

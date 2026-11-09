@@ -2,7 +2,7 @@ import { REFERENCE_DATE } from './model.types.ts'
 import type { Country, IsoDate } from './model.types.ts'
 
 // UTC offsets in late November 2026: Spain is on CET; Mexico, Colombia, Peru and Argentina have no daylight saving time.
-const UTC_OFFSET_HOURS: Record<Country, number> = { ES: 1, MX: -6, CO: -5, PE: -5, AR: -3 }
+export const UTC_OFFSET_HOURS: Record<Country, number> = { ES: 1, MX: -6, CO: -5, PE: -5, AR: -3 }
 
 const HOUR_MS = 60 * 60 * 1000
 

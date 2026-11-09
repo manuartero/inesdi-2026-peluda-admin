@@ -11,7 +11,7 @@ import { CustomerCard, UnknownCustomerCard } from '@/customers/customer-card.com
 import { findCustomer, petsOf } from '@/customers/customers.data.ts'
 import { PetCard } from '@/customers/pet-card.component.tsx'
 import { formatDate, formatTime } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { ticketPromptText } from './ticket.prompt.ts'
 import { INBOX, findTicket } from './tickets.data.ts'
 import type { InboxTicket } from './tickets.data.ts'
@@ -27,7 +27,7 @@ function MessageCard({ ticket }: { ticket: InboxTicket }) {
         <dl className="space-y-1.5">
           <Field label="Remitente">{ticket.sender}</Field>
           <Field label="Canal">{LABELS.ticketChannel[ticket.channel]}</Field>
-          <Field label="País">{LABELS.country[ticket.country]}</Field>
+          <Field label="País">{countryWithFlag(ticket.country)}</Field>
           <Field label="Recibido">
             {formatDate(ticket.receivedAt)} {formatTime(ticket.receivedAt)}
             {isLocalTimeDifferent && (

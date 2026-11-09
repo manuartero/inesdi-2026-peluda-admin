@@ -11,7 +11,7 @@ import { CustomerCard, UnknownCustomerCard } from '@/customers/customer-card.com
 import { findCustomer, petsOf } from '@/customers/customers.data.ts'
 import { PetCard } from '@/customers/pet-card.component.tsx'
 import { formatDate } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { reviewPromptText } from './review.prompt.ts'
 import { ReviewStars } from './review-stars.component.tsx'
 import { REVIEWS, findReview } from './reviews.data.ts'
@@ -30,7 +30,7 @@ function ReviewCard({ review }: { review: ShownReview }) {
             <ReviewStars stars={review.stars} />
           </Field>
           <Field label="Canal">{LABELS.reviewChannel[review.channel]}</Field>
-          <Field label="País">{LABELS.country[review.country]}</Field>
+          <Field label="País">{countryWithFlag(review.country)}</Field>
           <Field label="Fecha">{formatDate(review.date)}</Field>
         </dl>
         <div className="rounded-md border bg-muted/40 p-4 text-sm leading-relaxed whitespace-pre-wrap">{review.text}</div>

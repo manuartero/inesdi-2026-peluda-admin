@@ -1,0 +1,119 @@
+{
+  "names": {
+    "ES": {
+      "female": ["Ana", "María", "Laura", "Marta", "Cristina", "Paula", "Sara", "Andrea", "Raquel", "Silvia", "Beatriz", "Alba", "Noelia", "Inés", "Clara", "Julia", "Eva", "Lorena", "Sonia", "Mónica", "Natalia", "Alicia", "Begoña", "Ainhoa", "Montse", "Amparo", "Esther", "Miriam", "Celia", "Rocío"],
+      "male": ["José", "Antonio", "Manuel", "David", "Pablo", "Álvaro", "Jorge", "Carlos", "Adrián", "Iván", "Rubén", "Óscar", "Víctor", "Diego", "Hugo", "Mario", "Alejandro", "Fernando", "Luis", "Miguel", "Jaime", "Gonzalo", "Íñigo", "Xavier", "Ignacio", "Borja", "Joaquín", "Enrique"],
+      "surnames": ["García", "Fernández", "González", "Rodríguez", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Jiménez", "Díaz", "Álvarez", "Romero", "Alonso", "Torres", "Vázquez", "Ramos", "Serrano", "Blanco", "Molina", "Morales", "Suárez", "Delgado", "Marín", "Iglesias", "Medina", "Garrido", "Cortés", "Santos", "Castillo", "Lozano", "Guerrero", "Prieto", "Calvo", "Gallego", "León", "Peña", "Cabrera", "Campos", "Vega", "Fuentes", "Carrasco", "Caballero", "Nieto", "Pascual", "Montero", "Lorenzo", "Hidalgo", "Ferrer", "Vicente", "Benítez", "Arias", "Crespo", "Román", "Velasco", "Moya", "Parra", "Esteban", "Bravo", "Gallardo"]
+    },
+    "MX": {
+      "female": ["Guadalupe", "Fernanda", "Ximena", "Daniela", "Valeria", "Mariana", "Alejandra", "Karla", "Itzel", "Andrea", "Paola", "Diana", "Adriana", "Verónica", "Brenda", "Nayeli", "Regina", "Mónica", "Yolanda", "Leticia"],
+      "male": ["José Luis", "Juan Carlos", "Luis Ángel", "Miguel Ángel", "Eduardo", "Ricardo", "Fernando", "Arturo", "Emiliano", "Santiago", "Héctor", "Óscar", "Iván", "Jesús", "Francisco", "Omar", "Alfredo", "Gerardo", "Ulises", "Rafael"],
+      "surnames": ["Hernández", "García", "Martínez", "López", "González", "Pérez", "Rodríguez", "Sánchez", "Ramírez", "Cruz", "Gómez", "Morales", "Vázquez", "Reyes", "Jiménez", "Díaz", "Gutiérrez", "Ruiz", "Mendoza", "Aguilar", "Ortiz", "Castillo", "Álvarez", "Méndez", "Chávez", "Rivera", "Juárez", "Ramos", "Herrera", "Medina", "Vargas", "Guzmán", "Velázquez", "Contreras", "Salazar", "Luna", "Cervantes", "Navarro", "Espinosa", "Zamora"]
+    },
+    "CO": {
+      "female": ["María José", "Laura", "Juliana", "Natalia", "Carolina", "Paula Andrea", "Manuela", "Daniela", "Luisa Fernanda", "Sara", "Ana María", "Isabella", "Diana", "Mariana", "Lina", "Angélica"],
+      "male": ["Juan Pablo", "Juan David", "Santiago", "Sebastián", "Carlos Andrés", "Julián", "Mateo", "Alejandro", "Nicolás", "Daniel", "Felipe", "Esteban", "Óscar", "Diego", "Hernán"],
+      "surnames": ["Rodríguez", "Gómez", "González", "Martínez", "García", "López", "Hernández", "Sánchez", "Ramírez", "Pérez", "Díaz", "Muñoz", "Rojas", "Moreno", "Jiménez", "Torres", "Vargas", "Castro", "Gutiérrez", "Ospina", "Osorio", "Restrepo", "Cárdenas", "Mejía", "Giraldo", "Arango", "Zapata", "Valencia", "Quintero", "Salazar", "Henao", "Londoño", "Betancur"]
+    },
+    "PE": {
+      "female": ["Milagros", "Fiorella", "Gianella", "Rosa María", "Karen", "Carmen", "Jimena", "Valeria", "Pamela", "Ruth", "Yesenia", "Claudia", "Mariela", "Ana Lucía", "Melissa"],
+      "male": ["Renzo", "Piero", "Luis Alberto", "Juan Carlos", "José Antonio", "César", "Christian", "Gustavo", "Víctor Hugo", "Diego", "Jorge Luis", "Álvaro", "Kevin", "Wilmer", "Raúl"],
+      "surnames": ["Quispe", "Flores", "Sánchez", "Rodríguez", "García", "Rojas", "Mamani", "Huamán", "Chávez", "Torres", "Ramos", "Vásquez", "Díaz", "Mendoza", "Castillo", "Espinoza", "Gutiérrez", "Ríos", "Salazar", "Vargas", "Cáceres", "Paredes", "Gonzales", "Cárdenas", "Medina", "Zevallos", "Villanueva", "Palacios", "Condori", "Apaza", "Tello"]
+    },
+    "AR": {
+      "female": ["Sofía", "Camila", "Valentina", "Lucía", "Martina", "Agustina", "Micaela", "Julieta", "Carolina", "Romina", "Belén", "Antonella", "Paula", "Victoria", "Natalia"],
+      "male": ["Santiago", "Matías", "Nicolás", "Juan Martín", "Facundo", "Tomás", "Lucas", "Joaquín", "Gonzalo", "Federico", "Ezequiel", "Leandro", "Franco", "Ignacio", "Pablo"],
+      "surnames": ["González", "Rodríguez", "Fernández", "López", "Martínez", "Pérez", "Sánchez", "Romero", "Sosa", "Álvarez", "Torres", "Ruiz", "Benítez", "Acosta", "Medina", "Herrera", "Aguirre", "Pereyra", "Russo", "Bianchi", "Romano", "Colombo", "Lombardi", "Gallo", "Rinaldi", "Moretti", "Costa", "Paz", "Ríos", "Molina"]
+    }
+  },
+  "cities": {
+    "ES": [
+      { "name": "Madrid", "weight": 18 }, { "name": "Barcelona", "weight": 12 }, { "name": "Valencia", "weight": 9 }, { "name": "Sevilla", "weight": 6 },
+      { "name": "Málaga", "weight": 5 }, { "name": "Zaragoza", "weight": 4 }, { "name": "Murcia", "weight": 3 }, { "name": "Palma", "weight": 3 },
+      { "name": "Bilbao", "weight": 3 }, { "name": "Alicante", "weight": 3 }, { "name": "Valladolid", "weight": 2 }, { "name": "Vigo", "weight": 2 },
+      { "name": "Gijón", "weight": 2 }, { "name": "Granada", "weight": 2 }, { "name": "A Coruña", "weight": 2 }, { "name": "Vitoria-Gasteiz", "weight": 2 },
+      { "name": "Córdoba", "weight": 2 }, { "name": "Castellón de la Plana", "weight": 2 }, { "name": "Las Palmas de Gran Canaria", "weight": 2 }, { "name": "Pamplona", "weight": 1 },
+      { "name": "Santander", "weight": 1 }, { "name": "Salamanca", "weight": 1 }, { "name": "Elche", "weight": 1 }, { "name": "Getafe", "weight": 1 },
+      { "name": "Sabadell", "weight": 1 }, { "name": "Tarragona", "weight": 1 }, { "name": "Girona", "weight": 1 }, { "name": "Santa Cruz de Tenerife", "weight": 1 }
+    ],
+    "MX": [
+      { "name": "Ciudad de México", "weight": 14 }, { "name": "Guadalajara", "weight": 6 }, { "name": "Monterrey", "weight": 6 }, { "name": "Puebla", "weight": 3 },
+      { "name": "Querétaro", "weight": 3 }, { "name": "Mérida", "weight": 2 }, { "name": "Toluca", "weight": 2 }, { "name": "León", "weight": 2 },
+      { "name": "Tijuana", "weight": 2 }, { "name": "Cancún", "weight": 1 }, { "name": "Aguascalientes", "weight": 1 }, { "name": "Morelia", "weight": 1 }
+    ],
+    "CO": [
+      { "name": "Bogotá", "weight": 12 }, { "name": "Medellín", "weight": 7 }, { "name": "Cali", "weight": 4 }, { "name": "Barranquilla", "weight": 3 },
+      { "name": "Bucaramanga", "weight": 2 }, { "name": "Cartagena", "weight": 2 }, { "name": "Pereira", "weight": 1 }, { "name": "Manizales", "weight": 1 }
+    ],
+    "PE": [
+      { "name": "Lima", "weight": 14 }, { "name": "Arequipa", "weight": 3 }, { "name": "Trujillo", "weight": 2 }, { "name": "Chiclayo", "weight": 1 },
+      { "name": "Piura", "weight": 1 }, { "name": "Cusco", "weight": 1 }
+    ],
+    "AR": [
+      { "name": "Buenos Aires", "weight": 12 }, { "name": "Córdoba", "weight": 3 }, { "name": "Rosario", "weight": 3 }, { "name": "Mendoza", "weight": 2 },
+      { "name": "La Plata", "weight": 2 }, { "name": "Mar del Plata", "weight": 1 }
+    ]
+  },
+  "breeds": [
+    { "species": "dog", "name": "Mestizo", "minKg": 8, "maxKg": 25, "weight": 14, "countries": ["ES", "MX", "PE", "AR"] },
+    { "species": "dog", "name": "Criollo", "minKg": 8, "maxKg": 25, "weight": 14, "countries": ["CO"] },
+    { "species": "dog", "name": "Labrador", "minKg": 26, "maxKg": 34, "weight": 6 },
+    { "species": "dog", "name": "Golden retriever", "minKg": 26, "maxKg": 33, "weight": 4 },
+    { "species": "dog", "name": "Pastor alemán", "minKg": 28, "maxKg": 38, "weight": 3 },
+    { "species": "dog", "name": "Beagle", "minKg": 10, "maxKg": 15, "weight": 3 },
+    { "species": "dog", "name": "Bulldog francés", "minKg": 9, "maxKg": 13, "weight": 4 },
+    { "species": "dog", "name": "Caniche", "minKg": 4, "maxKg": 8, "weight": 3 },
+    { "species": "dog", "name": "Chihuahua", "minKg": 1.5, "maxKg": 3, "weight": 4 },
+    { "species": "dog", "name": "Yorkshire terrier", "minKg": 2, "maxKg": 3.5, "weight": 4 },
+    { "species": "dog", "name": "Teckel", "minKg": 5, "maxKg": 9, "weight": 2 },
+    { "species": "dog", "name": "Border collie", "minKg": 14, "maxKg": 20, "weight": 2 },
+    { "species": "dog", "name": "Schnauzer miniatura", "minKg": 6, "maxKg": 9, "weight": 3 },
+    { "species": "dog", "name": "Bichón maltés", "minKg": 3, "maxKg": 4.5, "weight": 3 },
+    { "species": "dog", "name": "Shih tzu", "minKg": 4.5, "maxKg": 7.5, "weight": 3 },
+    { "species": "dog", "name": "Boxer", "minKg": 25, "maxKg": 32, "weight": 2 },
+    { "species": "dog", "name": "Cocker spaniel", "minKg": 11, "maxKg": 15, "weight": 2 },
+    { "species": "dog", "name": "Pomerania", "minKg": 2, "maxKg": 3.5, "weight": 2 },
+    { "species": "dog", "name": "Husky siberiano", "minKg": 18, "maxKg": 26, "weight": 2 },
+    { "species": "dog", "name": "Pug", "minKg": 6, "maxKg": 9, "weight": 2 },
+    { "species": "dog", "name": "Jack Russell terrier", "minKg": 5, "maxKg": 8, "weight": 2 },
+    { "species": "dog", "name": "Galgo español", "minKg": 22, "maxKg": 30, "weight": 2, "countries": ["ES"] },
+    { "species": "dog", "name": "Podenco", "minKg": 18, "maxKg": 25, "weight": 2, "countries": ["ES"] },
+    { "species": "dog", "name": "Bodeguero andaluz", "minKg": 6, "maxKg": 9, "weight": 1, "countries": ["ES"] },
+    { "species": "dog", "name": "Mastín español", "minKg": 55, "maxKg": 75, "weight": 1, "countries": ["ES"] },
+    { "species": "dog", "name": "Xoloitzcuintle", "minKg": 10, "maxKg": 20, "weight": 2, "countries": ["MX"] },
+    { "species": "dog", "name": "Perro sin pelo del Perú", "minKg": 8, "maxKg": 20, "weight": 2, "countries": ["PE"] },
+    { "species": "dog", "name": "Dogo argentino", "minKg": 35, "maxKg": 45, "weight": 2, "countries": ["AR"] },
+    { "species": "cat", "name": "Común europeo", "minKg": 3.5, "maxKg": 5.5, "weight": 14, "countries": ["ES"] },
+    { "species": "cat", "name": "Común", "minKg": 3.5, "maxKg": 5.5, "weight": 14, "countries": ["MX", "CO", "PE", "AR"] },
+    { "species": "cat", "name": "Siamés", "minKg": 3, "maxKg": 5, "weight": 3 },
+    { "species": "cat", "name": "Persa", "minKg": 3.5, "maxKg": 5.5, "weight": 2 },
+    { "species": "cat", "name": "Maine coon", "minKg": 5.5, "maxKg": 8.5, "weight": 2 },
+    { "species": "cat", "name": "Británico de pelo corto", "minKg": 4, "maxKg": 6.5, "weight": 2 },
+    { "species": "cat", "name": "Bengalí", "minKg": 3.5, "maxKg": 6, "weight": 1 },
+    { "species": "cat", "name": "Angora", "minKg": 3, "maxKg": 5, "weight": 1 },
+    { "species": "cat", "name": "Ragdoll", "minKg": 4.5, "maxKg": 7, "weight": 1 }
+  ],
+  "petNames": {
+    "dog": ["Luna", "Max", "Coco", "Rocky", "Bimba", "Lola", "Toby", "Bruno", "Kira", "Nala", "Thor", "Simba", "Leo", "Chispa", "Canela", "Duna", "Rufo", "Lucas", "Mía", "Zeus", "Milo", "Kiara", "Tango", "Lupe", "Oreo", "Bolt", "Pipa", "Trufa", "Gala", "Odín", "Atila", "Nina", "Rex", "Yako", "Sombra", "Kenzo", "Maya", "Ozzy", "Brownie", "Frida", "Manchas", "Pirata", "Paco", "Golfo", "Tara", "Cuqui", "Nico", "Lía"],
+    "cat": ["Michi", "Luna", "Nala", "Simba", "Misha", "Kitty", "Pelusa", "Mía", "Coco", "Nube", "Olivia", "Miau", "Bigotes", "Kiwi", "Bolita", "Chester", "Zarpas", "Canela", "Mango", "Oliver", "Nieve", "Tigre", "Cleo", "Moka", "Pantera", "Lucero", "Sushi", "Mochi", "Gris", "Lulú"]
+  },
+  "allergies": ["pollo", "trigo", "ternera", "maíz", "soja"],
+  "customerNotes": [
+    "Prefiere que le escriban por WhatsApp.",
+    "Portal sin ascensor: el repartidor deja la caja en la portería.",
+    "Pidió factura a nombre de su empresa.",
+    "Se dio de alta con el código de la campaña de verano.",
+    "Cambió de tarjeta en octubre.",
+    "Ha pedido que no le llamen por teléfono.",
+    "Ha recomendado Peluda a dos amigos.",
+    "Entregar a partir de las 15:00.",
+    "Tuvo un retraso en agosto; se le devolvieron los gastos de envío."
+  ],
+  "carriers": {
+    "ES": { "name": "Rutas Levante", "trackingPrefix": "RL-" },
+    "MX": { "name": "Envíos Meseta", "trackingPrefix": "EM-" },
+    "CO": { "name": "Rápido Cordillera", "trackingPrefix": "RC-" },
+    "PE": { "name": "Courier Costa Verde", "trackingPrefix": "CV-" },
+    "AR": { "name": "Correo Austral", "trackingPrefix": "CA-" }
+  }
+}

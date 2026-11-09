@@ -3,14 +3,14 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { HANDWRITTEN } from '@/data/handwritten.data.ts'
+import { DATA } from '@/data/peluda.data.ts'
 import { formatLongDate } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag } from '@/data/model.labels.ts'
 import { COUNTRIES, REFERENCE_DATE } from '@/data/model.types.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'
 import { UNCLASSIFIED_TODAY } from '@/tickets/tickets.data.ts'
 
-const { company } = HANDWRITTEN
+const { company } = DATA
 
 // 'always' groups 4-digit figures too, so 4.000 lines up with 10.000 in the country list.
 const formatNumber = (value: number) => value.toLocaleString('es-ES', { useGrouping: 'always' })
@@ -39,7 +39,7 @@ function SubscribersByCountry() {
         <dl className="space-y-2 text-sm">
           {COUNTRIES.map((country) => (
             <div key={country} className="flex justify-between">
-              <dt>{LABELS.country[country]}</dt>
+              <dt>{countryWithFlag(country)}</dt>
               <dd className="tabular-nums">{formatNumber(company.subscribers[country])}</dd>
             </div>
           ))}

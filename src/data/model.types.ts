@@ -66,12 +66,14 @@ export type Pet = {
   allergies: string[]
 }
 
+export const SUBSCRIPTION_STATUSES = ['active', 'paused', 'cancelled'] as const
+
 export type Subscription = {
   id: string
   customerId: string
   petId: string
   planId: Plan['id']
-  status: 'active' | 'paused' | 'cancelled'
+  status: (typeof SUBSCRIPTION_STATUSES)[number]
   startDate: IsoDate
   cancelDate?: IsoDate
   monthlyPrice: number
@@ -80,21 +82,27 @@ export type Subscription = {
   nextShipment?: IsoDate
 }
 
+export const CHARGE_STATUSES = ['charged', 'refunded', 'failed'] as const
+
 export type Charge = {
   date: IsoDate
   amount: number
-  status: 'charged' | 'refunded' | 'failed'
+  status: (typeof CHARGE_STATUSES)[number]
 }
+
+export const ORDER_STATUSES = ['preparing', 'shipped', 'delivered', 'issue', 'returned'] as const
+
+export type OrderLine = { productId: string; quantity: number }
 
 export type Order = {
   id: string
   subscriptionId: string
   customerId: string
   date: IsoDate
-  lines: { productId: string; quantity: number }[]
+  lines: OrderLine[]
   amount: number
   currency: Currency
-  status: 'preparing' | 'shipped' | 'delivered' | 'issue' | 'returned'
+  status: (typeof ORDER_STATUSES)[number]
   carrier: string
   trackingNumber: string
   // Two `charged` entries on one order is the "charged twice" ticket.

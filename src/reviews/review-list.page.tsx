@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { formatDate } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { COUNTRIES, REVIEW_STATUSES } from '@/data/model.types.ts'
 import { ReviewStars } from './review-stars.component.tsx'
 import { REVIEWS, UNANSWERED } from './reviews.data.ts'
@@ -35,7 +35,7 @@ function ReviewRow({ review }: { review: ShownReview }) {
         <ReviewStars stars={review.stars} />
       </TableCell>
       <TableCell>{LABELS.reviewChannel[review.channel]}</TableCell>
-      <TableCell>{LABELS.country[review.country]}</TableCell>
+      <TableCell>{countryWithFlag(review.country)}</TableCell>
       <TableCell className="max-w-36 truncate">{review.author}</TableCell>
       <TableCell className="max-w-0 w-full">
         <Link to={`/reviews/${review.id}`} className="block truncate hover:underline">
@@ -103,7 +103,7 @@ export function ReviewListPage() {
             <ToggleGroupItem value={ALL}>Todos los países</ToggleGroupItem>
             {COUNTRIES.map((code) => (
               <ToggleGroupItem key={code} value={code}>
-                {LABELS.country[code]} · {countOf({ country: code })}
+                {countryWithFlag(code)} · {countOf({ country: code })}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

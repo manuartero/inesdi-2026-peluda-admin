@@ -1,7 +1,7 @@
 import { Field } from '@/app/field.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDate } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag } from '@/data/model.labels.ts'
 import type { Customer } from '@/data/model.types.ts'
 
 export function CustomerCard({ customer }: { customer: Customer }) {
@@ -20,7 +20,7 @@ export function CustomerCard({ customer }: { customer: Customer }) {
           <Field label="Email">{customer.email}</Field>
           <Field label="Teléfono">{customer.phone}</Field>
           <Field label="Ciudad">
-            {customer.city}, {LABELS.country[customer.country]}
+            {customer.city}, {countryWithFlag(customer.country)}
           </Field>
           <Field label="Cliente desde">{formatDate(customer.signupDate)}</Field>
           {customer.notes && <Field label="Notas internas">{customer.notes}</Field>}

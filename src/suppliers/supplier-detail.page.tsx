@@ -7,7 +7,7 @@ import { NotFoundPage } from '@/app/not-found.page.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDate } from '@/data/model.dates.ts'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag } from '@/data/model.labels.ts'
 import { ContractExpiry } from './contract-expiry.component.tsx'
 import { findSupplier } from './suppliers.data.ts'
 import type { ShownContract, SupplierWithContract } from './suppliers.data.ts'
@@ -48,7 +48,7 @@ function SupplierCard({ supplier }: { supplier: SupplierWithContract }) {
           </Field>
           <Field label="NIF / RFC / CUIT">{supplier.taxId}</Field>
           <Field label="Ciudad">
-            {supplier.city}, {LABELS.country[supplier.country]}
+            {supplier.city}, {countryWithFlag(supplier.country)}
           </Field>
           <Field label="Servicio">{supplier.service}</Field>
           <Field label="Contacto">

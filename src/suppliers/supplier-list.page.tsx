@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { LABELS } from '@/data/model.labels.ts'
+import { countryWithFlag } from '@/data/model.labels.ts'
 import { ContractExpiry } from './contract-expiry.component.tsx'
 import { SUPPLIERS } from './suppliers.data.ts'
 import type { SupplierWithContract } from './suppliers.data.ts'
@@ -21,7 +21,7 @@ function SupplierRow({ supplier }: { supplier: SupplierWithContract }) {
         <div className="text-xs text-muted-foreground">{supplier.city}</div>
       </TableCell>
       <TableCell className="whitespace-normal">{supplier.service}</TableCell>
-      <TableCell>{LABELS.country[supplier.country]}</TableCell>
+      <TableCell>{countryWithFlag(supplier.country)}</TableCell>
       <TableCell className="whitespace-normal">
         {contract && contract.title}
         {!contract && <Badge variant="outline">Contrato no digitalizado</Badge>}

@@ -18,14 +18,16 @@
 cms/app/
 ├── data/
 │   ├── schema.md           # this document
-│   ├── handwritten/        # plans, products, suppliers, case customers and pets, 30 tickets, 20 reviews
+│   ├── handwritten/        # plans, products, suppliers, case customers, pets, subscriptions and orders, 30 tickets, 20 reviews
 │   │   └── contracts/      # 3 contracts in Markdown (Spanish text)
-│   ├── generated/          # fixed-seed filler (do not edit)
-│   └── scripts/            # generate.cli.ts and export-cases.cli.ts
-└── src/data/model.types.ts # types shared by the CMS and the scripts
+│   └── generated/          # fixed-seed filler written by `pnpm generate` (do not edit)
+├── src/data/model.types.ts # types shared by the CMS and the scripts
+└── src/generate/           # the generator: rules in .ts, names and texts in .json
 ```
 
 Handwritten customers use IDs `CUS-00101` to `CUS-00599` (the middle digit is the country); generated ones start at `CUS-01000`.
+
+The case customers' subscriptions and the orders their tickets talk about are handwritten (Raúl's charge after cancelling, Marina's broken box, Daniel's «entregado»…); the rest of their order history is generated around them. `src/data/peluda.data.ts` merges both folders and checks every reference.
 
 ## Common types
 
@@ -103,7 +105,7 @@ Handwritten customers use IDs `CUS-00101` to `CUS-00599` (the middle digit is th
 | --- | --- | --- |
 | `id` | `ORD-2026-118734` | |
 | `subscriptionId`, `customerId` | | |
-| `date` | `2026-11-02` | Every 4 weeks from signup |
+| `date` | `2026-11-02` | Every 4 weeks from the subscription's `startDate`; only since August 2026 are kept |
 | `lines` | `[{ productId, quantity }]` | |
 | `amount`, `currency` | | |
 | `status` | `delivered` | `preparing` · `shipped` · `delivered` · `issue` · `returned` |

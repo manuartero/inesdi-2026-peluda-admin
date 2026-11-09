@@ -1,4 +1,4 @@
-import { HANDWRITTEN } from '@/data/handwritten.data.ts'
+import { DATA } from '@/data/peluda.data.ts'
 import { dataError } from '@/data/json-row.reader.ts'
 import type { Contract, Supplier, WithoutAnswerKey } from '@/data/model.types.ts'
 
@@ -19,7 +19,7 @@ function withText(contract: WithoutAnswerKey<Contract>) {
 
 export type ShownContract = ReturnType<typeof withText>
 
-const CONTRACTS = HANDWRITTEN.contracts.map(withText)
+const CONTRACTS = DATA.contracts.map(withText)
 
 function withContract(supplier: Supplier) {
   return { ...supplier, contract: CONTRACTS.find((contract) => contract.id === supplier.contractId) }
@@ -27,6 +27,6 @@ function withContract(supplier: Supplier) {
 
 export type SupplierWithContract = ReturnType<typeof withContract>
 
-export const SUPPLIERS = HANDWRITTEN.suppliers.map(withContract)
+export const SUPPLIERS = DATA.suppliers.map(withContract)
 
 export const findSupplier = (id: string | undefined) => SUPPLIERS.find((supplier) => supplier.id === id)

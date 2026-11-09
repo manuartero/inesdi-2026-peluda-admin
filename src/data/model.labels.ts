@@ -1,11 +1,15 @@
 import { rowReader } from './json-row.reader.ts'
 import labelsJson from './model.labels.json' with { type: 'json' }
+import type { Country } from './model.types.ts'
 import {
+  CHARGE_STATUSES,
   COUNTRIES,
+  ORDER_STATUSES,
   PET_ACTIVITIES,
   REVIEW_CHANNELS,
   REVIEW_STATUSES,
   SPECIES,
+  SUBSCRIPTION_STATUSES,
   TICKET_CHANNELS,
   TICKET_STATUSES,
 } from './model.types.ts'
@@ -25,4 +29,13 @@ export const LABELS = {
   reviewChannel: labelsFor({ key: 'reviewChannel', values: REVIEW_CHANNELS }),
   reviewStatus: labelsFor({ key: 'reviewStatus', values: REVIEW_STATUSES }),
   reviewStatusPlural: labelsFor({ key: 'reviewStatusPlural', values: REVIEW_STATUSES }),
+  subscriptionStatus: labelsFor({ key: 'subscriptionStatus', values: SUBSCRIPTION_STATUSES }),
+  orderStatus: labelsFor({ key: 'orderStatus', values: ORDER_STATUSES }),
+  chargeStatus: labelsFor({ key: 'chargeStatus', values: CHARGE_STATUSES }),
 }
+
+// flagOf('CO') is '🇨🇴': each ISO letter maps to its regional indicator symbol.
+const flagOf = (country: Country) => String.fromCodePoint(...[...country].map((letter) => 0x1f1e6 + letter.charCodeAt(0) - 65))
+
+// countryWithFlag('CO') is 'Colombia 🇨🇴'. For the screens only: the «Copiar para el prompt» texts keep the plain name.
+export const countryWithFlag = (country: Country) => `${LABELS.country[country]} ${flagOf(country)}`

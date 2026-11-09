@@ -1,4 +1,4 @@
-import { HANDWRITTEN } from '@/data/handwritten.data.ts'
+import { DATA } from '@/data/peluda.data.ts'
 import type { Review, WithoutAnswerKey } from '@/data/model.types.ts'
 
 export type ShownReview = WithoutAnswerKey<Review>
@@ -6,7 +6,7 @@ export type ShownReview = WithoutAnswerKey<Review>
 // Newest first, as review platforms show them; same-day reviews by ID, the latest first.
 const newestFirst = (a: ShownReview, b: ShownReview) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id)
 
-export const REVIEWS = [...HANDWRITTEN.reviews].sort(newestFirst)
+export const REVIEWS = [...DATA.reviews].sort(newestFirst)
 
 export const UNANSWERED = REVIEWS.filter((review) => review.status === 'unanswered')
 

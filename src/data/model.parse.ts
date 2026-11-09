@@ -1,7 +1,10 @@
 import { asList, dataError, rowReader } from './json-row.reader.ts'
 import {
+  CHARGE_STATUSES,
   CONTRACT_TRAP_KINDS,
   COUNTRIES,
+  CURRENCY_BY_COUNTRY,
+  ORDER_STATUSES,
   PET_ACTIVITIES,
   PLAN_IDS,
   PRODUCT_KINDS,
@@ -10,6 +13,7 @@ import {
   REVIEW_STATUSES,
   SPECIES,
   STARS,
+  SUBSCRIPTION_STATUSES,
   TICKET_CATEGORIES,
   TICKET_CHANNELS,
   TICKET_STATUSES,
@@ -19,11 +23,13 @@ import type {
   Company,
   Contract,
   Customer,
+  Order,
   Pet,
   Plan,
   Product,
   Review,
   ReviewAnswerKey,
+  Subscription,
   Supplier,
   Ticket,
   TicketAnswerKey,
@@ -31,7 +37,7 @@ import type {
 } from './model.types.ts'
 import type { RowReader } from './json-row.reader.ts'
 
-type Parse<T> = (row: RowReader) => T
+export type Parse<T> = (row: RowReader) => T
 
 function countryRecord(row: RowReader) {
   return Object.fromEntries(COUNTRIES.map((country) => [country, row.number(country)])) as Record<
@@ -115,6 +121,40 @@ export const parsePet: Parse<Pet> = (row) => ({
   weightKg: row.number('weightKg'),
   activity: row.oneOf({ key: 'activity', values: PET_ACTIVITIES }),
   allergies: row.texts('allergies'),
+})
+
+const CURRENCIES = Object.values(CURRENCY_BY_COUNTRY)
+
+export const parseSubscription: Parse<Subscription> = (row) => ({
+  id: row.text('id'),
+  customerId: row.text('customerId'),
+  petId: row.text('petId'),
+  planId: row.oneOf({ key: 'planId', values: PLAN_IDS }),
+  status: row.oneOf({ key: 'status', values: SUBSCRIPTION_STATUSES }),
+  startDate: row.date('startDate'),
+  cancelDate: row.optional({ key: 'cancelDate', read: row.date }),
+  monthlyPrice: row.number('monthlyPrice'),
+  currency: row.oneOf({ key: 'currency', values: CURRENCIES }),
+  productIds: row.texts('productIds'),
+  nextShipment: row.optional({ key: 'nextShipment', read: row.date }),
+})
+
+export const parseOrder: Parse<Order> = (row) => ({
+  id: row.text('id'),
+  subscriptionId: row.text('subscriptionId'),
+  customerId: row.text('customerId'),
+  date: row.date('date'),
+  lines: row.list('lines').map((line) => ({ productId: line.text('productId'), quantity: line.number('quantity') })),
+  amount: row.number('amount'),
+  currency: row.oneOf({ key: 'currency', values: CURRENCIES }),
+  status: row.oneOf({ key: 'status', values: ORDER_STATUSES }),
+  carrier: row.text('carrier'),
+  trackingNumber: row.text('trackingNumber'),
+  charges: row.list('charges').map((charge) => ({
+    date: charge.date('date'),
+    amount: charge.number('amount'),
+    status: charge.oneOf({ key: 'status', values: CHARGE_STATUSES }),
+  })),
 })
 
 export const parseTicket: Parse<WithoutAnswerKey<Ticket>> = (row) => ({
