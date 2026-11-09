@@ -1,8 +1,10 @@
 // Peluda data model. Field-by-field notes in data/schema.md.
 
-export type Country = 'ES' | 'MX' | 'CO' | 'PE' | 'AR'
+export const COUNTRIES = ['ES', 'MX', 'CO', 'PE', 'AR'] as const
+export type Country = (typeof COUNTRIES)[number]
 export type Currency = 'EUR' | 'MXN' | 'COP' | 'PEN' | 'ARS'
-export type Species = 'dog' | 'cat'
+export const SPECIES = ['dog', 'cat'] as const
+export type Species = (typeof SPECIES)[number]
 // `2026-11-24` or `2026-11-24T09:15:00`, in the country's local time.
 export type IsoDate = string
 
@@ -16,17 +18,21 @@ export const CURRENCY_BY_COUNTRY: Record<Country, Currency> = {
 // The CMS "today" is session 1, so the demo, the screenshots and the recording all match.
 export const REFERENCE_DATE: IsoDate = '2026-11-24'
 
+export const PLAN_IDS = ['basic', 'complete', 'care'] as const
+
 export type Plan = {
-  id: 'basic' | 'complete' | 'care'
+  id: (typeof PLAN_IDS)[number]
   name: string
   includes: string
   prices: Record<Country, number>
 }
 
+export const PRODUCT_KINDS = ['kibble', 'special_diet', 'treat', 'toy'] as const
+
 export type Product = {
   id: string
   name: string
-  kind: 'kibble' | 'special_diet' | 'treat' | 'toy'
+  kind: (typeof PRODUCT_KINDS)[number]
   species: Species | 'both'
   manufacturerId?: string
   markets: Country[]
@@ -46,6 +52,8 @@ export type Customer = {
   notes?: string
 }
 
+export const PET_ACTIVITIES = ['low', 'medium', 'high'] as const
+
 export type Pet = {
   id: string
   customerId: string
@@ -54,7 +62,7 @@ export type Pet = {
   breed: string
   birthDate: IsoDate
   weightKg: number
-  activity: 'low' | 'medium' | 'high'
+  activity: (typeof PET_ACTIVITIES)[number]
   allergies: string[]
 }
 
@@ -94,24 +102,33 @@ export type Order = {
 }
 
 // Answer keys are never shown in the CMS nor copied into the prompt.
+// The build strips them from the bundle (see vite.config.ts), so the CMS works with `WithoutAnswerKey<T>`.
+export type WithoutAnswerKey<T> = Omit<T, 'answerKey'>
+
+export const TICKET_CATEGORIES = ['shipping', 'billing', 'plan_change', 'cancellation', 'product_health', 'account', 'other'] as const
+export const URGENCIES = ['high', 'medium', 'low'] as const
+
 export type TicketAnswerKey = {
-  category: 'shipping' | 'billing' | 'plan_change' | 'cancellation' | 'product_health' | 'account' | 'other'
-  urgency: 'high' | 'medium' | 'low'
+  category: (typeof TICKET_CATEGORIES)[number]
+  urgency: (typeof URGENCIES)[number]
   trap?: string
   handwritten: boolean
 }
+
+export const TICKET_CHANNELS = ['email', 'form', 'app', 'whatsapp'] as const
+export const TICKET_STATUSES = ['unclassified'] as const
 
 export type Ticket = {
   id: string
   receivedAt: IsoDate
   country: Country
-  channel: 'email' | 'form' | 'app' | 'whatsapp'
+  channel: (typeof TICKET_CHANNELS)[number]
   customerId?: string
   orderId?: string
   sender: string
   subject: string
   message: string
-  status: 'unclassified'
+  status: (typeof TICKET_STATUSES)[number]
   answerKey: TicketAnswerKey
 }
 

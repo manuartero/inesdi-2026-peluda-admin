@@ -1,0 +1,71 @@
+import companyJson from '../../data/handwritten/company.handwritten.json' with { type: 'json' }
+import customersJson from '../../data/handwritten/customers.handwritten.json' with { type: 'json' }
+import petsJson from '../../data/handwritten/pets.handwritten.json' with { type: 'json' }
+import plansJson from '../../data/handwritten/plans.handwritten.json' with { type: 'json' }
+import productsJson from '../../data/handwritten/products.handwritten.json' with { type: 'json' }
+import suppliersJson from '../../data/handwritten/suppliers.handwritten.json' with { type: 'json' }
+import ticketsJson from '../../data/handwritten/tickets.handwritten.json' with { type: 'json' }
+import { dataError } from './json-row.reader.ts'
+import {
+  parseCompany,
+  parseCustomer,
+  parseList,
+  parseOne,
+  parsePet,
+  parsePlan,
+  parseProduct,
+  parseSupplier,
+  parseTicket,
+} from './model.parse.ts'
+
+type Identified = { id: string }
+
+function checkUniqueIds({ items, file }: { items: Identified[]; file: string }) {
+  const seen = new Set<string>()
+  for (const { id } of items) {
+    if (seen.has(id)) {
+      throw dataError(`${file}: duplicate id ${id}`)
+    }
+    seen.add(id)
+  }
+}
+
+// checkReference({ from: 'TCK-20261124-0004', field: 'customerId', id: 'CUS-00999', targets }) fails:
+// the ticket would show an empty customer card in the demo.
+function checkReference({ from, field, id, targets }: { from: string; field: string; id?: string; targets: Identified[] }) {
+  if (id === undefined || targets.some((target) => target.id === id)) {
+    return
+  }
+  throw dataError(`${from} › ${field}: ${id} does not exist`)
+}
+
+function loadHandwritten() {
+  const plans = parseList({ json: plansJson, file: 'plans.handwritten.json', parse: parsePlan })
+  const products = parseList({ json: productsJson, file: 'products.handwritten.json', parse: parseProduct })
+  const suppliers = parseList({ json: suppliersJson, file: 'suppliers.handwritten.json', parse: parseSupplier })
+  const customers = parseList({ json: customersJson, file: 'customers.handwritten.json', parse: parseCustomer })
+  const pets = parseList({ json: petsJson, file: 'pets.handwritten.json', parse: parsePet })
+  const tickets = parseList({ json: ticketsJson, file: 'tickets.handwritten.json', parse: parseTicket })
+  const company = parseOne({ json: companyJson, file: 'company.handwritten.json', parse: parseCompany })
+
+  checkUniqueIds({ items: products, file: 'products.handwritten.json' })
+  checkUniqueIds({ items: suppliers, file: 'suppliers.handwritten.json' })
+  checkUniqueIds({ items: customers, file: 'customers.handwritten.json' })
+  checkUniqueIds({ items: pets, file: 'pets.handwritten.json' })
+  checkUniqueIds({ items: tickets, file: 'tickets.handwritten.json' })
+
+  for (const product of products) {
+    checkReference({ from: product.id, field: 'manufacturerId', id: product.manufacturerId, targets: suppliers })
+    checkReference({ from: product.id, field: 'replaces', id: product.replaces, targets: products })
+  }
+  for (const pet of pets) {
+    checkReference({ from: pet.id, field: 'customerId', id: pet.customerId, targets: customers })
+  }
+  for (const ticket of tickets) {
+    checkReference({ from: ticket.id, field: 'customerId', id: ticket.customerId, targets: customers })
+  }
+
+  return { plans, products, suppliers, customers, pets, tickets, company }
+}
+
+export const HANDWRITTEN = loadHandwritten()

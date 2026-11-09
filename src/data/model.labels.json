@@ -1,0 +1,7 @@
+{
+  "country": { "ES": "España", "MX": "México", "CO": "Colombia", "PE": "Perú", "AR": "Argentina" },
+  "ticketChannel": { "email": "Email", "form": "Formulario web", "app": "App", "whatsapp": "WhatsApp" },
+  "ticketStatus": { "unclassified": "Sin clasificar" },
+  "species": { "dog": "Perro", "cat": "Gato" },
+  "petActivity": { "low": "Baja", "medium": "Media", "high": "Alta" }
+}
