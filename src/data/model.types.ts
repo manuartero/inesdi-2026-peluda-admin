@@ -143,9 +143,11 @@ export type Supplier = {
   contractId?: string
 }
 
+export const CONTRACT_TRAP_KINDS = ['auto_renewal', 'hidden_penalty', 'missing_clause'] as const
+
 export type ContractTrap = {
-  kind: 'auto_renewal' | 'hidden_penalty' | 'missing_clause'
-  // For `missing_clause`, the clause that should be there: "Confidencialidad".
+  kind: (typeof CONTRACT_TRAP_KINDS)[number]
+  // The clause number as written in the text (`14.2`, `II.6`); for `missing_clause`, the clause that should be there: "Confidencialidad".
   clause: string
   explanation: string
 }

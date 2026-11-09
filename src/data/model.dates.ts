@@ -49,3 +49,8 @@ export function formatAge(birthDate: IsoDate) {
   const years = Math.floor(months / 12)
   return years === 1 ? '1 año' : `${years} años`
 }
+
+const DAY_MS = 24 * HOUR_MS
+
+// daysFromReference('2026-12-31') is 37; a past date is negative.
+export const daysFromReference = (iso: IsoDate) => Math.round((wallClock(iso).getTime() - wallClock(REFERENCE_DATE).getTime()) / DAY_MS)

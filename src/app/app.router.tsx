@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import { HomePage } from '@/home/home.page.tsx'
+import { SupplierDetailPage } from '@/suppliers/supplier-detail.page.tsx'
+import { SupplierListPage } from '@/suppliers/supplier-list.page.tsx'
 import { TicketDetailPage } from '@/tickets/ticket-detail.page.tsx'
 import { TicketInboxPage } from '@/tickets/ticket-inbox.page.tsx'
 import { AppLayout } from './app-layout.component.tsx'
@@ -19,6 +21,8 @@ export const APP_ROUTER = createBrowserRouter([
       { path: '/', element: <HomePage /> },
       { path: '/tickets', element: <TicketInboxPage /> },
       { path: '/tickets/:ticketId', element: <TicketDetailPage /> },
+      { path: '/suppliers', element: <SupplierListPage /> },
+      { path: '/suppliers/:supplierId', element: <SupplierDetailPage /> },
       ...comingSoonRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],

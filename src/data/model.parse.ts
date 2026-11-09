@@ -1,5 +1,6 @@
 import { asList, rowReader } from './json-row.reader.ts'
 import {
+  CONTRACT_TRAP_KINDS,
   COUNTRIES,
   PET_ACTIVITIES,
   PLAN_IDS,
@@ -12,6 +13,7 @@ import {
 } from './model.types.ts'
 import type {
   Company,
+  Contract,
   Customer,
   Pet,
   Plan,
@@ -61,6 +63,27 @@ export const parseSupplier: Parse<Supplier> = (row) => {
     service: row.text('service'),
     contact: { name: contact.text('name'), email: contact.text('email') },
     contractId: row.optional({ key: 'contractId', read: row.text }),
+  }
+}
+
+export const parseContract: Parse<WithoutAnswerKey<Contract>> = (row) => ({
+  id: row.text('id'),
+  supplierId: row.text('supplierId'),
+  title: row.text('title'),
+  signedOn: row.date('signedOn'),
+  startDate: row.date('startDate'),
+  expiryOnRecord: row.date('expiryOnRecord'),
+  file: row.text('file'),
+})
+
+export const parseContractAnswerKey: Parse<Contract['answerKey']> = (contractRow) => {
+  const traps = contractRow.child('answerKey').list('traps')
+  return {
+    traps: traps.map((trap) => ({
+      kind: trap.oneOf({ key: 'kind', values: CONTRACT_TRAP_KINDS }),
+      clause: trap.text('clause'),
+      explanation: trap.text('explanation'),
+    })),
   }
 }
 

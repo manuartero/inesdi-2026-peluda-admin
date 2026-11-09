@@ -148,7 +148,7 @@ A ticket's `answerKey`: `category` (`shipping` · `billing` · `plan_change` · 
 | `signedOn`, `startDate` | | |
 | `expiryOnRecord` | `2026-12-31` | **What the team believes**, not what the text says. That gap is the auto-renewal trap |
 | `file` | `contracts/nutrican.md` | Full text, 4–6 pages |
-| `answerKey` | `{ traps: [{ kind, clause, explanation }] }` | `kind`: `auto_renewal` · `hidden_penalty` · `missing_clause` |
+| `answerKey` | `{ traps: [{ kind, clause, explanation }] }` | `kind`: `auto_renewal` · `hidden_penalty` · `missing_clause`. `clause` is the paragraph number as written (`14.2`, `II.6`) or, for `missing_clause`, its name («Protección de datos»). `pnpm check:data` checks the paragraph exists, or that a missing clause's name appears nowhere in the text |
 
 ### Review (~120: 20 handwritten + filler)
 

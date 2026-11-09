@@ -105,6 +105,15 @@ export function rowReader({ raw, where }: { raw: unknown; where: string }) {
     return rowReader({ raw: raw[key], where: `${label} › ${key}` })
   }
 
+  // list('traps') reads each item with its own reader: `… › answerKey › traps #1 › kind: expected …`.
+  const list = (key: string) => {
+    const value = raw[key]
+    if (!Array.isArray(value)) {
+      return fail({ key, expected: 'a list' })
+    }
+    return value.map((item, index) => rowReader({ raw: item, where: `${label} › ${key} #${index}` }))
+  }
+
   const optional = <T>({ key, read }: { key: string; read: (key: string) => T }) => {
     if (!has(key)) {
       return undefined
@@ -112,7 +121,7 @@ export function rowReader({ raw, where }: { raw: unknown; where: string }) {
     return read(key)
   }
 
-  return { has, text, number, flag, date, oneOf, texts, listOf, child, optional }
+  return { has, text, number, flag, date, oneOf, texts, listOf, child, list, optional }
 }
 
 export type RowReader = ReturnType<typeof rowReader>

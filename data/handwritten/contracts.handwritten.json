@@ -1,0 +1,31 @@
+[
+  {
+    "id": "CTR-NUTRICAN-2024", "supplierId": "SUP-NUTRICAN", "title": "Contrato de fabricación y suministro de pienso",
+    "signedOn": "2023-11-20", "startDate": "2024-01-01", "expiryOnRecord": "2026-12-31", "file": "contracts/nutrican.md",
+    "answerKey": {
+      "traps": [
+        { "kind": "auto_renewal", "clause": "14.2", "explanation": "La 10.1 dice que vence el 31/12/2026, pero la 14.2 (en «Disposiciones generales») lo prorroga solo por 2 años si nadie lo denuncia con 90 días de antelación, es decir, antes del 02/10/2026. Ese plazo ya pasó: el contrato sigue hasta el 31/12/2028 y los precios suben un 4 % extra el 01/01/2027." },
+        { "kind": "hidden_penalty", "clause": "5.4", "explanation": "Peluda tiene 48 horas para avisar por escrito al fabricante de una incidencia de calidad o salud animal; si no, pierde todo derecho a reclamar por ese lote (retirada, reposición e indemnizaciones). Enlaza con el caso urgente de tickets (0004, 0015, 0063 y 0145): el reloj empieza hoy." }
+      ]
+    }
+  },
+  {
+    "id": "CTR-RUTAS-LEVANTE-2023", "supplierId": "SUP-RUTAS-LEVANTE", "title": "Contrato de prestación de servicios de transporte y distribución",
+    "signedOn": "2023-02-15", "startDate": "2023-03-01", "expiryOnRecord": "2027-02-28", "file": "contracts/rutas-levante.md",
+    "answerKey": {
+      "traps": [
+        { "kind": "hidden_penalty", "clause": "II.6", "explanation": "La 12.2 parece permitir salir sin causa con 60 días de preaviso, pero remite al Anexo II, y el apartado II.6 obliga a Peluda a pagar el 35 % de la facturación media mensual por cada mes que falte hasta el 28/02/2027. El II.5 añade un volumen mínimo de 7.000 envíos al mes." }
+      ]
+    }
+  },
+  {
+    "id": "CTR-VETAMIGA-2025", "supplierId": "SUP-VETAMIGA", "title": "Acuerdo de colaboración para el plan Cuidado",
+    "signedOn": "2025-02-10", "startDate": "2025-03-01", "expiryOnRecord": "2027-02-28", "file": "contracts/vetamiga.md",
+    "answerKey": {
+      "traps": [
+        { "kind": "missing_clause", "clause": "Protección de datos", "explanation": "Las clínicas reciben y envían a Peluda datos de los titulares y de sus mascotas (cláusula sexta), también desde México, pero no hay cláusula de protección de datos ni de encargado del tratamiento. Es la demo de la sesión 1: si se pregunta qué dice el contrato sobre protección de datos, la respuesta correcta es «no consta»." },
+        { "kind": "missing_clause", "clause": "Confidencialidad", "explanation": "Tampoco hay deber de confidencialidad: nada impide a las clínicas, que pueden trabajar con otras marcas (cláusula novena), usar la información de Peluda." }
+      ]
+    }
+  }
+]

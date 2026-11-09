@@ -2,7 +2,7 @@
   { "path": "/", "label": "Inicio", "icon": "home" },
   { "path": "/tickets", "label": "Tickets", "icon": "inbox" },
   { "path": "/customers", "label": "Clientes", "icon": "users", "comingSoon": true },
-  { "path": "/suppliers", "label": "Proveedores y contratos", "icon": "contract", "comingSoon": true },
+  { "path": "/suppliers", "label": "Proveedores y contratos", "icon": "contract" },
   { "path": "/reviews", "label": "Reseñas", "icon": "star", "comingSoon": true },
   { "path": "/brand", "label": "Marca", "icon": "brand", "comingSoon": true }
 ]

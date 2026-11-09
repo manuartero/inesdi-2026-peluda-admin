@@ -1,4 +1,5 @@
 import companyJson from '../../data/handwritten/company.handwritten.json' with { type: 'json' }
+import contractsJson from '../../data/handwritten/contracts.handwritten.json' with { type: 'json' }
 import customersJson from '../../data/handwritten/customers.handwritten.json' with { type: 'json' }
 import petsJson from '../../data/handwritten/pets.handwritten.json' with { type: 'json' }
 import plansJson from '../../data/handwritten/plans.handwritten.json' with { type: 'json' }
@@ -8,6 +9,7 @@ import ticketsJson from '../../data/handwritten/tickets.handwritten.json' with {
 import { dataError } from './json-row.reader.ts'
 import {
   parseCompany,
+  parseContract,
   parseCustomer,
   parseList,
   parseOne,
@@ -17,6 +19,7 @@ import {
   parseSupplier,
   parseTicket,
 } from './model.parse.ts'
+import type { Supplier } from './model.types.ts'
 
 type Identified = { id: string }
 
@@ -39,10 +42,19 @@ function checkReference({ from, field, id, targets }: { from: string; field: str
   throw dataError(`${from} › ${field}: ${id} does not exist`)
 }
 
+// SUP-VETAMIGA pointing at CTR-NUTRICAN-2024 would open the wrong contract from the supplier page.
+function checkContractOwner({ contract, suppliers }: { contract: { id: string; supplierId: string }; suppliers: Supplier[] }) {
+  const owner = suppliers.find((supplier) => supplier.contractId === contract.id)
+  if (owner?.id !== contract.supplierId) {
+    throw dataError(`${contract.id} › supplierId: ${contract.supplierId} does not list it as its contractId`)
+  }
+}
+
 function loadHandwritten() {
   const plans = parseList({ json: plansJson, file: 'plans.handwritten.json', parse: parsePlan })
   const products = parseList({ json: productsJson, file: 'products.handwritten.json', parse: parseProduct })
   const suppliers = parseList({ json: suppliersJson, file: 'suppliers.handwritten.json', parse: parseSupplier })
+  const contracts = parseList({ json: contractsJson, file: 'contracts.handwritten.json', parse: parseContract })
   const customers = parseList({ json: customersJson, file: 'customers.handwritten.json', parse: parseCustomer })
   const pets = parseList({ json: petsJson, file: 'pets.handwritten.json', parse: parsePet })
   const tickets = parseList({ json: ticketsJson, file: 'tickets.handwritten.json', parse: parseTicket })
@@ -50,6 +62,7 @@ function loadHandwritten() {
 
   checkUniqueIds({ items: products, file: 'products.handwritten.json' })
   checkUniqueIds({ items: suppliers, file: 'suppliers.handwritten.json' })
+  checkUniqueIds({ items: contracts, file: 'contracts.handwritten.json' })
   checkUniqueIds({ items: customers, file: 'customers.handwritten.json' })
   checkUniqueIds({ items: pets, file: 'pets.handwritten.json' })
   checkUniqueIds({ items: tickets, file: 'tickets.handwritten.json' })
@@ -58,6 +71,13 @@ function loadHandwritten() {
     checkReference({ from: product.id, field: 'manufacturerId', id: product.manufacturerId, targets: suppliers })
     checkReference({ from: product.id, field: 'replaces', id: product.replaces, targets: products })
   }
+  for (const supplier of suppliers) {
+    checkReference({ from: supplier.id, field: 'contractId', id: supplier.contractId, targets: contracts })
+  }
+  for (const contract of contracts) {
+    checkReference({ from: contract.id, field: 'supplierId', id: contract.supplierId, targets: suppliers })
+    checkContractOwner({ contract, suppliers })
+  }
   for (const pet of pets) {
     checkReference({ from: pet.id, field: 'customerId', id: pet.customerId, targets: customers })
   }
@@ -65,7 +85,7 @@ function loadHandwritten() {
     checkReference({ from: ticket.id, field: 'customerId', id: ticket.customerId, targets: customers })
   }
 
-  return { plans, products, suppliers, customers, pets, tickets, company }
+  return { plans, products, suppliers, contracts, customers, pets, tickets, company }
 }
 
 export const HANDWRITTEN = loadHandwritten()
