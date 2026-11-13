@@ -1,15 +1,23 @@
+import { Link } from 'react-router'
 import { Field } from '@/app/field.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
 import type { Customer } from '@/data/model.types.ts'
 
-export function CustomerCard({ customer }: { customer: Customer }) {
+// From a ticket or a review, `linkToRecord` opens the customer's record; on the record itself there is nowhere to go.
+export function CustomerCard({ customer, linkToRecord = true }: { customer: Customer; linkToRecord?: boolean }) {
+  const name = `${customer.firstName} ${customer.lastName}`
   return (
     <Card>
       <CardHeader>
         <CardTitle>
-          {customer.firstName} {customer.lastName}
+          {linkToRecord && (
+            <Link to={`/customers/${customer.id}`} className="hover:underline">
+              {name}
+            </Link>
+          )}
+          {!linkToRecord && name}
         </CardTitle>
       </CardHeader>
       <CardContent>

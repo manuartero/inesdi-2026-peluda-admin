@@ -1,5 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import { BrandPage } from '@/brand/brand.page.tsx'
+import { CustomerDetailPage } from '@/customers/customer-detail.page.tsx'
+import { CustomerListPage } from '@/customers/customer-list.page.tsx'
 import { HomePage } from '@/home/home.page.tsx'
 import { ReviewDetailPage } from '@/reviews/review-detail.page.tsx'
 import { ReviewListPage } from '@/reviews/review-list.page.tsx'
@@ -24,6 +26,8 @@ export const APP_ROUTER = createBrowserRouter([
       { path: '/', element: <HomePage /> },
       { path: '/tickets', element: <TicketInboxPage /> },
       { path: '/tickets/:ticketId', element: <TicketDetailPage /> },
+      { path: '/customers', element: <CustomerListPage /> },
+      { path: '/customers/:customerId', element: <CustomerDetailPage /> },
       { path: '/suppliers', element: <SupplierListPage /> },
       { path: '/suppliers/:supplierId', element: <SupplierDetailPage /> },
       { path: '/reviews', element: <ReviewListPage /> },

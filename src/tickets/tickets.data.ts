@@ -21,3 +21,4 @@ export const UNCLASSIFIED_TODAY = INBOX.filter(
 
 export const findTicket = (id: string | undefined) => INBOX.find((ticket) => ticket.id === id)
 
+export const ticketsOf = (customerId: string) => INBOX.filter((ticket) => ticket.customerId === customerId)

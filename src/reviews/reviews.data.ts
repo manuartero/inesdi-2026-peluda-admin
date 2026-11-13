@@ -11,3 +11,5 @@ export const REVIEWS = [...DATA.reviews].sort(newestFirst)
 export const UNANSWERED = REVIEWS.filter((review) => review.status === 'unanswered')
 
 export const findReview = (id: string | undefined) => REVIEWS.find((review) => review.id === id)
+
+export const reviewsOf = (customerId: string) => REVIEWS.filter((review) => review.customerId === customerId)
