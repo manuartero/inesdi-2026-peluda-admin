@@ -8,8 +8,10 @@ import { StepLinks } from '@/app/step-links.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CustomerCard, UnknownCustomerCard } from '@/customers/customer-card.component.tsx'
-import { findCustomer, petsOf } from '@/customers/customers.data.ts'
+import { findCustomer, ordersOf, petsOf, subscriptionsOf } from '@/customers/customers.data.ts'
+import { OrderHistory } from '@/customers/order-history.component.tsx'
 import { PetCard } from '@/customers/pet-card.component.tsx'
+import { SubscriptionCard } from '@/customers/subscription-card.component.tsx'
 import { formatDate, formatTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { ticketPromptText } from './ticket.prompt.ts'
@@ -46,8 +48,10 @@ const ticketPath = (ticket: InboxTicket | undefined) => ticket && `/tickets/${ti
 function TicketDetail({ ticket }: { ticket: InboxTicket }) {
   const customer = findCustomer(ticket.customerId)
   const pets = petsOf(customer?.id)
+  const subscriptions = subscriptionsOf(customer?.id)
+  const orders = ordersOf(customer?.id)
   const index = INBOX.indexOf(ticket)
-  const promptText = ticketPromptText({ ticket, customer, pets })
+  const promptText = ticketPromptText({ ticket, history: { customer, pets, subscriptions, orders } })
 
   return (
     <>
@@ -71,12 +75,18 @@ function TicketDetail({ ticket }: { ticket: InboxTicket }) {
         }
       />
       <div className="grid items-start gap-6 px-8 py-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <MessageCard ticket={ticket} />
+        <div className="min-w-0 space-y-6">
+          <MessageCard ticket={ticket} />
+          {customer && <OrderHistory orders={orders} highlightedOrderId={ticket.orderId} title="Pedidos del cliente" />}
+        </div>
         <div className="space-y-4">
           {customer && <CustomerCard customer={customer} />}
           {!customer && <UnknownCustomerCard />}
           {pets.map((pet) => (
             <PetCard key={pet.id} pet={pet} />
+          ))}
+          {subscriptions.map((subscription) => (
+            <SubscriptionCard key={subscription.id} subscription={subscription} pet={pets.find((pet) => pet.id === subscription.petId)} />
           ))}
         </div>
       </div>
