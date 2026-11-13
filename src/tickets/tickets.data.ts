@@ -15,9 +15,13 @@ const byArrival = (a: InboxTicket, b: InboxTicket) => a.receivedAtMadrid.localeC
 
 export const INBOX = DATA.tickets.map(withMadridTime).sort(byArrival)
 
-export const UNCLASSIFIED_TODAY = INBOX.filter(
-  (ticket) => ticket.status === 'unclassified' && isOnReferenceDate(ticket.receivedAtMadrid),
-)
+// The whole inbox is unclassified: today's tickets plus the backlog of the two days before.
+export const UNCLASSIFIED = INBOX.filter((ticket) => ticket.status === 'unclassified')
+
+export const RECEIVED_TODAY = INBOX.filter((ticket) => isOnReferenceDate(ticket.receivedAtMadrid))
+
+// INBOX_DAYS is ['2026-11-22', '2026-11-23', '2026-11-24'], by Madrid date.
+export const INBOX_DAYS = [...new Set(INBOX.map((ticket) => ticket.receivedAtMadrid.slice(0, 10)))]
 
 export const findTicket = (id: string | undefined) => INBOX.find((ticket) => ticket.id === id)
 

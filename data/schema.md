@@ -63,7 +63,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | `availableFrom` | `2026-10-01` | **Key to the urgent ticket:** the "new kibble" is a recipe that changed recently |
 | `replaces` | `PRD-KIBBLE-ADULT-DOG-2024` | Optional: the previous recipe |
 
-### Customer (~200, generated + the ones the cases need)
+### Customer (~600, generated + the ones the cases need)
 
 | Field | Example | Note |
 | --- | --- | --- |
@@ -99,7 +99,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | `productIds` | | What ships every 4 weeks |
 | `nextShipment` | `2026-11-28` | |
 
-### Order (~1,000, generated)
+### Order (~2,600, generated)
 
 | Field | Example | Note |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | `carrier`, `trackingNumber` | Rutas Levante, `RL-55128830` | |
 | `charges` | `[{ date, amount, status }]` | Two charges = the "charged twice" case. `status`: `charged` · `refunded` · `failed` |
 
-### Ticket (~150 "today": 30 handwritten + filler)
+### Ticket (~450: 150 a day, today plus the 2 days before; 30 handwritten + filler)
 
 | Field | Example | Note |
 | --- | --- | --- |
@@ -152,7 +152,7 @@ A ticket's `answerKey`: `category` (`shipping` · `billing` · `plan_change` · 
 | `file` | `contracts/nutrican.md` | Full text, 4–6 pages |
 | `answerKey` | `{ traps: [{ kind, clause, explanation }] }` | `kind`: `auto_renewal` · `hidden_penalty` · `missing_clause`. `clause` is the paragraph number as written (`14.2`, `II.6`) or, for `missing_clause`, its name («Protección de datos»). `pnpm check:data` checks the paragraph exists, or that a missing clause's name appears nowhere in the text |
 
-### Review (~120: 20 handwritten + filler)
+### Review (~320: 20 handwritten + filler)
 
 | Field | Example | Note |
 | --- | --- | --- |

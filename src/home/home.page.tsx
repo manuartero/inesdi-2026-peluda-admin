@@ -8,7 +8,7 @@ import { formatLongDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
 import { COUNTRIES, REFERENCE_DATE } from '@/data/model.types.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'
-import { UNCLASSIFIED_TODAY } from '@/tickets/tickets.data.ts'
+import { RECEIVED_TODAY, UNCLASSIFIED } from '@/tickets/tickets.data.ts'
 
 const { company } = DATA
 
@@ -76,9 +76,9 @@ export function HomePage() {
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <TodayCard
               to="/tickets"
-              label="Tickets sin clasificar hoy"
-              count={UNCLASSIFIED_TODAY.length}
-              detail={`Media diaria: unos ${formatNumber(company.ticketsPerDay)} tickets.`}
+              label="Tickets sin clasificar"
+              count={UNCLASSIFIED.length}
+              detail={`${RECEIVED_TODAY.length} recibidos hoy; el resto, de los dos días anteriores. Media diaria: unos ${formatNumber(company.ticketsPerDay)}.`}
             />
             <TodayCard
               to="/reviews?status=unanswered"

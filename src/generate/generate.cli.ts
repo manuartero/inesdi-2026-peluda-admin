@@ -50,7 +50,7 @@ function generate() {
   // Filler tickets and reviews come from generated customers only: the case customers say exactly what the cases need.
   const writers = households({ customers: base.customers, pets: base.pets, subscriptions: base.subscriptions })
   const tickets = generateTickets({ random, households: writers, handwrittenIds: HANDWRITTEN.tickets.map((ticket) => ticket.id) })
-  const reviews = generateReviews({ random, households: writers })
+  const reviews = generateReviews({ random, households: writers, handwrittenIds: HANDWRITTEN.reviews.map((review) => review.id) })
 
   const written = [
     writeRows({ file: 'customers.generated.json', rows: base.customers }),

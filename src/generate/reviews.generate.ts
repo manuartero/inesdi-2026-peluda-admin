@@ -10,15 +10,15 @@ import type { Household } from './generate.people.ts'
 import type { Random } from './generate.random.ts'
 import templatesJson from './reviews.templates.json' with { type: 'json' }
 
-// With the handwritten 20 (average 3,0), these 100 bring the overall average to ≈ 4,3, as in the dossier.
-const STAR_COUNT: Record<Review['stars'], number> = { 5: 68, 4: 24, 3: 4, 2: 2, 1: 2 }
-const REVIEW_COUNT: Record<Country, number> = { ES: 56, MX: 22, CO: 10, PE: 8, AR: 4 }
-// ~30 % answered overall, almost all positive: 6 handwritten + 28 positive + 2 mixed here.
-const ANSWERED_POSITIVE = 28
-const ANSWERED_MIXED = 2
+// With the handwritten 20 (average 3,0), these 300 bring the overall average to ≈ 4,3, as in the dossier.
+const STAR_COUNT: Record<Review['stars'], number> = { 5: 180, 4: 84, 3: 18, 2: 9, 1: 9 }
+const REVIEW_COUNT: Record<Country, number> = { ES: 168, MX: 66, CO: 30, PE: 24, AR: 12 }
+// ~30 % answered overall, almost all positive: 6 handwritten + 84 positive + 6 mixed here.
+const ANSWERED_POSITIVE = 84
+const ANSWERED_MIXED = 6
 const DAYS_BACK = 30
-// Handwritten reviews go from REV-2026-0401 to REV-2026-0420.
-const FIRST_REVIEW_NUMBER = 300
+// Filler numbers start at REV-2026-0100 and skip the handwritten ones (REV-2026-0401 to REV-2026-0420).
+const FIRST_REVIEW_NUMBER = 100
 
 const REGIONS = ['es', 'latam', 'ar', 'any'] as const
 type Region = (typeof REGIONS)[number]
@@ -131,12 +131,24 @@ function answeredDrafts({ random, drafts }: { random: Random; drafts: ReviewDraf
   return new Set([...positive, ...mixed])
 }
 
+// freeReviewIds({ count: 3, taken }) is REV-2026-0100, 0101, 0102, skipping any number in `taken`.
+function freeReviewIds({ count, taken }: { count: number; taken: Set<string> }) {
+  const ids: string[] = []
+  for (let number = FIRST_REVIEW_NUMBER; ids.length < count; number++) {
+    const id = `REV-2026-${String(number).padStart(4, '0')}`
+    if (!taken.has(id)) {
+      ids.push(id)
+    }
+  }
+  return ids
+}
+
 /**
- * ~100 filler reviews from the last month, on top of the 20 handwritten ones.
+ * ~300 filler reviews from the last month, on top of the 20 handwritten ones.
  * - Stars are dealt from fixed counts, so the average never drifts with the seed.
  * - Their answer key carries `handwritten: false` and no trap.
  */
-export function generateReviews({ random, households }: { random: Random; households: Household[] }) {
+export function generateReviews({ random, households, handwrittenIds }: { random: Random; households: Household[]; handwrittenIds: string[] }) {
   const stars = random.shuffle(STARS.flatMap((value) => Array.from({ length: STAR_COUNT[value] }, () => value)))
   const countries = random.shuffle(COUNTRIES.flatMap((country) => Array.from({ length: REVIEW_COUNT[country] }, () => country)))
   const nextTemplate = templateDecks(random)
@@ -146,11 +158,12 @@ export function generateReviews({ random, households }: { random: Random; househ
   })
   drafts.sort((a, b) => a.date.localeCompare(b.date))
   const answered = answeredDrafts({ random, drafts })
+  const ids = freeReviewIds({ count: drafts.length, taken: new Set(handwrittenIds) })
 
   return drafts.map(({ firstName: _firstName, pet: _pet, ...draft }, index): Review => {
     const isAnswered = answered.has(drafts[index])
     return {
-      id: `REV-2026-${String(FIRST_REVIEW_NUMBER + index).padStart(4, '0')}`,
+      id: ids[index],
       ...draft,
       status: isAnswered ? 'answered' : 'unanswered',
       reply: isAnswered ? replyFor({ random, draft: drafts[index] }) : undefined,

@@ -5,8 +5,8 @@ import { POOLS } from './generate.pools.ts'
 import { subscriptionPrice } from './generate.prices.ts'
 import type { Random } from './generate.random.ts'
 
-// ~200 customers split like the dossier's subscribers: 10.000 · 4.000 · 1.800 · 1.500 · 700.
-const CUSTOMER_COUNT: Record<Country, number> = { ES: 111, MX: 44, CO: 20, PE: 17, AR: 8 }
+// ~600 customers split like the dossier's subscribers: 10.000 · 4.000 · 1.800 · 1.500 · 700.
+const CUSTOMER_COUNT: Record<Country, number> = { ES: 333, MX: 132, CO: 60, PE: 51, AR: 24 }
 // Peluda opens in Spain in 2021, Mexico in 2023, Peru in 2024, Colombia in 2025 and Argentina in 2026.
 const LAUNCH_DATE: Record<Country, IsoDate> = { ES: '2021-09-01', MX: '2023-04-01', PE: '2024-03-01', CO: '2025-02-01', AR: '2026-03-01' }
 const LAST_SIGNUP: IsoDate = '2026-11-10'
@@ -225,7 +225,7 @@ function generateSubscription(input: { random: Random; plans: Plan[]; customer: 
 }
 
 /**
- * The generated customer base: ~200 customers (CUS-01000 on), one or two pets each and one subscription per pet.
+ * The generated customer base: ~600 customers (CUS-01000 on), one or two pets each and one subscription per pet.
  * - IDs follow signup order across countries.
  * - `pausedSince` is not stored: it tells the order generator when a paused subscription stopped shipping.
  */

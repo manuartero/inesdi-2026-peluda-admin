@@ -53,4 +53,18 @@ export function formatAge(birthDate: IsoDate) {
 const DAY_MS = 24 * HOUR_MS
 
 // daysFromReference('2026-12-31') is 37; a past date is negative.
-export const daysFromReference = (iso: IsoDate) => Math.round((wallClock(iso).getTime() - wallClock(REFERENCE_DATE).getTime()) / DAY_MS)
+export const daysFromReference = (iso: IsoDate) => Math.round((wallClock(iso.slice(0, 10)).getTime() - wallClock(REFERENCE_DATE).getTime()) / DAY_MS)
+
+const SHORT_DAY = formatter({ weekday: 'short', day: 'numeric' })
+
+// formatDay('2026-11-24T09:15:00') is 'Hoy'; '2026-11-23…' is 'Ayer'; '2026-11-22…' is 'dom 22'.
+export function formatDay(iso: IsoDate) {
+  const days = daysFromReference(iso)
+  if (days === 0) {
+    return 'Hoy'
+  }
+  if (days === -1) {
+    return 'Ayer'
+  }
+  return SHORT_DAY.format(wallClock(iso)).replace(',', '')
+}
