@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { CopyPromptButton } from '@/app/copy-prompt-button.component.tsx'
+import { DownloadButton } from '@/app/download-button.component.tsx'
 import { Field } from '@/app/field.component.tsx'
 import { MarkdownText } from '@/app/markdown-text.component.tsx'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
@@ -84,6 +85,9 @@ function NotDigitisedCard() {
   )
 }
 
+// contractFileName for NutriCan is 'CTR-NUTRICAN-2024.md': the reference the team uses, in a format any chat accepts.
+const contractFileName = (contract: ShownContract) => `${contract.id}.md`
+
 function SupplierDetail({ supplier }: { supplier: SupplierWithContract }) {
   const { contract } = supplier
   return (
@@ -95,7 +99,14 @@ function SupplierDetail({ supplier }: { supplier: SupplierWithContract }) {
             <ArrowLeft className="size-3.5" /> Proveedores y contratos
           </Link>
         }
-        actions={contract && <CopyPromptButton text={contract.text} />}
+        actions={
+          contract && (
+            <div className="flex items-center gap-2">
+              <DownloadButton label="Descargar contrato" fileName={contractFileName(contract)} type="text/markdown;charset=utf-8" content={() => contract.text} />
+              <CopyPromptButton text={contract.text} />
+            </div>
+          )
+        }
       />
       <div className="grid items-start gap-6 px-8 py-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         {contract && <ContractTextCard contract={contract} />}

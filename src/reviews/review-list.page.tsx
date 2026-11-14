@@ -1,11 +1,14 @@
 import { Link, useNavigate, useSearchParams } from 'react-router'
+import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
-import { COUNTRIES, REVIEW_STATUSES } from '@/data/model.types.ts'
+import { COUNTRIES, REVIEW_STATUSES, TODAY } from '@/data/model.types.ts'
+import { exportFileName } from '@/lib/csv.ts'
+import { reviewsCsv } from './reviews.csv.ts'
 import { ReviewStars } from './review-stars.component.tsx'
 import { REVIEWS, UNANSWERED } from './reviews.data.ts'
 import type { ShownReview } from './reviews.data.ts'
@@ -76,6 +79,13 @@ export function ReviewListPage() {
       <PageHeader
         title="Reseñas"
         description={`${REVIEWS.length} reseñas del último mes en la web, la app y Google. ${UNANSWERED.length} sin responder.`}
+        actions={
+          <ExportCsvButton
+            count={reviews.length}
+            fileName={exportFileName({ what: 'resenas', parts: [TODAY, filters.status, filters.country] })}
+            csv={() => reviewsCsv(reviews)}
+          />
+        }
       />
       <div className="space-y-4 px-8 py-6">
         <div className="flex flex-wrap gap-3">

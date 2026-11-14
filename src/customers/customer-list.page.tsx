@@ -1,14 +1,17 @@
 import { Search } from 'lucide-react'
 import type { ChangeEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
+import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
-import { COUNTRIES } from '@/data/model.types.ts'
+import { COUNTRIES, TODAY } from '@/data/model.types.ts'
+import { exportFileName } from '@/lib/csv.ts'
 import type { Country, Customer } from '@/data/model.types.ts'
+import { customersCsv } from './customers.csv.ts'
 import { CUSTOMERS, petsOf, subscriptionsOf } from './customers.data.ts'
 import { PetName } from './pet-icon.component.tsx'
 import { SubscriptionStatusBadge } from './subscription-card.component.tsx'
@@ -95,7 +98,17 @@ export function CustomerListPage() {
 
   return (
     <>
-      <PageHeader title="Clientes" description={`${CUSTOMERS.length} clientes en cinco países.`} />
+      <PageHeader
+        title="Clientes"
+        description={`${CUSTOMERS.length} clientes en cinco países.`}
+        actions={
+          <ExportCsvButton
+            count={customers.length}
+            fileName={exportFileName({ what: 'clientes', parts: [TODAY, country] })}
+            csv={() => customersCsv(customers)}
+          />
+        }
+      />
       <div className="space-y-4 px-8 py-6">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-72">

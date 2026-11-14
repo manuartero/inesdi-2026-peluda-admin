@@ -1,4 +1,5 @@
 import { Link, useNavigate, useSearchParams } from 'react-router'
+import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -6,7 +7,9 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { formatDay, formatTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { COUNTRIES } from '@/data/model.types.ts'
+import { exportFileName } from '@/lib/csv.ts'
 import type { Country } from '@/data/model.types.ts'
+import { ticketsCsv } from './tickets.csv.ts'
 import { INBOX, INBOX_DAYS, RECEIVED_TODAY } from './tickets.data.ts'
 import type { InboxTicket } from './tickets.data.ts'
 
@@ -76,6 +79,13 @@ export function TicketInboxPage() {
       <PageHeader
         title="Bandeja de tickets"
         description={`${INBOX.length} tickets sin clasificar: ${RECEIVED_TODAY.length} de hoy y ${backlogCount} de los dos días anteriores. Horas en horario de Madrid.`}
+        actions={
+          <ExportCsvButton
+            count={tickets.length}
+            fileName={exportFileName({ what: 'tickets', parts: [filters.day, filters.country] })}
+            csv={() => ticketsCsv(tickets)}
+          />
+        }
       />
       <div className="space-y-4 px-8 py-6">
         <div className="flex flex-wrap gap-3">
