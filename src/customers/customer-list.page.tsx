@@ -10,6 +10,7 @@ import { countryWithFlag } from '@/data/model.labels.ts'
 import { COUNTRIES } from '@/data/model.types.ts'
 import type { Country, Customer } from '@/data/model.types.ts'
 import { CUSTOMERS, petsOf, subscriptionsOf } from './customers.data.ts'
+import { PetName } from './pet-icon.component.tsx'
 import { SubscriptionStatusBadge } from './subscription-card.component.tsx'
 
 const ALL = 'all'
@@ -53,7 +54,13 @@ function CustomerRow({ customer }: { customer: Customer }) {
       </TableCell>
       <TableCell>{countryWithFlag(customer.country)}</TableCell>
       <TableCell>{customer.city}</TableCell>
-      <TableCell className="max-w-0 w-full truncate">{pets.map((pet) => pet.name).join(', ')}</TableCell>
+      <TableCell className="max-w-0 w-full">
+        <div className="flex flex-wrap gap-x-3 gap-y-1">
+          {pets.map((pet) => (
+            <PetName key={pet.id} species={pet.species} name={pet.name} />
+          ))}
+        </div>
+      </TableCell>
       <TableCell>
         <div className="flex gap-1">
           {statuses.map((status) => (
@@ -117,7 +124,7 @@ export function CustomerListPage() {
             ))}
           </ToggleGroup>
         </div>
-        <div className="rounded-lg border">
+        <div className="surface overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

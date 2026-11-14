@@ -33,7 +33,7 @@ function ReviewCard({ review }: { review: ShownReview }) {
           <Field label="País">{countryWithFlag(review.country)}</Field>
           <Field label="Fecha">{formatDate(review.date)}</Field>
         </dl>
-        <div className="rounded-md border bg-muted/40 p-4 text-sm leading-relaxed whitespace-pre-wrap">{review.text}</div>
+        <div className="rounded-lg border-[1.5px] bg-muted p-4 text-sm leading-relaxed whitespace-pre-wrap">{review.text}</div>
       </CardContent>
     </Card>
   )

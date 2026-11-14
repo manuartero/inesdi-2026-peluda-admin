@@ -6,6 +6,7 @@ import { LABELS } from '@/data/model.labels.ts'
 import { formatMoney } from '@/data/model.money.ts'
 import type { Pet, Subscription } from '@/data/model.types.ts'
 import { findPlan, productName } from './customers.data.ts'
+import { PetName } from './pet-icon.component.tsx'
 
 export function SubscriptionStatusBadge({ status }: { status: Subscription['status'] }) {
   const label = LABELS.subscriptionStatus[status]
@@ -23,9 +24,13 @@ export function SubscriptionCard({ subscription, pet }: { subscription: Subscrip
     <Card size="sm">
       <CardHeader>
         <CardTitle className="flex items-center justify-between gap-2">
-          <span>
+          <span className="inline-flex items-center">
             Plan {plan?.name ?? subscription.planId}
-            {pet && <span className="font-normal text-muted-foreground"> · {pet.name}</span>}
+            {pet && (
+              <span className="ml-2 font-normal text-muted-foreground">
+                <PetName species={pet.species} name={pet.name} />
+              </span>
+            )}
           </span>
           <SubscriptionStatusBadge status={subscription.status} />
         </CardTitle>

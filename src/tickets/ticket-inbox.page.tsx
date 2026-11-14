@@ -108,7 +108,7 @@ export function TicketInboxPage() {
             ))}
           </ToggleGroup>
         </div>
-        <div className="rounded-lg border">
+        <div className="surface overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

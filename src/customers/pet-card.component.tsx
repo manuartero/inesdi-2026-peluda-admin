@@ -3,13 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatAge } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import type { Pet } from '@/data/model.types.ts'
+import { PetName } from './pet-icon.component.tsx'
 
 export function PetCard({ pet }: { pet: Pet }) {
   const allergies = pet.allergies.length > 0 ? pet.allergies.join(', ') : 'Ninguna conocida'
   return (
     <Card size="sm">
       <CardHeader>
-        <CardTitle>{pet.name}</CardTitle>
+        <CardTitle>
+          <PetName species={pet.species} name={pet.name} />
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <dl className="space-y-1.5">

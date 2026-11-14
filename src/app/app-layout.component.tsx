@@ -12,8 +12,8 @@ const BADGES: Record<string, number> = { '/tickets': UNCLASSIFIED.length, '/revi
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return cn(
-    'flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground',
-    isActive && 'bg-sidebar-accent font-medium text-sidebar-foreground',
+    'group flex items-center gap-2.5 rounded-lg border-[1.5px] border-transparent px-2.5 py-2 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-muted hover:text-sidebar-foreground',
+    isActive && 'active border-border-strong bg-muted font-semibold text-sidebar-foreground shadow-[0_2px_0_0_var(--border-strong)]',
   )
 }
 
@@ -22,9 +22,9 @@ function NavItem({ entry }: { entry: NavEntry }) {
   const badge = BADGES[entry.path]
   return (
     <NavLink to={entry.path} end={entry.path === '/'} className={navLinkClass}>
-      <Icon className="size-4 shrink-0" />
+      <Icon className="size-4 shrink-0 group-[.active]:text-brand" strokeWidth={2.25} />
       <span className="flex-1 truncate">{entry.label}</span>
-      {badge !== undefined && <span className="text-xs tabular-nums text-muted-foreground">{badge}</span>}
+      {badge !== undefined && <span className="rounded-full bg-foreground px-1.5 py-px text-[0.7rem] font-semibold tabular-nums text-background">{badge}</span>}
     </NavLink>
   )
 }
@@ -32,7 +32,7 @@ function NavItem({ entry }: { entry: NavEntry }) {
 export function AppLayout() {
   return (
     <div className="flex min-h-svh">
-      <aside className="sticky top-0 flex h-svh w-60 shrink-0 flex-col border-r bg-sidebar px-3 py-4">
+      <aside className="sticky top-0 flex h-svh w-60 shrink-0 flex-col border-r-[1.5px] border-border-strong bg-sidebar px-3 py-4">
         <div className="px-2.5 pb-5">
           <PeludaLogo />
         </div>

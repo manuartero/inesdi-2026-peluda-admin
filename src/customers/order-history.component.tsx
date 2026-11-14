@@ -23,9 +23,11 @@ function OrderStatusBadge({ status }: { status: Order['status'] }) {
 function OrderRow({ order, highlighted }: { order: Order; highlighted: boolean }) {
   return (
     <TableRow className={highlighted ? 'bg-amber-50 dark:bg-amber-950/40' : undefined}>
-      <TableCell className="tabular-nums text-muted-foreground">{formatDate(order.date)}</TableCell>
-      <TableCell className="font-mono text-xs">{order.id}</TableCell>
-      <TableCell className="max-w-0 w-full whitespace-normal">{linesText(order)}</TableCell>
+      <TableCell>
+        <div className="tabular-nums">{formatDate(order.date)}</div>
+        <div className="font-mono text-xs text-muted-foreground">{order.id}</div>
+      </TableCell>
+      <TableCell className="min-w-48 whitespace-normal">{linesText(order)}</TableCell>
       <TableCell className="tabular-nums">{formatMoney({ amount: order.amount, currency: order.currency })}</TableCell>
       <TableCell className="whitespace-nowrap">
         {order.charges.map((charge) => (
@@ -34,10 +36,9 @@ function OrderRow({ order, highlighted }: { order: Order; highlighted: boolean }
       </TableCell>
       <TableCell>
         <OrderStatusBadge status={order.status} />
-      </TableCell>
-      <TableCell className="text-xs text-muted-foreground">
-        {order.carrier}
-        <div className="font-mono">{order.trackingNumber}</div>
+        <div className="mt-1 text-xs text-muted-foreground">
+          {order.carrier} · <span className="font-mono">{order.trackingNumber}</span>
+        </div>
       </TableCell>
     </TableRow>
   )
@@ -60,13 +61,11 @@ export function OrderHistory({ orders, highlightedOrderId, title = 'Pedidos' }: 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Fecha</TableHead>
                 <TableHead>Pedido</TableHead>
                 <TableHead>Productos</TableHead>
                 <TableHead>Importe</TableHead>
                 <TableHead>Cobros</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Envío</TableHead>
+                <TableHead>Estado y envío</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

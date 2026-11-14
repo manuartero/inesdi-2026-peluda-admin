@@ -37,7 +37,7 @@ function MessageCard({ ticket }: { ticket: InboxTicket }) {
             )}
           </Field>
         </dl>
-        <div className="rounded-md border bg-muted/40 p-4 text-sm leading-relaxed whitespace-pre-wrap">{ticket.message}</div>
+        <div className="rounded-lg border-[1.5px] bg-muted p-4 text-sm leading-relaxed whitespace-pre-wrap">{ticket.message}</div>
       </CardContent>
     </Card>
   )

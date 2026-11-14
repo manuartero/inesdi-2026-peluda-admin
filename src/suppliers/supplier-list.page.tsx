@@ -39,7 +39,7 @@ export function SupplierListPage() {
         description={`${SUPPLIERS.length} proveedores clave, ${digitisedCount} con el contrato digitalizado.`}
       />
       <div className="px-8 py-6">
-        <div className="rounded-lg border">
+        <div className="surface overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
