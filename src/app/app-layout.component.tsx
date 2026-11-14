@@ -13,7 +13,7 @@ const BADGES: Record<string, number> = { '/tickets': UNCLASSIFIED.length, '/revi
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return cn(
     'group flex items-center gap-2.5 rounded-lg border-[1.5px] border-transparent px-2.5 py-2 text-sm font-medium text-sidebar-foreground/75 transition-colors hover:bg-muted hover:text-sidebar-foreground',
-    isActive && 'active border-border-strong bg-muted font-semibold text-sidebar-foreground shadow-[0_2px_0_0_var(--border-strong)]',
+    isActive && 'active border-border-strong bg-muted font-semibold text-sidebar-foreground',
   )
 }
 

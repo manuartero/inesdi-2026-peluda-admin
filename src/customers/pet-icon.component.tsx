@@ -9,7 +9,7 @@ export function PetIcon({ species }: { species: Species }) {
   const Icon = SPECIES_ICONS[species]
   return (
     <span
-      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand-ledge"
+      className="inline-flex size-7 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand-deep"
       title={LABELS.species[species]}
     >
       <Icon className="size-4" strokeWidth={2.25} aria-label={LABELS.species[species]} />
