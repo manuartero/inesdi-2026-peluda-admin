@@ -2,6 +2,7 @@ import { GENERATED } from './generated.data.ts'
 import { HANDWRITTEN } from './handwritten.data.ts'
 import { dataError } from './json-row.reader.ts'
 import type { Order, Pet, Subscription, Supplier } from './model.types.ts'
+import { shiftCustomer, shiftOrder, shiftPet, shiftProduct, shiftReview, shiftSubscription, shiftTicket } from './model.shift.ts'
 
 type Identified = { id: string }
 
@@ -62,13 +63,15 @@ const ownerById = <T extends { id: string; customerId: string }>(items: T[]) =>
   new Map(items.map((item) => [item.id, item.customerId]))
 
 function loadData() {
-  const { plans, products, suppliers, contracts, company } = HANDWRITTEN
-  const customers = [...HANDWRITTEN.customers, ...GENERATED.customers]
-  const pets: Pet[] = [...HANDWRITTEN.pets, ...GENERATED.pets]
-  const subscriptions = [...HANDWRITTEN.subscriptions, ...GENERATED.subscriptions]
-  const orders: Order[] = [...HANDWRITTEN.orders, ...GENERATED.orders]
-  const tickets = [...HANDWRITTEN.tickets, ...GENERATED.tickets]
-  const reviews = [...HANDWRITTEN.reviews, ...GENERATED.reviews]
+  // Contracts keep their dates: they are signed documents, and their expiry is meant to be compared with the real today.
+  const { plans, suppliers, contracts, company } = HANDWRITTEN
+  const products = HANDWRITTEN.products.map(shiftProduct)
+  const customers = [...HANDWRITTEN.customers, ...GENERATED.customers].map(shiftCustomer)
+  const pets: Pet[] = [...HANDWRITTEN.pets, ...GENERATED.pets].map(shiftPet)
+  const subscriptions = [...HANDWRITTEN.subscriptions, ...GENERATED.subscriptions].map(shiftSubscription)
+  const orders: Order[] = [...HANDWRITTEN.orders, ...GENERATED.orders].map(shiftOrder)
+  const tickets = [...HANDWRITTEN.tickets, ...GENERATED.tickets].map(shiftTicket)
+  const reviews = [...HANDWRITTEN.reviews, ...GENERATED.reviews].map(shiftReview)
 
   const planIds = idsOf({ items: plans, what: 'plans' })
   const productIds = idsOf({ items: products, what: 'products' })
@@ -132,5 +135,5 @@ function loadData() {
   return { plans, products, suppliers, contracts, company, customers, pets, subscriptions, orders, tickets, reviews }
 }
 
-// Handwritten case content plus the generated filler, checked as one data set.
+// Handwritten case content plus the generated filler, moved to today's dates and checked as one data set.
 export const DATA = loadData()

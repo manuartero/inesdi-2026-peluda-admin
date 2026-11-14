@@ -8,7 +8,8 @@
 
 - **One source.** Everything lives in `data/` as JSON (contracts as Markdown). The CMS imports it and a script exports the workshop case files.
 - **Handwritten and generated stay apart.** Handwritten content (with the traps) goes in `data/handwritten/`; filler is generated with a fixed seed into `data/generated/` and is never edited by hand.
-- **Fixed reference date:** the CMS "today" is **Tuesday 24/11/2026** (session 1), so the screenshots, the demo and the recording all match.
+- **Moving "today":** the files are written for **Tuesday 24/11/2026** (`DATA_DATE`), and at load time every date moves by the days between that and the real UTC today, so the CMS always looks current. Contracts keep their dates (they are signed documents). Ticket IDs carry their day and move with it (`TCK-20261124-0004` becomes `TCK-20261201-0004` on 1 December).
+- **Dates inside texts are tokens**, so they move too: `{date:-22}` «2 de noviembre», `{month:-54}` «octubre», `{weekday:-4}` «viernes», `{WEEKDAY:0}` «MARTES», `{short:-18}` «6/11» (days from `DATA_DATE`), and `{nextMonth:1}` «diciembre» (months from today, for plans). An unknown token fails `check:data`.
 - **Answer key kept apart.** What the model *should* find (expected category, contract trap…) goes in an `answerKey` field that the CMS never shows and the "Copiar para el prompt" button never copies. It is exported to a separate answer-key file per case.
 - **Made-up personal data:** `@example.com` emails, test phone numbers, no well-known names.
 
@@ -112,7 +113,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | `carrier`, `trackingNumber` | Rutas Levante, `RL-55128830` | |
 | `charges` | `[{ date, amount, status }]` | Two charges = the "charged twice" case. `status`: `charged` · `refunded` · `failed` |
 
-### Ticket (~450: 150 a day, today plus the 2 days before; 30 handwritten + filler)
+### Ticket (451: ~150 a day, today plus the 2 days before; 30 handwritten + filler)
 
 | Field | Example | Note |
 | --- | --- | --- |

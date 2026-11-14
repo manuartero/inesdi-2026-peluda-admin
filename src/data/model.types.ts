@@ -15,8 +15,11 @@ export const CURRENCY_BY_COUNTRY: Record<Country, Currency> = {
   PE: 'PEN',
   AR: 'ARS',
 }
-// The CMS "today" is session 1, so the demo, the screenshots and the recording all match.
-export const REFERENCE_DATE: IsoDate = '2026-11-24'
+// The day the data files are written for: their dates and «hoy» are relative to it.
+// At load time every date moves by the days between DATA_DATE and TODAY (see model.shift.ts), so the CMS always looks current.
+export const DATA_DATE: IsoDate = '2026-11-24'
+// Today's UTC date when the page (or check:data) runs.
+export const TODAY: IsoDate = new Date().toISOString().slice(0, 10)
 
 export const PLAN_IDS = ['basic', 'complete', 'care'] as const
 

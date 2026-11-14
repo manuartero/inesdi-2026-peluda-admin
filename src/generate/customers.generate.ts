@@ -1,11 +1,11 @@
-import { COUNTRIES, CURRENCY_BY_COUNTRY, REFERENCE_DATE } from '../data/model.types.ts'
+import { COUNTRIES, CURRENCY_BY_COUNTRY, DATA_DATE } from '../data/model.types.ts'
 import type { Country, Customer, IsoDate, Pet, Plan, Species, Subscription } from '../data/model.types.ts'
 import { addDays, daysBetween, earliest, latest, nextCycleAfter } from './generate.dates.ts'
 import { POOLS } from './generate.pools.ts'
 import { subscriptionPrice } from './generate.prices.ts'
 import type { Random } from './generate.random.ts'
 
-// ~600 customers split like the dossier's subscribers: 10.000 · 4.000 · 1.800 · 1.500 · 700.
+// ~600 customers split like the dossier's subscribers: 9.812 · 3.947 · 1.836 · 1.429 · 540.
 const CUSTOMER_COUNT: Record<Country, number> = { ES: 333, MX: 132, CO: 60, PE: 51, AR: 24 }
 // Peluda opens in Spain in 2021, Mexico in 2023, Peru in 2024, Colombia in 2025 and Argentina in 2026.
 const LAUNCH_DATE: Record<Country, IsoDate> = { ES: '2021-09-01', MX: '2023-04-01', PE: '2024-03-01', CO: '2025-02-01', AR: '2026-03-01' }
@@ -118,7 +118,7 @@ function generatePet({ random, customer, index, usedNames }: { random: Random; c
     name,
     species,
     breed: breed.name,
-    birthDate: addDays({ date: REFERENCE_DATE, days: -Math.round(ageMonths * 30.4) - random.int({ min: 0, max: 20 }) }),
+    birthDate: addDays({ date: DATA_DATE, days: -Math.round(ageMonths * 30.4) - random.int({ min: 0, max: 20 }) }),
     weightKg: roundWeight(adultKg * growth),
     activity: petActivity({ random, ageMonths }),
     allergies: random.chance(0.12) ? [random.pick(POOLS.allergies)] : [],
@@ -172,7 +172,7 @@ function productIdsFor({ plan, pet, country, ageMonths }: { plan: Plan['id']; pe
 function startDate({ random, customer, pet, index }: { random: Random; customer: Customer; pet: Pet; index: number }) {
   const joined = index === 0 ? customer.signupDate : addDays({ date: customer.signupDate, days: random.int({ min: 30, max: 540 }) })
   const weaned = addDays({ date: pet.birthDate, days: 60 })
-  const latestStart = latest([addDays({ date: REFERENCE_DATE, days: -20 }), customer.signupDate])
+  const latestStart = latest([addDays({ date: DATA_DATE, days: -20 }), customer.signupDate])
   return earliest([latest([joined, weaned]), latestStart])
 }
 
@@ -180,15 +180,15 @@ type Lifecycle = { status: Subscription['status']; cancelDate?: IsoDate; pausedS
 
 // About 10 % cancelled in the last year and 5 % paused; the rest active.
 function lifecycle({ random, start }: { random: Random; start: IsoDate }): Lifecycle {
-  const age = daysBetween({ from: start, to: REFERENCE_DATE })
+  const age = daysBetween({ from: start, to: DATA_DATE })
   const roll = random.next()
   if (age > 90 && roll < 0.1) {
-    const from = latest([addDays({ date: start, days: 56 }), addDays({ date: REFERENCE_DATE, days: -365 })])
-    const span = daysBetween({ from, to: addDays({ date: REFERENCE_DATE, days: -5 }) })
+    const from = latest([addDays({ date: start, days: 56 }), addDays({ date: DATA_DATE, days: -365 })])
+    const span = daysBetween({ from, to: addDays({ date: DATA_DATE, days: -5 }) })
     return { status: 'cancelled', cancelDate: addDays({ date: from, days: random.int({ min: 0, max: span }) }) }
   }
   if (age > 60 && roll < 0.15) {
-    const pausedSince = latest([addDays({ date: REFERENCE_DATE, days: -random.int({ min: 10, max: 90 }) }), addDays({ date: start, days: 30 })])
+    const pausedSince = latest([addDays({ date: DATA_DATE, days: -random.int({ min: 10, max: 90 }) }), addDays({ date: start, days: 30 })])
     return { status: 'paused', pausedSince }
   }
   return { status: 'active' }
@@ -219,7 +219,7 @@ function generateSubscription(input: { random: Random; plans: Plan[]; customer: 
     monthlyPrice: subscriptionPrice({ plan: findPlan({ plans, id: planId }), country, weightKg: pet.weightKg }),
     currency: CURRENCY_BY_COUNTRY[country],
     productIds: productIdsFor({ plan: planId, pet, country, ageMonths }),
-    nextShipment: status === 'active' ? nextCycleAfter({ start, date: REFERENCE_DATE }) : undefined,
+    nextShipment: status === 'active' ? nextCycleAfter({ start, date: DATA_DATE }) : undefined,
   }
   return { subscription, pausedSince }
 }

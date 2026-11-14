@@ -16,4 +16,4 @@ pnpm build
 pnpm lint
 ```
 
-The CMS "today" is fixed at 24/11/2026. Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`), so the deployed site never ships the workshop's solutions.
+The CMS "today" is the real (UTC) today: the data is written for 24/11/2026 and every date moves to today when the page loads (`src/data/model.shift.ts`). Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`), so the deployed site never ships the workshop's solutions.

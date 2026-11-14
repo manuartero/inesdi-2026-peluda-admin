@@ -5,7 +5,7 @@
 A **fake but believable backoffice** for Peluda, the fictional company used in the INESDI workshop *Prompt engineering estratégico* (2026). It is not a product: it is a **prop** for the workshop.
 
 - **Realistic demos:** a ticket, contract or review is copied from "the company system" and pasted into Claude or ChatGPT, the way someone would at work.
-- **Screenshots for the slides:** the before (an inbox with 450 unclassified tickets: today's 150 plus the two days before) and the after.
+- **Screenshots for the slides:** the before (an inbox with 451 unclassified tickets: today's 150 plus the two days before) and the after.
 - **Practice after the session:** students who watch the recording can open it, pick their own tickets or reviews and practise.
 - **Consistency:** the same customer, pet and order show up in the ticket, the review and the customer record.
 
@@ -35,7 +35,7 @@ A **single data source** feeds the CMS **and** the workshop case files (CSV and 
 | --- | --- | --- |
 | Customers and pets | ~600 and ~750 | Generated (fictional names across the five countries) |
 | Subscriptions and orders | ~750 and ~2,600 | Generated |
-| Tickets | ~450 (150 a day: today and a 2-day backlog) | **30 handwritten for the case** (with traps) + generated filler |
+| Tickets | 451 (~150 a day: today and a 2-day backlog) | **30 handwritten for the case** (with traps) + generated filler |
 | Contracts | 3 | **Handwritten**, with traps |
 | Reviews | ~320 | **20 handwritten for the case** + generated filler |
 | Products and plans | ~15 | Handwritten, from the dossier |

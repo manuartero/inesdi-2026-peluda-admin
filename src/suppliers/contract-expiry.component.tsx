@@ -1,5 +1,5 @@
 import { Badge } from '@/components/ui/badge'
-import { daysFromReference, formatDate } from '@/data/model.dates.ts'
+import { daysFromToday, formatDate } from '@/data/model.dates.ts'
 import type { IsoDate } from '@/data/model.types.ts'
 
 const SOON_DAYS = 90
@@ -15,7 +15,7 @@ function daysLeftLabel(days: number) {
 }
 
 export function ContractExpiry({ expiry }: { expiry: IsoDate }) {
-  const days = daysFromReference(expiry)
+  const days = daysFromToday(expiry)
   const isSoon = days >= 0 && days <= SOON_DAYS
   return (
     <span className="inline-flex flex-wrap items-center gap-2">

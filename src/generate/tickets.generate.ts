@@ -1,20 +1,22 @@
 import type { RowReader } from '../data/json-row.reader.ts'
 import { UTC_OFFSET_HOURS } from '../data/model.dates.ts'
 import { parseList } from '../data/model.parse.ts'
-import { COUNTRIES, REFERENCE_DATE, SPECIES, TICKET_CATEGORIES, URGENCIES } from '../data/model.types.ts'
+import { COUNTRIES, DATA_DATE, SPECIES, TICKET_CATEGORIES, URGENCIES } from '../data/model.types.ts'
 import type { Country, IsoDate, Ticket } from '../data/model.types.ts'
 import { personName } from './customers.generate.ts'
 import { fillIn, pickHousehold } from './generate.people.ts'
 import type { Household } from './generate.people.ts'
 import type { Random } from './generate.random.ts'
-import { addDays, withTime } from './generate.dates.ts'
+import { addDays, daysBetween, withTime } from './generate.dates.ts'
 import templatesJson from './tickets.templates.json' with { type: 'json' }
 
-// ~150 tickets a day, split like the subscribers. Today the handwritten 30 are on top of these 120.
-const TODAY_COUNT: Record<Country, number> = { ES: 65, MX: 29, CO: 12, PE: 10, AR: 4 }
-const PREVIOUS_DAY_COUNT: Record<Country, number> = { ES: 81, MX: 36, CO: 15, PE: 13, AR: 5 }
-const DAILY_SIZE = 150
-// With a 26 h first response, the inbox still holds the two days before today: 450 unclassified tickets.
+// ~150 tickets a day, split like the subscribers, by days from DATA_DATE. Today the handwritten 30 are on top of these 121.
+// With a 26 h first response, the inbox still holds the two days before today: 143 + 157 + 151 = 451 unclassified tickets.
+const FILLER_COUNT_BY_DAY: Record<number, Record<Country, number>> = {
+  [-2]: { ES: 77, MX: 34, CO: 14, PE: 13, AR: 5 },
+  [-1]: { ES: 85, MX: 38, CO: 16, PE: 13, AR: 5 },
+  0: { ES: 66, MX: 29, CO: 12, PE: 10, AR: 4 },
+}
 const BACKLOG_DAYS = 2
 const DAY_MINUTES = 24 * 60
 // The last ticket lands at 17:50 Madrid time, ten minutes before session 1 starts.
@@ -117,18 +119,24 @@ function draftTicket(input: { random: Random; households: Household[]; slot: Tic
   }
 }
 
-// Handwritten tickets keep their numbers (0004, 0009…); filler takes the free ones up to 0150, in arrival order.
-// freeTicketNumbers({ date: '2026-11-23', taken }) is TCK-20261123-0001 … TCK-20261123-0150.
-function freeTicketNumbers({ date, taken }: { date: IsoDate; taken: Set<string> }) {
+// Handwritten tickets keep their numbers (0004, 0009…); filler takes the free ones, in arrival order.
+// freeTicketNumbers({ date: '2026-11-23', count: 3, taken }) is TCK-20261123-0001, 0002 and 0003.
+function freeTicketNumbers({ date, count, taken }: { date: IsoDate; count: number; taken: Set<string> }) {
   const day = date.replaceAll('-', '')
-  const numbers = Array.from({ length: DAILY_SIZE }, (_, index) => `TCK-${day}-${String(index + 1).padStart(4, '0')}`)
-  return numbers.filter((id) => !taken.has(id))
+  const ids: string[] = []
+  for (let number = 1; ids.length < count; number++) {
+    const id = `TCK-${day}-${String(number).padStart(4, '0')}`
+    if (!taken.has(id)) {
+      ids.push(id)
+    }
+  }
+  return ids
 }
 
 // The slots of one day: when and from where each ticket arrives. Today's first Spanish one is the 17:50 ticket.
 function daySlots({ random, date }: { random: Random; date: IsoDate }) {
-  const isToday = date === REFERENCE_DATE
-  const counts = isToday ? TODAY_COUNT : PREVIOUS_DAY_COUNT
+  const isToday = date === DATA_DATE
+  const counts = FILLER_COUNT_BY_DAY[daysBetween({ from: DATA_DATE, to: date })]
   const lastArrival = isToday ? LAST_ARRIVAL_MINUTES : DAY_MINUTES
   return COUNTRIES.flatMap((country) =>
     Array.from({ length: counts[country] }, (_, index): TicketSlot => {
@@ -144,19 +152,16 @@ type DayInput = { random: Random; households: Household[]; decks: Record<string,
 function dayTickets({ random, households, decks, date, taken }: DayInput) {
   const drafts = daySlots({ random, date }).map((slot) => draftTicket({ random, households, slot, template: decks[regionOf(slot.country)]() }))
   drafts.sort((a, b) => a.madrid - b.madrid)
-  const ids = freeTicketNumbers({ date, taken })
-  if (ids.length !== drafts.length) {
-    throw new Error(`tickets ${date}: ${drafts.length} filler tickets for ${ids.length} free numbers`)
-  }
+  const ids = freeTicketNumbers({ date, count: drafts.length, taken })
   return drafts.map(({ date: _date, madrid: _madrid, ...ticket }, index): Ticket => ({ id: ids[index], ...ticket }))
 }
 
 // backlogDates() is ['2026-11-22', '2026-11-23', '2026-11-24'].
-const backlogDates = () => Array.from({ length: BACKLOG_DAYS + 1 }, (_, index) => addDays({ date: REFERENCE_DATE, days: index - BACKLOG_DAYS }))
+const backlogDates = () => Array.from({ length: BACKLOG_DAYS + 1 }, (_, index) => addDays({ date: DATA_DATE, days: index - BACKLOG_DAYS }))
 
 /**
- * The filler tickets of the inbox: 420 on top of the 30 handwritten ones, 450 in all.
- * - 150 a day: today (up to 17:50) and the two days before, still unclassified.
+ * The filler tickets of the inbox: 421 on top of the 30 handwritten ones, 451 in all.
+ * - About 150 a day: today (up to 17:50) and the two days before, still unclassified.
  * - Spanish customers write with «vosotros», Latin American ones with «ustedes».
  * - Their answer key carries `handwritten: false` and no trap.
  */

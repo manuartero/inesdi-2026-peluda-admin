@@ -1,7 +1,7 @@
 import type { RowReader } from '../data/json-row.reader.ts'
 import { rowReader } from '../data/json-row.reader.ts'
 import { parseList } from '../data/model.parse.ts'
-import { COUNTRIES, REFERENCE_DATE, SPECIES, STARS } from '../data/model.types.ts'
+import { COUNTRIES, DATA_DATE, SPECIES, STARS } from '../data/model.types.ts'
 import type { Country, Review } from '../data/model.types.ts'
 import { personName } from './customers.generate.ts'
 import { addDays } from './generate.dates.ts'
@@ -98,7 +98,7 @@ function draftReview(input: { random: Random; households: Household[]; country: 
   const known = channel === 'google' ? undefined : pickHousehold({ random, households, country, species: template.species })
   const writer = known?.customer ?? personName({ random, country })
   return {
-    date: addDays({ date: REFERENCE_DATE, days: -random.int({ min: 0, max: DAYS_BACK }) }),
+    date: addDays({ date: DATA_DATE, days: -random.int({ min: 0, max: DAYS_BACK }) }),
     channel,
     country,
     customerId: known?.customer.id,
@@ -125,7 +125,7 @@ function replyFor({ random, draft }: { random: Random; draft: ReviewDraft }) {
 }
 
 function answeredDrafts({ random, drafts }: { random: Random; drafts: ReviewDraft[] }) {
-  const notToday = drafts.filter((draft) => draft.date < REFERENCE_DATE)
+  const notToday = drafts.filter((draft) => draft.date < DATA_DATE)
   const positive = random.shuffle(notToday.filter((draft) => draft.stars >= 4)).slice(0, ANSWERED_POSITIVE)
   const mixed = random.shuffle(notToday.filter((draft) => draft.stars === 3)).slice(0, ANSWERED_MIXED)
   return new Set([...positive, ...mixed])

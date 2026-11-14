@@ -1,4 +1,4 @@
-import { REFERENCE_DATE } from './model.types.ts'
+import { TODAY } from './model.types.ts'
 import type { Country, IsoDate } from './model.types.ts'
 
 // UTC offsets in late November 2026: Spain is on CET; Mexico, Colombia, Peru and Argentina have no daylight saving time.
@@ -30,11 +30,11 @@ export function madridTime({ local, country }: { local: IsoDate; country: Countr
   return madrid.toISOString().slice(0, 19)
 }
 
-export const isOnReferenceDate = (iso: IsoDate) => iso.startsWith(REFERENCE_DATE)
+export const isToday = (iso: IsoDate) => iso.startsWith(TODAY)
 
 function ageInMonths(birthDate: IsoDate) {
   const birth = wallClock(birthDate)
-  const today = wallClock(REFERENCE_DATE)
+  const today = wallClock(TODAY)
   const months = (today.getUTCFullYear() - birth.getUTCFullYear()) * 12 + today.getUTCMonth() - birth.getUTCMonth()
   const monthPending = today.getUTCDate() < birth.getUTCDate()
   return monthPending ? months - 1 : months
@@ -52,14 +52,22 @@ export function formatAge(birthDate: IsoDate) {
 
 const DAY_MS = 24 * HOUR_MS
 
-// daysFromReference('2026-12-31') is 37; a past date is negative.
-export const daysFromReference = (iso: IsoDate) => Math.round((wallClock(iso.slice(0, 10)).getTime() - wallClock(REFERENCE_DATE).getTime()) / DAY_MS)
+// daysBetween({ from: '2026-11-24', to: '2026-12-31' }) is 37; an earlier `to` is negative. Times of day are ignored.
+export const daysBetween = ({ from, to }: { from: IsoDate; to: IsoDate }) =>
+  Math.round((wallClock(to.slice(0, 10)).getTime() - wallClock(from.slice(0, 10)).getTime()) / DAY_MS)
+
+// On 2026-11-24, daysFromToday('2026-12-31') is 37.
+export const daysFromToday = (iso: IsoDate) => daysBetween({ from: TODAY, to: iso })
+
+// addDays({ iso: '2026-11-24T09:15:00', days: 7 }) is '2026-12-01T09:15:00'; a plain date stays a plain date.
+export const addDays = ({ iso, days }: { iso: IsoDate; days: number }) =>
+  new Date(wallClock(iso).getTime() + days * DAY_MS).toISOString().slice(0, iso.length)
 
 const SHORT_DAY = formatter({ weekday: 'short', day: 'numeric' })
 
-// formatDay('2026-11-24T09:15:00') is 'Hoy'; '2026-11-23…' is 'Ayer'; '2026-11-22…' is 'dom 22'.
+// On 2026-11-24, formatDay('2026-11-24T09:15:00') is 'Hoy'; '2026-11-23…' is 'Ayer'; '2026-11-22…' is 'dom 22'.
 export function formatDay(iso: IsoDate) {
-  const days = daysFromReference(iso)
+  const days = daysFromToday(iso)
   if (days === 0) {
     return 'Hoy'
   }

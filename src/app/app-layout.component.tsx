@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router'
 import { cn } from '@/lib/utils'
-import { REFERENCE_DATE } from '@/data/model.types.ts'
+import { TODAY } from '@/data/model.types.ts'
 import { formatLongDate } from '@/data/model.dates.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'
 import { UNCLASSIFIED } from '@/tickets/tickets.data.ts'
@@ -42,7 +42,7 @@ export function AppLayout() {
           ))}
         </nav>
         <div className="mt-auto space-y-1 px-2.5 text-xs text-muted-foreground">
-          <div className="first-letter:uppercase">{formatLongDate(REFERENCE_DATE)}</div>
+          <div className="first-letter:uppercase">{formatLongDate(TODAY)}</div>
           <div>Entorno de formación · datos ficticios</div>
         </div>
       </aside>

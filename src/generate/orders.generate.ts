@@ -1,4 +1,4 @@
-import { REFERENCE_DATE } from '../data/model.types.ts'
+import { DATA_DATE } from '../data/model.types.ts'
 import type { Charge, Country, Customer, IsoDate, Order, OrderLine, Pet, Product, Subscription } from '../data/model.types.ts'
 import { addDays, CYCLE_DAYS, dayOfYear, daysBetween } from './generate.dates.ts'
 import { POOLS } from './generate.pools.ts'
@@ -29,7 +29,7 @@ type OrdersInput = {
 
 function cycleDates({ subscription, stop }: { subscription: Subscription; stop?: IsoDate }) {
   const dates: IsoDate[] = []
-  for (let date = subscription.startDate; date <= REFERENCE_DATE; date = addDays({ date, days: CYCLE_DAYS })) {
+  for (let date = subscription.startDate; date <= DATA_DATE; date = addDays({ date, days: CYCLE_DAYS })) {
     if (stop !== undefined && date >= stop) {
       break
     }
@@ -63,7 +63,7 @@ function orderLines(input: { subscription: Subscription; date: IsoDate; pet: Pet
 
 // Today's orders are being prepared, the last three days' are on their way, older ones are delivered.
 function orderOutcome({ random, date, amount, withIncidents }: { random: Random; date: IsoDate; amount: number; withIncidents: boolean }) {
-  const age = daysBetween({ from: date, to: REFERENCE_DATE })
+  const age = daysBetween({ from: date, to: DATA_DATE })
   const failedFirst = withIncidents && random.chance(0.015)
   const charges: Charge[] = failedFirst
     ? [{ date, amount, status: 'failed' }, { date: addDays({ date, days: 1 }), amount, status: 'charged' }]

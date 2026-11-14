@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DATA } from '@/data/peluda.data.ts'
 import { formatLongDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
-import { COUNTRIES, REFERENCE_DATE } from '@/data/model.types.ts'
+import { COUNTRIES, TODAY } from '@/data/model.types.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'
 import { RECEIVED_TODAY, UNCLASSIFIED } from '@/tickets/tickets.data.ts'
 
@@ -69,7 +69,7 @@ function TodayCard({ to, label, count, detail }: { to: string; label: string; co
 export function HomePage() {
   return (
     <>
-      <PageHeader title="Inicio" description={<span className="first-letter:uppercase">{formatLongDate(REFERENCE_DATE)}</span>} />
+      <PageHeader title="Inicio" description={<span className="first-letter:uppercase">{formatLongDate(TODAY)}</span>} />
       <div className="space-y-8 px-8 py-6">
         <section className="space-y-3">
           <h2 className="text-sm font-medium text-muted-foreground">Hoy</h2>
