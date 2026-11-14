@@ -4,8 +4,15 @@ export type CsvColumn<T> = { header: string; value: (row: T) => string | number 
 const SEPARATOR = ';'
 const BOM = '﻿'
 
-// csvField('Dice "urgente"') is '"Dice ""urgente"""'. Every field is quoted, so line breaks inside a message are safe.
-const csvField = (value: string | number | undefined) => `"${String(value ?? '').replaceAll('"', '""')}"`
+// Excel runs a cell that starts with = + - @ as a formula: «=HYPERLINK(…)» in a message would become a live link.
+const FORMULA_START = /^[=+\-@\t\r]/
+
+// csvField('Dice "urgente"') is '"Dice ""urgente"""'; csvField('=1+1') is `"'=1+1"`. Every field is quoted, so line breaks are safe.
+function csvField(value: string | number | undefined) {
+  const text = String(value ?? '')
+  const safe = FORMULA_START.test(text) ? `'${text}` : text
+  return `"${safe.replaceAll('"', '""')}"`
+}
 
 export function toCsv<T>({ columns, rows }: { columns: CsvColumn<T>[]; rows: T[] }) {
   const header = columns.map((column) => csvField(column.header)).join(SEPARATOR)
