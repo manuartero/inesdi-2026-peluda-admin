@@ -4,7 +4,7 @@
   "monthlyChurnPct": 4.5,
   "ticketsPerDay": 150,
   "firstResponseHours": { "current": 26, "target": 4 },
-  "reviewsPerMonth": 400,
+  "reviewsPerMonth": 320,
   "reviewsAnsweredPct": 30,
   "averageRating": 4.3
 }

@@ -82,7 +82,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | --- | --- | --- |
 | `id`, `customerId` | `PET-01042-1`, `CUS-01042` | |
 | `name` | Lola | |
-| `species`, `breed` | `dog`, Beagle | 72 % dogs · 28 % cats |
+| `species`, `breed` | `dog`, Beagle | 76 % dogs · 24 % cats |
 | `birthDate` | `2019-05-01` | Age is computed |
 | `weightKg` | `12.4` | |
 | `activity` | `medium` | `low` · `medium` · `high` |
