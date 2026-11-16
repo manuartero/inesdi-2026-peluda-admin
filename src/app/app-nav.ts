@@ -11,7 +11,6 @@ function parseNavEntry(raw: unknown) {
     path: row.text('path'),
     label: row.text('label'),
     icon: ICONS[row.oneOf({ key: 'icon', values: ICON_NAMES })],
-    comingSoon: row.optional({ key: 'comingSoon', read: row.flag }) ?? false,
   }
 }
 

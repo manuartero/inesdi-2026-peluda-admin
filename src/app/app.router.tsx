@@ -10,14 +10,7 @@ import { SupplierListPage } from '@/suppliers/supplier-list.page.tsx'
 import { TicketDetailPage } from '@/tickets/ticket-detail.page.tsx'
 import { TicketInboxPage } from '@/tickets/ticket-inbox.page.tsx'
 import { AppLayout } from './app-layout.component.tsx'
-import { APP_NAV } from './app-nav.ts'
-import { ComingSoonPage } from './coming-soon.page.tsx'
 import { NotFoundPage } from './not-found.page.tsx'
-
-const comingSoonRoutes = APP_NAV.filter((entry) => entry.comingSoon).map((entry) => ({
-  path: entry.path,
-  element: <ComingSoonPage title={entry.label} />,
-}))
 
 // Exported apart from the router so the tests can mount them in a memory router.
 export const APP_ROUTES = [
@@ -34,7 +27,6 @@ export const APP_ROUTES = [
       { path: '/reviews', element: <ReviewListPage /> },
       { path: '/reviews/:reviewId', element: <ReviewDetailPage /> },
       { path: '/brand', element: <BrandPage /> },
-      ...comingSoonRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },

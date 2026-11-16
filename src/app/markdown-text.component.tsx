@@ -105,54 +105,41 @@ function Table({ header, rows }: { header: string[]; rows: string[][] }) {
   )
 }
 
+// The page's h1 is the document title, so a document's `#` renders one level down.
+const TEXT_BLOCKS = {
+  h1: { Tag: 'h2', className: 'text-lg font-semibold tracking-tight' },
+  h2: { Tag: 'h3', className: 'pt-4 text-base font-semibold' },
+  h3: { Tag: 'h4', className: 'pt-2 font-semibold' },
+  paragraph: { Tag: 'p', className: undefined },
+  quote: { Tag: 'blockquote', className: 'border-l-2 pl-4 text-muted-foreground' },
+} as const
+
+const LIST_BLOCKS = {
+  list: { Tag: 'ul', className: 'list-disc space-y-1 pl-5' },
+  numbered: { Tag: 'ol', className: 'list-decimal space-y-1 pl-5' },
+} as const
+
 function MarkdownBlock({ block }: { block: Block }) {
+  if (block.kind === 'table') {
+    return <Table header={block.header} rows={block.rows} />
+  }
+  if ('items' in block) {
+    const { Tag, className } = LIST_BLOCKS[block.kind]
+    return (
+      <Tag className={className}>
+        {block.items.map((item) => (
+          <li key={item}>
+            <Inline text={item} />
+          </li>
+        ))}
+      </Tag>
+    )
+  }
+  const { Tag, className } = TEXT_BLOCKS[block.kind]
   return (
-    <>
-      {block.kind === 'h1' && (
-        <h2 className="text-lg font-semibold tracking-tight">
-          <Inline text={block.text} />
-        </h2>
-      )}
-      {block.kind === 'h2' && (
-        <h3 className="pt-4 text-base font-semibold">
-          <Inline text={block.text} />
-        </h3>
-      )}
-      {block.kind === 'h3' && (
-        <h4 className="pt-2 font-semibold">
-          <Inline text={block.text} />
-        </h4>
-      )}
-      {block.kind === 'paragraph' && (
-        <p>
-          <Inline text={block.text} />
-        </p>
-      )}
-      {block.kind === 'quote' && (
-        <blockquote className="border-l-2 pl-4 text-muted-foreground">
-          <Inline text={block.text} />
-        </blockquote>
-      )}
-      {block.kind === 'list' && (
-        <ul className="list-disc space-y-1 pl-5">
-          {block.items.map((item) => (
-            <li key={item}>
-              <Inline text={item} />
-            </li>
-          ))}
-        </ul>
-      )}
-      {block.kind === 'numbered' && (
-        <ol className="list-decimal space-y-1 pl-5">
-          {block.items.map((item) => (
-            <li key={item}>
-              <Inline text={item} />
-            </li>
-          ))}
-        </ol>
-      )}
-      {block.kind === 'table' && <Table header={block.header} rows={block.rows} />}
-    </>
+    <Tag className={className}>
+      <Inline text={block.text} />
+    </Tag>
   )
 }
 
