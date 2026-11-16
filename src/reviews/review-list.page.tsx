@@ -54,7 +54,7 @@ function ReviewRow({ review }: { review: ShownReview }) {
 }
 
 export function ReviewListPage() {
-  const { searchParams, setParam } = useListParams()
+  const { searchParams, setParam } = useListParams<keyof Filters>()
   const filters = {
     country: countryFromParam(searchParams.get('country')),
     status: statusFromParam(searchParams.get('status')),

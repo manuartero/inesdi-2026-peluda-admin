@@ -64,7 +64,7 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
 }
 
 export function TicketInboxPage() {
-  const { searchParams, setParam } = useListParams()
+  const { searchParams, setParam } = useListParams<keyof Filters>()
   const filters = {
     country: countryFromParam(searchParams.get('country')),
     age: ageFromParam(searchParams.get('age')),

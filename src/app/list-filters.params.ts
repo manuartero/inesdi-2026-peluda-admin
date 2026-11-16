@@ -6,9 +6,9 @@ import { COUNTRIES } from '@/data/model.types.ts'
 export const countryFromParam = (param: string | null) => COUNTRIES.find((country) => country === param)
 
 // setParam({ key: 'age', value: 0 }) keeps `age=0`; an undefined or empty value removes the key.
-export function useListParams() {
+export function useListParams<Key extends string>() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const setParam = ({ key, value }: { key: string; value: string | number | undefined }) => {
+  const setParam = ({ key, value }: { key: Key; value: string | number | undefined }) => {
     const next = new URLSearchParams(searchParams)
     if (value === undefined || value === '') {
       next.delete(key)

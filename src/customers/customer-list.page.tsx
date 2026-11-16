@@ -74,7 +74,7 @@ function CustomerRow({ customer }: { customer: Customer }) {
 }
 
 export function CustomerListPage() {
-  const { searchParams, setParam } = useListParams()
+  const { searchParams, setParam } = useListParams<'country' | 'q'>()
   const country = countryFromParam(searchParams.get('country'))
   const rawQuery = searchParams.get('q') ?? ''
   const query = normalized(rawQuery)
