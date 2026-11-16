@@ -23,7 +23,7 @@ Tickets, customers, contracts and reviews to practise prompt engineering on.
 ## What this is
 
 > [!WARNING]
-> **Peluda is fictional.** Its company, customers, contracts, tickets and reviews were invented for a classroom.
+> **Peluda is fictional.** The company, its customers, contracts, tickets and reviews were invented for a classroom.
 
 Teaching material for the *Prompt engineering estratégico* workshop of INESDI's **Máster de FP en Inteligencia Artificial Aplicada a la Empresa** (2026). Students copy a ticket, a contract or a review with **«Copiar para el prompt»**, paste it into a chat assistant and practise the prompt that handles it.
 
