@@ -32,8 +32,6 @@ function readCarrier(row: RowReader) {
   return { name: row.text('name'), trackingPrefix: row.text('trackingPrefix') }
 }
 
-export type Breed = ReturnType<typeof readBreed>
-
 function readPools() {
   const row = rowReader({ raw: poolsJson, where: 'generate.pools.json' })
   const names = row.child('names')

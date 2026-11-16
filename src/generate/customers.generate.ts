@@ -2,6 +2,7 @@ import { COUNTRIES, CURRENCY_BY_COUNTRY } from '../data/model.types.ts'
 import type { Country, Customer, Pet, Plan, Species, Subscription } from '../data/model.types.ts'
 import { dayOf, nextCycleAfter, relativeDay } from './generate.dates.ts'
 import type { Day } from './generate.dates.ts'
+import { personName } from './generate.people.ts'
 import { POOLS } from './generate.pools.ts'
 import { subscriptionPrice } from './generate.prices.ts'
 import type { Random } from './generate.random.ts'
@@ -42,15 +43,6 @@ function phoneFor({ country, number }: { country: Country; number: string }) {
 function signupDay({ random, country }: { random: Random; country: Country }) {
   const span = LAST_SIGNUP - LAUNCH_DAY[country]
   return LAUNCH_DAY[country] + Math.floor(span * random.next() ** 0.6)
-}
-
-export function personName({ random, country }: { random: Random; country: Country }) {
-  const names = POOLS.names[country]
-  const firstName = random.pick(random.chance(0.5) ? names.female : names.male)
-  const firstSurname = random.pick(names.surnames)
-  const twoSurnames = country !== 'AR' || random.chance(0.3)
-  const lastName = twoSurnames ? `${firstSurname} ${random.pick(names.surnames)}` : firstSurname
-  return { firstName, lastName }
 }
 
 function uniqueEmail({ firstName, lastName, taken }: { firstName: string; lastName: string; taken: Set<string> }) {

@@ -1,4 +1,5 @@
 import type { Country, Customer, Pet, Species, Subscription } from '../data/model.types.ts'
+import { POOLS } from './generate.pools.ts'
 import type { Random } from './generate.random.ts'
 
 export type Household = { customer: Customer; pets: Pet[] }
@@ -25,4 +26,26 @@ export function pickHousehold(input: { random: Random; households: Household[]; 
 // fillIn({ text: 'Hola, {pet}', values: { pet: 'Lola' } }) is 'Hola, Lola'.
 export function fillIn({ text, values }: { text: string; values: Record<string, string> }) {
   return text.replace(/\{(\w+)\}/g, (placeholder, key: string) => values[key] ?? placeholder)
+}
+
+export function personName({ random, country }: { random: Random; country: Country }) {
+  const names = POOLS.names[country]
+  const firstName = random.pick(random.chance(0.5) ? names.female : names.male)
+  const firstSurname = random.pick(names.surnames)
+  const twoSurnames = country !== 'AR' || random.chance(0.3)
+  const lastName = twoSurnames ? `${firstSurname} ${random.pick(names.surnames)}` : firstSurname
+  return { firstName, lastName }
+}
+
+// freeIds({ first: 1001, count: 3, taken, format: (n) => `TCK-${n}` }) is TCK-1001, TCK-1002 and TCK-1003, skipping any ID in `taken`.
+export function freeIds(input: { first: number; count: number; taken: Set<string>; format: (number: number) => string }) {
+  const { first, count, taken, format } = input
+  const ids: string[] = []
+  for (let number = first; ids.length < count; number++) {
+    const id = format(number)
+    if (!taken.has(id)) {
+      ids.push(id)
+    }
+  }
+  return ids
 }

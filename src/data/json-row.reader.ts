@@ -15,6 +15,10 @@ export function dataError(message: string) {
   return error
 }
 
+export function isDataError(error: unknown) {
+  return error instanceof Error && error.name === 'DataError'
+}
+
 function isRow(value: unknown): value is Row {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
@@ -80,7 +84,7 @@ export function rowReader({ raw, where }: { raw: unknown; where: string }) {
     return value
   }
 
-  const oneOf = <T extends string>({ key, values }: { key: string; values: readonly T[] }) => {
+  const oneOf = <T extends string | number>({ key, values }: { key: string; values: readonly T[] }) => {
     const value = raw[key]
     const match = values.find((candidate) => candidate === value)
     if (match === undefined) {

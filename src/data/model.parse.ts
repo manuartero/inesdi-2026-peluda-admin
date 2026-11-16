@@ -1,4 +1,4 @@
-import { asList, dataError, rowReader } from './json-row.reader.ts'
+import { asList, rowReader } from './json-row.reader.ts'
 import {
   CHARGE_STATUSES,
   CONTRACT_TRAP_KINDS,
@@ -180,15 +180,6 @@ export const parseTicketAnswerKey: Parse<TicketAnswerKey> = (ticketRow) => {
   }
 }
 
-function readStars(row: RowReader) {
-  const value = row.number('stars')
-  const stars = STARS.find((candidate) => candidate === value)
-  if (stars === undefined) {
-    throw dataError(`${row.text('id')} › stars: expected 1 to 5, got ${value}`)
-  }
-  return stars
-}
-
 export const parseReview: Parse<WithoutAnswerKey<Review>> = (row) => ({
   id: row.text('id'),
   date: row.day('date'),
@@ -196,7 +187,7 @@ export const parseReview: Parse<WithoutAnswerKey<Review>> = (row) => ({
   country: row.oneOf({ key: 'country', values: COUNTRIES }),
   customerId: row.optional({ key: 'customerId', read: row.text }),
   author: row.text('author'),
-  stars: readStars(row),
+  stars: row.oneOf({ key: 'stars', values: STARS }),
   title: row.optional({ key: 'title', read: row.text }),
   text: row.text('text'),
   status: row.oneOf({ key: 'status', values: REVIEW_STATUSES }),

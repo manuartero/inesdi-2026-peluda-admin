@@ -1,9 +1,8 @@
 import type { RowReader } from '../data/json-row.reader.ts'
 import { parseList } from '../data/model.parse.ts'
-import { COUNTRIES, SPECIES, TICKET_CATEGORIES, URGENCIES } from '../data/model.types.ts'
+import { COUNTRIES, DAY_MINUTES, SPECIES, TICKET_CATEGORIES, URGENCIES } from '../data/model.types.ts'
 import type { Country, Ticket } from '../data/model.types.ts'
-import { personName } from './customers.generate.ts'
-import { fillIn, pickHousehold } from './generate.people.ts'
+import { fillIn, freeIds, personName, pickHousehold } from './generate.people.ts'
 import type { Household } from './generate.people.ts'
 import type { Random } from './generate.random.ts'
 import type { Day } from './generate.dates.ts'
@@ -17,7 +16,6 @@ const FILLER_COUNT_BY_DAY: Record<number, Record<Country, number>> = {
   0: { ES: 66, MX: 29, CO: 12, PE: 10, AR: 4 },
 }
 const BACKLOG_DAYS = [-2, -1, 0]
-const DAY_MINUTES = 24 * 60
 // Arrival times are laid out on a Madrid clock where «now» is 18:00, so the last ticket landed ten minutes ago.
 const NOW_MINUTES = 18 * 60
 const LAST_ARRIVAL_MINUTES = 17 * 60 + 50
@@ -124,17 +122,9 @@ function draftTicket(input: { random: Random; households: Household[]; slot: Tic
 
 // IDs never carry a date, so a ticket number in a slide or a demo stays valid: today's are TCK-0001 on, yesterday's TCK-1001 on,
 // the day before's TCK-2001 on. Handwritten tickets keep their numbers (0004, 0009…); filler takes the free ones, in arrival order.
-// freeTicketNumbers({ day: -1, count: 3, taken }) is TCK-1001, TCK-1002 and TCK-1003.
-function freeTicketNumbers({ day, count, taken }: { day: Day; count: number; taken: Set<string> }) {
-  const ids: string[] = []
-  for (let number = 1; ids.length < count; number++) {
-    const id = `TCK-${String(-day * 1000 + number).padStart(4, '0')}`
-    if (!taken.has(id)) {
-      ids.push(id)
-    }
-  }
-  return ids
-}
+// ticketNumbers({ day: -1, count: 3, taken }) is TCK-1001, TCK-1002 and TCK-1003.
+const ticketNumbers = ({ day, count, taken }: { day: Day; count: number; taken: Set<string> }) =>
+  freeIds({ first: -day * 1000 + 1, count, taken, format: (number) => `TCK-${String(number).padStart(4, '0')}` })
 
 // The slots of one day: when and from where each ticket arrives. Today's first Spanish one is the 17:50 ticket.
 function daySlots({ random, day }: { random: Random; day: Day }) {
@@ -155,7 +145,7 @@ type DayInput = { random: Random; households: Household[]; decks: Record<string,
 function dayTickets({ random, households, decks, day, taken }: DayInput) {
   const drafts = daySlots({ random, day }).map((slot) => draftTicket({ random, households, slot, template: decks[regionOf(slot.country)]() }))
   drafts.sort((a, b) => a.madrid - b.madrid)
-  const ids = freeTicketNumbers({ day, count: drafts.length, taken })
+  const ids = ticketNumbers({ day, count: drafts.length, taken })
   return drafts.map(({ day: _day, madrid: _madrid, ...ticket }, index): Ticket => ({ id: ids[index], ...ticket }))
 }
 

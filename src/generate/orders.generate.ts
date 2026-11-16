@@ -2,7 +2,7 @@ import type { Charge, Country, Customer, Order, OrderLine, Pet, Product, Subscri
 import { CYCLE_DAYS, dayOf, relativeDay } from './generate.dates.ts'
 import type { Day } from './generate.dates.ts'
 import { POOLS } from './generate.pools.ts'
-import { priceOn } from './generate.prices.ts'
+import { LARGE_PET_KG, priceOn } from './generate.prices.ts'
 import type { Random } from './generate.random.ts'
 
 // The CMS shows the last ~4 months of orders, not years of them.
@@ -13,7 +13,6 @@ const HANDWRITTEN_WINDOW_DAYS = 3
 // 328 keeps the numbers in the range of the handwritten orders (ORD-2026-306214 is from 3 weeks ago).
 const ORDERS_PER_DAY = 640
 const ORDER_NUMBER_DAY_BASE = 328
-const LARGE_PET_KG = 30
 
 type OrderDraft = { day: Day; order: Omit<Order, 'id'> }
 

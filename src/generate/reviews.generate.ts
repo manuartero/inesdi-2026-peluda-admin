@@ -3,9 +3,8 @@ import { rowReader } from '../data/json-row.reader.ts'
 import { parseList } from '../data/model.parse.ts'
 import { COUNTRIES, SPECIES, STARS } from '../data/model.types.ts'
 import type { Country, Review } from '../data/model.types.ts'
-import { personName } from './customers.generate.ts'
 import { relativeDay } from './generate.dates.ts'
-import { fillIn, pickHousehold } from './generate.people.ts'
+import { fillIn, freeIds, personName, pickHousehold } from './generate.people.ts'
 import type { Household } from './generate.people.ts'
 import type { Random } from './generate.random.ts'
 import templatesJson from './reviews.templates.json' with { type: 'json' }
@@ -30,18 +29,9 @@ const REGIONS_BY_COUNTRY: Record<Country, Region[]> = {
   AR: ['ar', 'latam', 'any'],
 }
 
-function readStars(row: RowReader) {
-  const value = row.number('stars')
-  const stars = STARS.find((candidate) => candidate === value)
-  if (stars === undefined) {
-    throw new Error(`reviews.templates.json › stars: expected 1 to 5, got ${value}`)
-  }
-  return stars
-}
-
 function readTemplate(row: RowReader) {
   return {
-    stars: readStars(row),
+    stars: row.oneOf({ key: 'stars', values: STARS }),
     region: row.oneOf({ key: 'region', values: REGIONS }),
     species: row.optional({ key: 'species', read: (key) => row.oneOf({ key, values: SPECIES }) }),
     title: row.text('title'),
@@ -133,18 +123,6 @@ function answeredDrafts({ random, drafts }: { random: Random; drafts: ReviewDraf
   return new Set([...positive, ...mixed])
 }
 
-// freeReviewIds({ count: 3, taken }) is REV-2026-0100, 0101, 0102, skipping any number in `taken`.
-function freeReviewIds({ count, taken }: { count: number; taken: Set<string> }) {
-  const ids: string[] = []
-  for (let number = FIRST_REVIEW_NUMBER; ids.length < count; number++) {
-    const id = `REV-2026-${String(number).padStart(4, '0')}`
-    if (!taken.has(id)) {
-      ids.push(id)
-    }
-  }
-  return ids
-}
-
 /**
  * ~300 filler reviews from the last month, on top of the 20 handwritten ones.
  * - Stars are dealt from fixed counts, so the average never drifts with the seed.
@@ -160,7 +138,12 @@ export function generateReviews({ random, households, handwrittenIds }: { random
   })
   drafts.sort((a, b) => a.day - b.day)
   const answered = answeredDrafts({ random, drafts })
-  const ids = freeReviewIds({ count: drafts.length, taken: new Set(handwrittenIds) })
+  const ids = freeIds({
+    first: FIRST_REVIEW_NUMBER,
+    count: drafts.length,
+    taken: new Set(handwrittenIds),
+    format: (number) => `REV-2026-${String(number).padStart(4, '0')}`,
+  })
 
   return drafts.map(({ day: _day, firstName: _firstName, pet: _pet, ...draft }, index): Review => {
     const isAnswered = answered.has(drafts[index])
