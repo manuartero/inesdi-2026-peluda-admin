@@ -1,23 +1,22 @@
-import { Link, useNavigate, useSearchParams } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
+import { CountryFilter, FilterGroup } from '@/app/list-filters.component.tsx'
+import { countryFromParam, useListParams } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
-import { COUNTRIES, REVIEW_STATUSES, TODAY } from '@/data/model.types.ts'
+import { REVIEW_STATUSES, TODAY } from '@/data/model.types.ts'
+import type { Country } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
 import { reviewsCsv } from './reviews.csv.ts'
 import { ReviewStars } from './review-stars.component.tsx'
 import { REVIEWS, UNANSWERED } from './reviews.data.ts'
 import type { ShownReview } from './reviews.data.ts'
 
-const ALL = 'all'
+type Filters = { country?: Country; status?: ShownReview['status'] }
 
-type Filters = { country?: string; status?: string }
-
-const countryFromParam = (param: string | null) => COUNTRIES.find((country) => country === param)
 const statusFromParam = (param: string | null) => REVIEW_STATUSES.find((status) => status === param)
 
 const preview = (text: string) => text.replace(/\s+/g, ' ').trim()
@@ -55,22 +54,12 @@ function ReviewRow({ review }: { review: ShownReview }) {
 }
 
 export function ReviewListPage() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { searchParams, setParam } = useListParams()
   const filters = {
     country: countryFromParam(searchParams.get('country')),
     status: statusFromParam(searchParams.get('status')),
   }
   const reviews = REVIEWS.filter((review) => matches({ review, filters }))
-
-  const setFilter = ({ key, value }: { key: keyof Filters; value: string | undefined }) => {
-    const next = new URLSearchParams(searchParams)
-    if (value) {
-      next.set(key, value)
-    } else {
-      next.delete(key)
-    }
-    setSearchParams(next, { replace: true })
-  }
 
   const countOf = (filter: Filters) => REVIEWS.filter((review) => matches({ review, filters: { ...filters, ...filter } })).length
 
@@ -89,34 +78,17 @@ export function ReviewListPage() {
       />
       <div className="space-y-4 px-8 py-6">
         <div className="flex flex-wrap gap-3">
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={filters.status ?? ALL}
-            onValueChange={(value) => setFilter({ key: 'status', value: statusFromParam(value) })}
-          >
-            <ToggleGroupItem value={ALL}>Todas · {countOf({ status: undefined })}</ToggleGroupItem>
-            {REVIEW_STATUSES.map((status) => (
-              <ToggleGroupItem key={status} value={status}>
-                {LABELS.reviewStatusPlural[status]} · {countOf({ status })}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={filters.country ?? ALL}
-            onValueChange={(value) => setFilter({ key: 'country', value: countryFromParam(value) })}
-          >
-            <ToggleGroupItem value={ALL}>Todos los países</ToggleGroupItem>
-            {COUNTRIES.map((code) => (
-              <ToggleGroupItem key={code} value={code}>
-                {countryWithFlag(code)} · {countOf({ country: code })}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+          <FilterGroup
+            value={filters.status}
+            allLabel={`Todas · ${countOf({ status: undefined })}`}
+            options={REVIEW_STATUSES.map((status) => ({ value: status, label: `${LABELS.reviewStatusPlural[status]} · ${countOf({ status })}` }))}
+            onChange={(value) => setParam({ key: 'status', value: statusFromParam(value) })}
+          />
+          <CountryFilter
+            country={filters.country}
+            countOf={(country) => countOf({ country })}
+            onChange={(country) => setParam({ key: 'country', value: country })}
+          />
         </div>
         <div className="surface overflow-hidden">
           <Table>

@@ -12,7 +12,7 @@ import { findCustomer, ordersOf, petsOf, subscriptionsOf } from '@/customers/cus
 import { OrderHistory } from '@/customers/order-history.component.tsx'
 import { PetCard } from '@/customers/pet-card.component.tsx'
 import { SubscriptionCard } from '@/customers/subscription-card.component.tsx'
-import { formatAgo, formatDate, formatTime } from '@/data/model.dates.ts'
+import { formatAgo, formatDateTime, formatTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { ticketPromptText } from './ticket.prompt.ts'
 import { INBOX, findTicket } from './tickets.data.ts'
@@ -34,7 +34,7 @@ function MessageCard({ ticket }: { ticket: InboxTicket }) {
             {formatAgo(ticket.minutesAgo)}
             <span className="text-muted-foreground">
               {' '}
-              · {formatDate(ticket.receivedAt)} {formatTime(ticket.receivedAt)}
+              · {formatDateTime(ticket.receivedAt)}
               {isLocalTimeDifferent && ` hora local; ${formatTime(ticket.receivedAtMadrid)} en Madrid`}
             </span>
           </Field>

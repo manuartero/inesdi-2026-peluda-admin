@@ -8,7 +8,7 @@ import { formatLongDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
 import { COUNTRIES, TODAY } from '@/data/model.types.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'
-import { LAST_24_HOURS, UNCLASSIFIED } from '@/tickets/tickets.data.ts'
+import { INBOX, LAST_24_HOURS } from '@/tickets/tickets.data.ts'
 
 const { company } = DATA
 
@@ -77,7 +77,7 @@ export function HomePage() {
             <TodayCard
               to="/tickets"
               label="Tickets sin clasificar"
-              count={UNCLASSIFIED.length}
+              count={INBOX.length}
               detail={`${LAST_24_HOURS.length} en las últimas 24 horas; el resto, de los dos días anteriores. Media diaria: unos ${formatNumber(company.ticketsPerDay)}.`}
             />
             <TodayCard

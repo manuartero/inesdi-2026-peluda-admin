@@ -3,12 +3,12 @@ import { cn } from 'cn'
 import { TODAY } from '@/data/model.types.ts'
 import { formatLongDate } from '@/data/model.dates.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'
-import { UNCLASSIFIED } from '@/tickets/tickets.data.ts'
+import { INBOX } from '@/tickets/tickets.data.ts'
 import { APP_NAV } from './app-nav.ts'
 import type { NavEntry } from './app-nav.ts'
 import { PeludaLogo } from './peluda-logo.component.tsx'
 
-const BADGES: Record<string, number> = { '/tickets': UNCLASSIFIED.length, '/reviews': UNANSWERED.length }
+const BADGES: Record<string, number> = { '/tickets': INBOX.length, '/reviews': UNANSWERED.length }
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return cn(

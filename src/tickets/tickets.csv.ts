@@ -1,16 +1,14 @@
-import { formatDate, formatTime } from '@/data/model.dates.ts'
+import { formatDateTime } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import { toCsv } from '@/lib/csv.ts'
 import type { CsvColumn } from '@/lib/csv.ts'
 import type { InboxTicket } from './tickets.data.ts'
 
-const dateTime = (iso: string) => `${formatDate(iso)} ${formatTime(iso)}`
-
 // What a team member gets from «Exportar CSV»: the ticket as the inbox shows it. No answer key; no email or phone, as in «Copiar para el prompt».
 const COLUMNS: CsvColumn<InboxTicket>[] = [
   { header: 'ID', value: (ticket) => ticket.id },
-  { header: 'Recibido (hora de Madrid)', value: (ticket) => dateTime(ticket.receivedAtMadrid) },
-  { header: 'Recibido (hora local)', value: (ticket) => dateTime(ticket.receivedAt) },
+  { header: 'Recibido (hora de Madrid)', value: (ticket) => formatDateTime(ticket.receivedAtMadrid) },
+  { header: 'Recibido (hora local)', value: (ticket) => formatDateTime(ticket.receivedAt) },
   { header: 'País', value: (ticket) => LABELS.country[ticket.country] },
   { header: 'Canal', value: (ticket) => LABELS.ticketChannel[ticket.channel] },
   { header: 'Remitente', value: (ticket) => ticket.sender },

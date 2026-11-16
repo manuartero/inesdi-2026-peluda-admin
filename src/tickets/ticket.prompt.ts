@@ -1,6 +1,6 @@
 import { findPlan, productName } from '@/customers/customers.data.ts'
 import { chargeText, linesText } from '@/customers/order.text.ts'
-import { formatAge, formatDate, formatTime } from '@/data/model.dates.ts'
+import { formatAge, formatDate, formatDateTime } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import { formatMoney } from '@/data/model.money.ts'
 import type { Customer, Order, Pet, Subscription } from '@/data/model.types.ts'
@@ -99,7 +99,7 @@ export function ticketPromptText({ ticket, history }: { ticket: InboxTicket; his
   const { customer, pets } = history
   return [
     `Ticket ${ticket.id}`,
-    `Recibido: ${formatDate(ticket.receivedAt)} ${formatTime(ticket.receivedAt)} (hora local)`,
+    `Recibido: ${formatDateTime(ticket.receivedAt)} (hora local)`,
     `País: ${LABELS.country[ticket.country]}`,
     `Canal: ${LABELS.ticketChannel[ticket.channel]}`,
     `Remitente: ${ticket.sender}`,

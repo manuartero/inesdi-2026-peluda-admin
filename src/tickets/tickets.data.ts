@@ -7,9 +7,6 @@ const byArrival = (a: InboxTicket, b: InboxTicket) => b.minutesAgo - a.minutesAg
 
 export const INBOX = [...DATA.tickets].sort(byArrival)
 
-// The whole inbox is unclassified: the last 24 hours plus the backlog of the two days before.
-export const UNCLASSIFIED = INBOX.filter((ticket) => ticket.status === 'unclassified')
-
 // ageInDays(ticket) is 0 for a ticket from the last 24 hours, 1 for one from 24 to 48 hours ago…
 export const ageInDays = (ticket: InboxTicket) => Math.floor(ticket.minutesAgo / DAY_MINUTES)
 

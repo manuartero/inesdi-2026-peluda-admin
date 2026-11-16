@@ -16,6 +16,8 @@ const LONG_DATE = utcFormatter({ weekday: 'long', day: 'numeric', month: 'long',
 
 export const formatDate = (iso: IsoDate) => DATE.format(wallClock(iso))
 export const formatTime = (iso: IsoDate) => TIME.format(wallClock(iso))
+// formatDateTime('2026-11-16T09:15:00') is '16/11/2026 09:15'.
+export const formatDateTime = (iso: IsoDate) => `${formatDate(iso)} ${formatTime(iso)}`
 export const formatLongDate = (iso: IsoDate) => LONG_DATE.format(wallClock(iso))
 
 function ageInMonths(birthDate: IsoDate) {

@@ -1,24 +1,21 @@
 import { Search } from 'lucide-react'
 import type { ChangeEvent } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
+import { CountryFilter } from '@/app/list-filters.component.tsx'
+import { countryFromParam, useListParams } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { countryWithFlag } from '@/data/model.labels.ts'
-import { COUNTRIES, TODAY } from '@/data/model.types.ts'
+import { TODAY } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
 import type { Country, Customer } from '@/data/model.types.ts'
 import { customersCsv } from './customers.csv.ts'
 import { CUSTOMERS, petsOf, subscriptionsOf } from './customers.data.ts'
 import { PetName } from './pet-icon.component.tsx'
 import { SubscriptionStatusBadge } from './subscription-card.component.tsx'
-
-const ALL = 'all'
-
-const countryFromParam = (param: string | null) => COUNTRIES.find((country) => country === param)
 
 // normalized('  Lucía NAVARRO ') is 'lucia navarro', so «lucia» finds «Lucía».
 const normalized = (text: string) =>
@@ -77,23 +74,13 @@ function CustomerRow({ customer }: { customer: Customer }) {
 }
 
 export function CustomerListPage() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { searchParams, setParam } = useListParams()
   const country = countryFromParam(searchParams.get('country'))
   const rawQuery = searchParams.get('q') ?? ''
   const query = normalized(rawQuery)
   const customers = CUSTOMERS.filter((customer) => matches({ customer, query, country }))
 
-  const setParam = ({ key, value }: { key: 'country' | 'q'; value: string | undefined }) => {
-    const next = new URLSearchParams(searchParams)
-    if (value) {
-      next.set(key, value)
-    } else {
-      next.delete(key)
-    }
-    setSearchParams(next, { replace: true })
-  }
-
-  const countIn = (code: Country) => CUSTOMERS.filter((customer) => matches({ customer, query, country: code })).length
+  const countIn = (code: Country | undefined) => CUSTOMERS.filter((customer) => matches({ customer, query, country: code })).length
   const search = (event: ChangeEvent<HTMLInputElement>) => setParam({ key: 'q', value: event.target.value })
 
   return (
@@ -122,20 +109,7 @@ export function CustomerListPage() {
               className="pl-8"
             />
           </div>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={country ?? ALL}
-            onValueChange={(value) => setParam({ key: 'country', value: countryFromParam(value) })}
-          >
-            <ToggleGroupItem value={ALL}>Todos los países</ToggleGroupItem>
-            {COUNTRIES.map((code) => (
-              <ToggleGroupItem key={code} value={code}>
-                {countryWithFlag(code)} · {countIn(code)}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+          <CountryFilter country={country} countOf={countIn} onChange={(code) => setParam({ key: 'country', value: code })} />
         </div>
         <div className="surface overflow-hidden">
           <Table>

@@ -1,23 +1,20 @@
-import { Link, useNavigate, useSearchParams } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
+import { CountryFilter, FilterGroup } from '@/app/list-filters.component.tsx'
+import { countryFromParam, useListParams } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { formatAgo, formatDate, formatTime } from '@/data/model.dates.ts'
+import { formatAgo, formatDateTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
-import { COUNTRIES } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
 import type { Country } from '@/data/model.types.ts'
 import { ticketsCsv } from './tickets.csv.ts'
 import { ageInDays, INBOX, INBOX_AGES, LAST_24_HOURS } from './tickets.data.ts'
 import type { InboxTicket } from './tickets.data.ts'
 
-const ALL = 'all'
-
 type Filters = { country?: Country; age?: number }
 
-const countryFromParam = (param: string | null) => COUNTRIES.find((country) => country === param)
 const ageFromParam = (param: string | null) => INBOX_AGES.find((age) => String(age) === param)
 
 // ageLabel(0) is 'Últimas 24 h'; ageLabel(2) is 'Hace 2 días'.
@@ -46,7 +43,7 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
   return (
     <TableRow className="cursor-pointer" onClick={() => navigate(`/tickets/${ticket.id}`)}>
       <TableCell className="tabular-nums whitespace-nowrap text-muted-foreground">
-        <time dateTime={ticket.receivedAtMadrid} title={`${formatDate(ticket.receivedAtMadrid)} ${formatTime(ticket.receivedAtMadrid)} en Madrid`}>
+        <time dateTime={ticket.receivedAtMadrid} title={`${formatDateTime(ticket.receivedAtMadrid)} en Madrid`}>
           {formatAgo(ticket.minutesAgo)}
         </time>
       </TableCell>
@@ -67,23 +64,13 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
 }
 
 export function TicketInboxPage() {
-  const [searchParams, setSearchParams] = useSearchParams()
+  const { searchParams, setParam } = useListParams()
   const filters = {
     country: countryFromParam(searchParams.get('country')),
     age: ageFromParam(searchParams.get('age')),
   }
   const tickets = INBOX.filter((ticket) => matches({ ticket, filters }))
   const backlogCount = INBOX.length - LAST_24_HOURS.length
-
-  const setFilter = ({ key, value }: { key: keyof Filters; value: string | number | undefined }) => {
-    const next = new URLSearchParams(searchParams)
-    if (value !== undefined) {
-      next.set(key, String(value))
-    } else {
-      next.delete(key)
-    }
-    setSearchParams(next, { replace: true })
-  }
 
   const countOf = (filter: Filters) => INBOX.filter((ticket) => matches({ ticket, filters: { ...filters, ...filter } })).length
 
@@ -102,34 +89,17 @@ export function TicketInboxPage() {
       />
       <div className="space-y-4 px-8 py-6">
         <div className="flex flex-wrap gap-3">
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={filters.age === undefined ? ALL : String(filters.age)}
-            onValueChange={(value) => setFilter({ key: 'age', value: ageFromParam(value) })}
-          >
-            <ToggleGroupItem value={ALL}>Todos los días · {countOf({ age: undefined })}</ToggleGroupItem>
-            {INBOX_AGES.map((age) => (
-              <ToggleGroupItem key={age} value={String(age)}>
-                {ageLabel(age)} · {countOf({ age })}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-          <ToggleGroup
-            type="single"
-            variant="outline"
-            size="sm"
-            value={filters.country ?? ALL}
-            onValueChange={(value) => setFilter({ key: 'country', value: countryFromParam(value) })}
-          >
-            <ToggleGroupItem value={ALL}>Todos los países · {countOf({ country: undefined })}</ToggleGroupItem>
-            {COUNTRIES.map((code) => (
-              <ToggleGroupItem key={code} value={code}>
-                {countryWithFlag(code)} · {countOf({ country: code })}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
+          <FilterGroup
+            value={filters.age === undefined ? undefined : String(filters.age)}
+            allLabel={`Todos los días · ${countOf({ age: undefined })}`}
+            options={INBOX_AGES.map((age) => ({ value: String(age), label: `${ageLabel(age)} · ${countOf({ age })}` }))}
+            onChange={(value) => setParam({ key: 'age', value: ageFromParam(value) })}
+          />
+          <CountryFilter
+            country={filters.country}
+            countOf={(country) => countOf({ country })}
+            onChange={(country) => setParam({ key: 'country', value: country })}
+          />
         </div>
         <div className="surface overflow-hidden">
           <Table>
