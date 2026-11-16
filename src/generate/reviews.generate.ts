@@ -1,10 +1,10 @@
 import type { RowReader } from '../data/json-row.reader.ts'
 import { rowReader } from '../data/json-row.reader.ts'
 import { parseList } from '../data/model.parse.ts'
-import { COUNTRIES, DATA_DATE, SPECIES, STARS } from '../data/model.types.ts'
+import { COUNTRIES, SPECIES, STARS } from '../data/model.types.ts'
 import type { Country, Review } from '../data/model.types.ts'
 import { personName } from './customers.generate.ts'
-import { addDays } from './generate.dates.ts'
+import { relativeDay } from './generate.dates.ts'
 import { fillIn, pickHousehold } from './generate.people.ts'
 import type { Household } from './generate.people.ts'
 import type { Random } from './generate.random.ts'
@@ -97,8 +97,10 @@ function draftReview(input: { random: Random; households: Household[]; country: 
   const channel = reviewChannel({ random, stars })
   const known = channel === 'google' ? undefined : pickHousehold({ random, households, country, species: template.species })
   const writer = known?.customer ?? personName({ random, country })
+  const day = -random.int({ min: 0, max: DAYS_BACK })
   return {
-    date: addDays({ date: DATA_DATE, days: -random.int({ min: 0, max: DAYS_BACK }) }),
+    day,
+    date: relativeDay(day),
     channel,
     country,
     customerId: known?.customer.id,
@@ -125,7 +127,7 @@ function replyFor({ random, draft }: { random: Random; draft: ReviewDraft }) {
 }
 
 function answeredDrafts({ random, drafts }: { random: Random; drafts: ReviewDraft[] }) {
-  const notToday = drafts.filter((draft) => draft.date < DATA_DATE)
+  const notToday = drafts.filter((draft) => draft.day < 0)
   const positive = random.shuffle(notToday.filter((draft) => draft.stars >= 4)).slice(0, ANSWERED_POSITIVE)
   const mixed = random.shuffle(notToday.filter((draft) => draft.stars === 3)).slice(0, ANSWERED_MIXED)
   return new Set([...positive, ...mixed])
@@ -156,11 +158,11 @@ export function generateReviews({ random, households, handwrittenIds }: { random
     const template = nextTemplate({ country, stars: stars[index] })
     return draftReview({ random, households, country, stars: stars[index], template })
   })
-  drafts.sort((a, b) => a.date.localeCompare(b.date))
+  drafts.sort((a, b) => a.day - b.day)
   const answered = answeredDrafts({ random, drafts })
   const ids = freeReviewIds({ count: drafts.length, taken: new Set(handwrittenIds) })
 
-  return drafts.map(({ firstName: _firstName, pet: _pet, ...draft }, index): Review => {
+  return drafts.map(({ day: _day, firstName: _firstName, pet: _pet, ...draft }, index): Review => {
     const isAnswered = answered.has(drafts[index])
     return {
       id: ids[index],

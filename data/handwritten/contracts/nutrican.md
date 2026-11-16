@@ -2,7 +2,7 @@
 
 Referencia: CTR-NUTRICAN-2024
 
-En Valencia, a 20 de noviembre de 2023.
+En Valencia, a {longDate:-36M+19d}.
 
 ## Reunidos
 
@@ -108,7 +108,7 @@ III. Que las Partes desean regular las condiciones en que el Fabricante fabricar
 
 ### Décima. Duración
 
-10.1. El presente contrato entrará en vigor el 1 de enero de 2024 y tendrá una duración inicial de tres (3) años, hasta el 31 de diciembre de 2026.
+10.1. El presente contrato entrará en vigor el {longDate:-34M} y tendrá una duración inicial de tres (3) años, hasta el {longDate:+2M-1d}.
 
 10.2. A su terminación, por cualquier causa, el Fabricante entregará a Peluda las existencias de Productos terminados y de envases con la marca de Peluda, que esta abonará al precio vigente, y destruirá cualquier copia de las Especificaciones.
 
@@ -172,7 +172,7 @@ Las fichas técnicas de cada Producto, con su receta, sus valores analíticos ga
 
 ## Anexo II. Precios
 
-Precios en euros por kilogramo, IVA no incluido, vigentes desde el 1 de enero de 2024:
+Precios en euros por kilogramo, IVA no incluido, vigentes desde el {longDate:-34M}:
 
 - Pienso Adulto Perro: 2,15 €/kg.
 - Pienso Cachorro Perro: 2,40 €/kg.

@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import { Field } from '@/app/field.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
 import type { Customer } from '@/data/model.types.ts'
 
@@ -30,7 +30,9 @@ export function CustomerCard({ customer, linkToRecord = true }: { customer: Cust
           <Field label="Ciudad">
             {customer.city}, {countryWithFlag(customer.country)}
           </Field>
-          <Field label="Cliente desde">{formatDate(customer.signupDate)}</Field>
+          <Field label="Cliente desde">
+            <RelativeDay iso={customer.signupDate} />
+          </Field>
           {customer.notes && <Field label="Notas internas">{customer.notes}</Field>}
         </dl>
       </CardContent>

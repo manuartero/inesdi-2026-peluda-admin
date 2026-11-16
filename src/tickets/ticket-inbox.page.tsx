@@ -4,26 +4,37 @@ import { PageHeader } from '@/app/page-header.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { formatDay, formatTime } from '@/data/model.dates.ts'
+import { formatAgo, formatDate, formatTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { COUNTRIES } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
 import type { Country } from '@/data/model.types.ts'
 import { ticketsCsv } from './tickets.csv.ts'
-import { INBOX, INBOX_DAYS, RECEIVED_TODAY } from './tickets.data.ts'
+import { ageInDays, INBOX, INBOX_AGES, LAST_24_HOURS } from './tickets.data.ts'
 import type { InboxTicket } from './tickets.data.ts'
 
 const ALL = 'all'
 
-type Filters = { country?: Country; day?: string }
+type Filters = { country?: Country; age?: number }
 
 const countryFromParam = (param: string | null) => COUNTRIES.find((country) => country === param)
-const dayFromParam = (param: string | null) => INBOX_DAYS.find((day) => day === param)
+const ageFromParam = (param: string | null) => INBOX_AGES.find((age) => String(age) === param)
+
+// ageLabel(0) is 'Últimas 24 h'; ageLabel(2) is 'Hace 2 días'.
+const ageLabel = (age: number) => (age === 0 ? 'Últimas 24 h' : `Hace ${age} ${age === 1 ? 'día' : 'días'}`)
+
+// ageFileName(0) is 'ultimas-24h'; ageFileName(2) is 'hace-2-dias'.
+function ageFileName(age: number | undefined) {
+  if (age === undefined) {
+    return undefined
+  }
+  return age === 0 ? 'ultimas-24h' : `hace-${age}-dias`
+}
 
 function matches({ ticket, filters }: { ticket: InboxTicket; filters: Filters }) {
   const countryMatches = !filters.country || ticket.country === filters.country
-  const dayMatches = !filters.day || ticket.receivedAtMadrid.startsWith(filters.day)
-  return countryMatches && dayMatches
+  const ageMatches = filters.age === undefined || ageInDays(ticket) === filters.age
+  return countryMatches && ageMatches
 }
 
 function preview(message: string) {
@@ -35,7 +46,9 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
   return (
     <TableRow className="cursor-pointer" onClick={() => navigate(`/tickets/${ticket.id}`)}>
       <TableCell className="tabular-nums whitespace-nowrap text-muted-foreground">
-        {formatDay(ticket.receivedAtMadrid)} {formatTime(ticket.receivedAtMadrid)}
+        <time dateTime={ticket.receivedAtMadrid} title={`${formatDate(ticket.receivedAtMadrid)} ${formatTime(ticket.receivedAtMadrid)} en Madrid`}>
+          {formatAgo(ticket.minutesAgo)}
+        </time>
       </TableCell>
       <TableCell>{countryWithFlag(ticket.country)}</TableCell>
       <TableCell>{LABELS.ticketChannel[ticket.channel]}</TableCell>
@@ -57,15 +70,15 @@ export function TicketInboxPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = {
     country: countryFromParam(searchParams.get('country')),
-    day: dayFromParam(searchParams.get('day')),
+    age: ageFromParam(searchParams.get('age')),
   }
   const tickets = INBOX.filter((ticket) => matches({ ticket, filters }))
-  const backlogCount = INBOX.length - RECEIVED_TODAY.length
+  const backlogCount = INBOX.length - LAST_24_HOURS.length
 
-  const setFilter = ({ key, value }: { key: keyof Filters; value: string | undefined }) => {
+  const setFilter = ({ key, value }: { key: keyof Filters; value: string | number | undefined }) => {
     const next = new URLSearchParams(searchParams)
-    if (value) {
-      next.set(key, value)
+    if (value !== undefined) {
+      next.set(key, String(value))
     } else {
       next.delete(key)
     }
@@ -78,11 +91,11 @@ export function TicketInboxPage() {
     <>
       <PageHeader
         title="Bandeja de tickets"
-        description={`${INBOX.length} tickets sin clasificar: ${RECEIVED_TODAY.length} de hoy y ${backlogCount} de los dos días anteriores. Horas en horario de Madrid.`}
+        description={`${INBOX.length} tickets sin clasificar: ${LAST_24_HOURS.length} de las últimas 24 horas y ${backlogCount} de los dos días anteriores. Pasa el ratón por encima para ver la hora de Madrid.`}
         actions={
           <ExportCsvButton
             count={tickets.length}
-            fileName={exportFileName({ what: 'tickets', parts: [filters.day, filters.country] })}
+            fileName={exportFileName({ what: 'tickets', parts: [ageFileName(filters.age), filters.country] })}
             csv={() => ticketsCsv(tickets)}
           />
         }
@@ -93,13 +106,13 @@ export function TicketInboxPage() {
             type="single"
             variant="outline"
             size="sm"
-            value={filters.day ?? ALL}
-            onValueChange={(value) => setFilter({ key: 'day', value: dayFromParam(value) })}
+            value={filters.age === undefined ? ALL : String(filters.age)}
+            onValueChange={(value) => setFilter({ key: 'age', value: ageFromParam(value) })}
           >
-            <ToggleGroupItem value={ALL}>Todos los días · {countOf({ day: undefined })}</ToggleGroupItem>
-            {INBOX_DAYS.map((day) => (
-              <ToggleGroupItem key={day} value={day}>
-                {formatDay(day)} · {countOf({ day })}
+            <ToggleGroupItem value={ALL}>Todos los días · {countOf({ age: undefined })}</ToggleGroupItem>
+            {INBOX_AGES.map((age) => (
+              <ToggleGroupItem key={age} value={String(age)}>
+                {ageLabel(age)} · {countOf({ age })}
               </ToggleGroupItem>
             ))}
           </ToggleGroup>

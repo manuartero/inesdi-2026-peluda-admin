@@ -1,8 +1,5 @@
 import { TODAY } from './model.types.ts'
-import type { Country, IsoDate } from './model.types.ts'
-
-// UTC offsets in late November 2026: Spain is on CET; Mexico, Colombia, Peru and Argentina have no daylight saving time.
-export const UTC_OFFSET_HOURS: Record<Country, number> = { ES: 1, MX: -6, CO: -5, PE: -5, AR: -3 }
+import type { IsoDate } from './model.types.ts'
 
 const HOUR_MS = 60 * 60 * 1000
 
@@ -22,15 +19,6 @@ const LONG_DATE = formatter({ weekday: 'long', day: 'numeric', month: 'long', ye
 export const formatDate = (iso: IsoDate) => DATE.format(wallClock(iso))
 export const formatTime = (iso: IsoDate) => TIME.format(wallClock(iso))
 export const formatLongDate = (iso: IsoDate) => LONG_DATE.format(wallClock(iso))
-
-// madridTime({ local: '2026-11-24T08:10:00', country: 'MX' }) is '2026-11-24T15:10:00'.
-export function madridTime({ local, country }: { local: IsoDate; country: Country }) {
-  const shiftHours = UTC_OFFSET_HOURS.ES - UTC_OFFSET_HOURS[country]
-  const madrid = new Date(wallClock(local).getTime() + shiftHours * HOUR_MS)
-  return madrid.toISOString().slice(0, 19)
-}
-
-export const isToday = (iso: IsoDate) => iso.startsWith(TODAY)
 
 function ageInMonths(birthDate: IsoDate) {
   const birth = wallClock(birthDate)
@@ -52,27 +40,40 @@ export function formatAge(birthDate: IsoDate) {
 
 const DAY_MS = 24 * HOUR_MS
 
-// daysBetween({ from: '2026-11-24', to: '2026-12-31' }) is 37; an earlier `to` is negative. Times of day are ignored.
+// daysBetween({ from: '2026-11-16', to: '2026-12-31' }) is 45; an earlier `to` is negative. Times of day are ignored.
 export const daysBetween = ({ from, to }: { from: IsoDate; to: IsoDate }) =>
   Math.round((wallClock(to.slice(0, 10)).getTime() - wallClock(from.slice(0, 10)).getTime()) / DAY_MS)
 
-// On 2026-11-24, daysFromToday('2026-12-31') is 37.
+// On 2026-11-16, daysFromToday('2026-12-31') is 45.
 export const daysFromToday = (iso: IsoDate) => daysBetween({ from: TODAY, to: iso })
 
-// addDays({ iso: '2026-11-24T09:15:00', days: 7 }) is '2026-12-01T09:15:00'; a plain date stays a plain date.
-export const addDays = ({ iso, days }: { iso: IsoDate; days: number }) =>
-  new Date(wallClock(iso).getTime() + days * DAY_MS).toISOString().slice(0, iso.length)
+const RELATIVE = new Intl.RelativeTimeFormat('es-ES', { numeric: 'always' })
 
-const SHORT_DAY = formatter({ weekday: 'short', day: 'numeric' })
-
-// On 2026-11-24, formatDay('2026-11-24T09:15:00') is 'Hoy'; '2026-11-23…' is 'Ayer'; '2026-11-22…' is 'dom 22'.
-export function formatDay(iso: IsoDate) {
+// On 2026-11-16: formatRelativeDay('2026-11-16') is 'hoy', '2026-11-13' 'hace 3 días', '2026-12-31' 'dentro de 45 días',
+// '2026-08-10' 'hace 3 meses' and '2023-02-15' 'hace 3 años'.
+export function formatRelativeDay(iso: IsoDate) {
   const days = daysFromToday(iso)
   if (days === 0) {
-    return 'Hoy'
+    return 'hoy'
   }
-  if (days === -1) {
-    return 'Ayer'
+  const months = Math.trunc(days / 30.4)
+  if (Math.abs(months) < 2) {
+    return RELATIVE.format(days, 'day')
   }
-  return SHORT_DAY.format(wallClock(iso)).replace(',', '')
+  const years = Math.trunc(days / 365)
+  if (Math.abs(years) < 1) {
+    return RELATIVE.format(months, 'month')
+  }
+  return RELATIVE.format(years, 'year')
+}
+
+// formatAgo(25) is 'hace 25 minutos', formatAgo(190) 'hace 3 horas', formatAgo(1630) 'hace 1 día'.
+export function formatAgo(minutes: number) {
+  if (minutes < 60) {
+    return RELATIVE.format(-minutes, 'minute')
+  }
+  if (minutes < 24 * 60) {
+    return RELATIVE.format(-Math.floor(minutes / 60), 'hour')
+  }
+  return RELATIVE.format(-Math.floor(minutes / (24 * 60)), 'day')
 }

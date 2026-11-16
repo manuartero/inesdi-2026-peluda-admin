@@ -18,4 +18,4 @@ pnpm test:unit     # vitest: a happy-path test per screen
 pnpm blue-ball     # lint + test:unit + build (build runs check:data): run before every commit
 ```
 
-The CMS "today" is the real (UTC) today: the data is written for 24/11/2026 and every date moves to today when the page loads (`src/data/model.shift.ts`). Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`), so the deployed site never ships the workshop's solutions.
+There is no fixed day: the data holds relative dates (`-22d`, a ticket `-3h10m` ago) that the CMS resolves from the real (UTC) now when the page loads (`src/data/model.relative.ts`), and ticket IDs carry no date (`TCK-0004`). Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`), so the deployed site never ships the workshop's solutions.

@@ -5,7 +5,7 @@ export type Country = (typeof COUNTRIES)[number]
 export type Currency = 'EUR' | 'MXN' | 'COP' | 'PEN' | 'ARS'
 export const SPECIES = ['dog', 'cat'] as const
 export type Species = (typeof SPECIES)[number]
-// `2026-11-24` or `2026-11-24T09:15:00`, in the country's local time.
+// `2026-11-16` or `2026-11-16T09:15:00`, in the country's local time. The data files hold relative dates instead (see model.relative.ts).
 export type IsoDate = string
 
 export const CURRENCY_BY_COUNTRY: Record<Country, Currency> = {
@@ -15,11 +15,11 @@ export const CURRENCY_BY_COUNTRY: Record<Country, Currency> = {
   PE: 'PEN',
   AR: 'ARS',
 }
-// The day the data files are written for: their dates and «hoy» are relative to it.
-// At load time every date moves by the days between DATA_DATE and TODAY (see model.shift.ts), so the CMS always looks current.
-export const DATA_DATE: IsoDate = '2026-11-24'
-// Today's UTC date when the page (or check:data) runs.
-export const TODAY: IsoDate = new Date().toISOString().slice(0, 10)
+const MINUTE_MS = 60 * 1000
+// The minute the page (or check:data) loads: every relative date in the data counts from it.
+export const NOW_MS = Math.floor(Date.now() / MINUTE_MS) * MINUTE_MS
+// Today's UTC date.
+export const TODAY: IsoDate = new Date(NOW_MS).toISOString().slice(0, 10)
 
 export const PLAN_IDS = ['basic', 'complete', 'care'] as const
 

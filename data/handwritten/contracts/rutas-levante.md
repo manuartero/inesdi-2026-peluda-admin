@@ -2,7 +2,7 @@
 
 Referencia: CTR-RUTAS-LEVANTE-2023
 
-En Valencia, a 15 de febrero de 2023.
+En Valencia, a {longDate:-45M+14d}.
 
 ## Reunidos
 
@@ -99,7 +99,7 @@ III. Que las Partes desean regular la prestación de dichos servicios, con arreg
 
 ### Undécima. Duración
 
-11.1. El presente contrato entrará en vigor el 1 de marzo de 2023 y tendrá una duración de cuatro (4) años, hasta el 28 de febrero de 2027.
+11.1. El presente contrato entrará en vigor el {longDate:-44M} y tendrá una duración de cuatro (4) años, hasta el {longDate:+4M-1d}.
 
 11.2. A su vencimiento, las Partes podrán acordar por escrito su renovación. Si no se renueva, el Transportista seguirá prestando los Servicios a petición del Cliente, con las mismas tarifas, durante un máximo de tres (3) meses, para facilitar el cambio de proveedor.
 

@@ -1,7 +1,7 @@
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { formatDate } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import { formatMoney } from '@/data/model.money.ts'
 import type { Order } from '@/data/model.types.ts'
@@ -24,7 +24,7 @@ function OrderRow({ order, highlighted }: { order: Order; highlighted: boolean }
   return (
     <TableRow className={highlighted ? 'bg-amber-50 dark:bg-amber-950/40' : undefined}>
       <TableCell>
-        <div className="tabular-nums">{formatDate(order.date)}</div>
+        <div className="tabular-nums"><RelativeDay iso={order.date} /></div>
         <div className="font-mono text-xs text-muted-foreground">{order.id}</div>
       </TableCell>
       <TableCell className="min-w-48 whitespace-normal">{linesText(order)}</TableCell>

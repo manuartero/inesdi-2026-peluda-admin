@@ -4,6 +4,7 @@ import { CopyPromptButton } from '@/app/copy-prompt-button.component.tsx'
 import { Field } from '@/app/field.component.tsx'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { StepLinks } from '@/app/step-links.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,7 +32,9 @@ function ReviewCard({ review }: { review: ShownReview }) {
           </Field>
           <Field label="Canal">{LABELS.reviewChannel[review.channel]}</Field>
           <Field label="País">{countryWithFlag(review.country)}</Field>
-          <Field label="Fecha">{formatDate(review.date)}</Field>
+          <Field label="Fecha">
+            <RelativeDay iso={review.date} /> <span className="text-muted-foreground">· {formatDate(review.date)}</span>
+          </Field>
         </dl>
         <div className="rounded-lg border-[1.5px] bg-muted p-4 text-sm leading-relaxed whitespace-pre-wrap">{review.text}</div>
       </CardContent>

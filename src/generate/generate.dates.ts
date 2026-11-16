@@ -1,33 +1,22 @@
-import type { IsoDate } from '../data/model.types.ts'
+// The generator counts in days from today: -22 is 22 days ago, 6 is in 6 days. The files get them as `-22d` and `+6d`.
+export type Day = number
 
-const DAY_MS = 24 * 60 * 60 * 1000
+// relativeDay(-22) is '-22d', relativeDay(6) is '+6d' and relativeDay(0) is '0d'.
+export const relativeDay = (day: Day) => (day > 0 ? `+${day}d` : `${day}d`)
 
-// Plain calendar days in UTC, like model.dates.ts: the machine's time zone never moves a date.
-const toTime = (date: IsoDate) => Date.parse(`${date.slice(0, 10)}T00:00:00Z`)
-const fromTime = (time: number) => new Date(time).toISOString().slice(0, 10)
-
-// addDays({ date: '2026-11-02', days: 28 }) is '2026-11-30'.
-export const addDays = ({ date, days }: { date: IsoDate; days: number }) => fromTime(toTime(date) + days * DAY_MS)
-
-// daysBetween({ from: '2026-11-20', to: '2026-11-24' }) is 4.
-export const daysBetween = ({ from, to }: { from: IsoDate; to: IsoDate }) => Math.round((toTime(to) - toTime(from)) / DAY_MS)
-
-// dayOfYear('2026-11-02') is 306.
-export const dayOfYear = (date: IsoDate) => daysBetween({ from: `${date.slice(0, 4)}-01-01`, to: date }) + 1
-
-// latest(['2026-07-01', '2025-03-24']) is '2026-07-01'.
-export const latest = (dates: IsoDate[]) => dates.reduce((a, b) => (a > b ? a : b))
-export const earliest = (dates: IsoDate[]) => dates.reduce((a, b) => (a < b ? a : b))
-
-// withTime({ date: '2026-11-24', minutes: 530 }) is '2026-11-24T08:50:00'; negative minutes fall on the day before.
-export function withTime({ date, minutes }: { date: IsoDate; minutes: number }) {
-  return new Date(toTime(date) + minutes * 60 * 1000).toISOString().slice(0, 19)
+// dayOf('-22d') is -22. Rows the generator reads (subscriptions, orders, products) only hold plain day offsets.
+export function dayOf(relative: string) {
+  const match = /^([+-]?\d+)d$/.exec(relative)
+  if (match === null) {
+    throw new Error(`expected a relative day like -22d, got ${relative}`)
+  }
+  return Number(match[1])
 }
 
 export const CYCLE_DAYS = 28
 
-// Orders ship every 4 weeks from the start date: nextCycleAfter({ start: '2026-10-07', date: '2026-11-24' }) is '2026-12-02'.
-export function nextCycleAfter({ start, date }: { start: IsoDate; date: IsoDate }) {
-  const cycles = Math.floor(daysBetween({ from: start, to: date }) / CYCLE_DAYS) + 1
-  return addDays({ date: start, days: Math.max(cycles, 0) * CYCLE_DAYS })
+// Orders ship every 4 weeks from the start day: nextCycleAfter({ start: -48, day: 0 }) is 8.
+export function nextCycleAfter({ start, day }: { start: Day; day: Day }) {
+  const cycles = Math.floor((day - start) / CYCLE_DAYS) + 1
+  return start + Math.max(cycles, 0) * CYCLE_DAYS
 }

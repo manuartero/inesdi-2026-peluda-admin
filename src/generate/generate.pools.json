@@ -103,11 +103,11 @@
     "Portal sin ascensor: el repartidor deja la caja en la portería.",
     "Pidió factura a nombre de su empresa.",
     "Se dio de alta con el código de la campaña de verano.",
-    "Cambió de tarjeta en octubre.",
+    "Cambió de tarjeta en {month:-40}.",
     "Ha pedido que no le llamen por teléfono.",
     "Ha recomendado Peluda a dos amigos.",
     "Entregar a partir de las 15:00.",
-    "Tuvo un retraso en agosto; se le devolvieron los gastos de envío."
+    "Tuvo un retraso en {month:-100}; se le devolvieron los gastos de envío."
   ],
   "carriers": {
     "ES": { "name": "Rutas Levante", "trackingPrefix": "RL-" },

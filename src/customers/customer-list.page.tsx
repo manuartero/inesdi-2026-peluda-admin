@@ -3,10 +3,10 @@ import type { ChangeEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
 import { COUNTRIES, TODAY } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
@@ -71,7 +71,7 @@ function CustomerRow({ customer }: { customer: Customer }) {
           ))}
         </div>
       </TableCell>
-      <TableCell className="tabular-nums text-muted-foreground">{formatDate(customer.signupDate)}</TableCell>
+      <TableCell className="tabular-nums text-muted-foreground"><RelativeDay iso={customer.signupDate} /></TableCell>
     </TableRow>
   )
 }

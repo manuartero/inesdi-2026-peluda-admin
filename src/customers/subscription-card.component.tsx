@@ -1,7 +1,7 @@
 import { Field } from '@/app/field.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatDate } from '@/data/model.dates.ts'
 import { LABELS } from '@/data/model.labels.ts'
 import { formatMoney } from '@/data/model.money.ts'
 import type { Pet, Subscription } from '@/data/model.types.ts'
@@ -42,9 +42,9 @@ export function SubscriptionCard({ subscription, pet }: { subscription: Subscrip
           </Field>
           <Field label="Cuota mensual">{formatMoney({ amount: subscription.monthlyPrice, currency: subscription.currency })}</Field>
           <Field label="Productos">{subscription.productIds.map(productName).join(', ')}</Field>
-          <Field label="Alta">{formatDate(subscription.startDate)}</Field>
-          {subscription.cancelDate && <Field label="Baja">{formatDate(subscription.cancelDate)}</Field>}
-          {subscription.nextShipment && <Field label="Próximo envío">{formatDate(subscription.nextShipment)}</Field>}
+          <Field label="Alta"><RelativeDay iso={subscription.startDate} /></Field>
+          {subscription.cancelDate && <Field label="Baja"><RelativeDay iso={subscription.cancelDate} /></Field>}
+          {subscription.nextShipment && <Field label="Próximo envío"><RelativeDay iso={subscription.nextShipment} /></Field>}
         </dl>
       </CardContent>
     </Card>

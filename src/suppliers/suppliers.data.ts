@@ -1,5 +1,6 @@
 import { DATA } from '@/data/peluda.data.ts'
 import { dataError } from '@/data/json-row.reader.ts'
+import { resolveDateTokens } from '@/data/model.relative.ts'
 import type { Contract, Supplier, WithoutAnswerKey } from '@/data/model.types.ts'
 
 // Keys are paths like `../../data/handwritten/contracts/nutrican.md`; `pnpm check:data` already checks each file exists.
@@ -14,7 +15,7 @@ function withText(contract: WithoutAnswerKey<Contract>) {
   if (text === undefined) {
     throw dataError(`${contract.id} › file: ${contract.file} not found`)
   }
-  return { ...contract, text }
+  return { ...contract, text: resolveDateTokens({ text, where: contract.file }) }
 }
 
 export type ShownContract = ReturnType<typeof withText>

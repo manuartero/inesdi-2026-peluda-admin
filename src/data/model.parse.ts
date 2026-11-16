@@ -60,7 +60,7 @@ export const parseProduct: Parse<Product> = (row) => ({
   species: row.oneOf({ key: 'species', values: [...SPECIES, 'both'] }),
   manufacturerId: row.optional({ key: 'manufacturerId', read: row.text }),
   markets: row.listOf({ key: 'markets', values: COUNTRIES }),
-  availableFrom: row.date('availableFrom'),
+  availableFrom: row.day('availableFrom'),
   replaces: row.optional({ key: 'replaces', read: row.text }),
 })
 
@@ -82,9 +82,9 @@ export const parseContract: Parse<WithoutAnswerKey<Contract>> = (row) => ({
   id: row.text('id'),
   supplierId: row.text('supplierId'),
   title: row.text('title'),
-  signedOn: row.date('signedOn'),
-  startDate: row.date('startDate'),
-  expiryOnRecord: row.date('expiryOnRecord'),
+  signedOn: row.day('signedOn'),
+  startDate: row.day('startDate'),
+  expiryOnRecord: row.day('expiryOnRecord'),
   file: row.text('file'),
 })
 
@@ -107,7 +107,7 @@ export const parseCustomer: Parse<Customer> = (row) => ({
   phone: row.text('phone'),
   country: row.oneOf({ key: 'country', values: COUNTRIES }),
   city: row.text('city'),
-  signupDate: row.date('signupDate'),
+  signupDate: row.day('signupDate'),
   notes: row.optional({ key: 'notes', read: row.text }),
 })
 
@@ -117,7 +117,7 @@ export const parsePet: Parse<Pet> = (row) => ({
   name: row.text('name'),
   species: row.oneOf({ key: 'species', values: SPECIES }),
   breed: row.text('breed'),
-  birthDate: row.date('birthDate'),
+  birthDate: row.day('birthDate'),
   weightKg: row.number('weightKg'),
   activity: row.oneOf({ key: 'activity', values: PET_ACTIVITIES }),
   allergies: row.texts('allergies'),
@@ -131,19 +131,19 @@ export const parseSubscription: Parse<Subscription> = (row) => ({
   petId: row.text('petId'),
   planId: row.oneOf({ key: 'planId', values: PLAN_IDS }),
   status: row.oneOf({ key: 'status', values: SUBSCRIPTION_STATUSES }),
-  startDate: row.date('startDate'),
-  cancelDate: row.optional({ key: 'cancelDate', read: row.date }),
+  startDate: row.day('startDate'),
+  cancelDate: row.optional({ key: 'cancelDate', read: row.day }),
   monthlyPrice: row.number('monthlyPrice'),
   currency: row.oneOf({ key: 'currency', values: CURRENCIES }),
   productIds: row.texts('productIds'),
-  nextShipment: row.optional({ key: 'nextShipment', read: row.date }),
+  nextShipment: row.optional({ key: 'nextShipment', read: row.day }),
 })
 
 export const parseOrder: Parse<Order> = (row) => ({
   id: row.text('id'),
   subscriptionId: row.text('subscriptionId'),
   customerId: row.text('customerId'),
-  date: row.date('date'),
+  date: row.day('date'),
   lines: row.list('lines').map((line) => ({ productId: line.text('productId'), quantity: line.number('quantity') })),
   amount: row.number('amount'),
   currency: row.oneOf({ key: 'currency', values: CURRENCIES }),
@@ -151,7 +151,7 @@ export const parseOrder: Parse<Order> = (row) => ({
   carrier: row.text('carrier'),
   trackingNumber: row.text('trackingNumber'),
   charges: row.list('charges').map((charge) => ({
-    date: charge.date('date'),
+    date: charge.day('date'),
     amount: charge.number('amount'),
     status: charge.oneOf({ key: 'status', values: CHARGE_STATUSES }),
   })),
@@ -159,7 +159,7 @@ export const parseOrder: Parse<Order> = (row) => ({
 
 export const parseTicket: Parse<WithoutAnswerKey<Ticket>> = (row) => ({
   id: row.text('id'),
-  receivedAt: row.date('receivedAt'),
+  receivedAt: row.ago('receivedAt'),
   country: row.oneOf({ key: 'country', values: COUNTRIES }),
   channel: row.oneOf({ key: 'channel', values: TICKET_CHANNELS }),
   customerId: row.optional({ key: 'customerId', read: row.text }),
@@ -191,7 +191,7 @@ function readStars(row: RowReader) {
 
 export const parseReview: Parse<WithoutAnswerKey<Review>> = (row) => ({
   id: row.text('id'),
-  date: row.date('date'),
+  date: row.day('date'),
   channel: row.oneOf({ key: 'channel', values: REVIEW_CHANNELS }),
   country: row.oneOf({ key: 'country', values: COUNTRIES }),
   customerId: row.optional({ key: 'customerId', read: row.text }),

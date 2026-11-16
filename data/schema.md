@@ -8,8 +8,11 @@
 
 - **One source.** Everything lives in `data/` as JSON (contracts as Markdown). The CMS imports it and a script exports the workshop case files.
 - **Handwritten and generated stay apart.** Handwritten content (with the traps) goes in `data/handwritten/`; filler is generated with a fixed seed into `data/generated/` and is never edited by hand.
-- **Moving "today":** the files are written for **Tuesday 24/11/2026** (`DATA_DATE`), and at load time every date moves by the days between that and the real UTC today, so the CMS always looks current. Contracts keep their dates (they are signed documents). Ticket IDs carry their day and move with it (`TCK-20261124-0004` becomes `TCK-20261201-0004` on 1 December).
-- **Dates inside texts are tokens**, so they move too: `{date:-22}` «2 de noviembre», `{month:-54}` «octubre», `{weekday:-4}` «viernes», `{WEEKDAY:0}` «MARTES», `{short:-18}` «6/11» (days from `DATA_DATE`), and `{nextMonth:1}` «diciembre» (months from today, for plans). An unknown token fails `check:data`.
+- **No fixed day: every date counts from now.** The files hold relative dates and the CMS resolves them from the real (UTC) now when it loads, so it always looks current (`src/data/model.relative.ts`):
+  - a day: `-22d` (22 days ago), `+6d`, `0d` (today); for contracts, `-34M` is the 1st of the month 34 months ago and `+2M-1d` the last day of next month;
+  - a ticket's arrival: `-1d3h10m` (1 day, 3 hours and 10 minutes ago). Nothing can arrive in the future, and the local and Madrid times come from the real time zones.
+- **Ticket IDs carry no date**, so a number in a slide or a demo stays valid: the latest day's tickets are `TCK-0001` on, the day before's `TCK-1001` on, two days before `TCK-2001` on.
+- **Dates inside texts are tokens**, so they move too: `{date:-22}` «25 de octubre», `{month:-54}` «septiembre», `{weekday:-4}` «jueves», `{WEEKDAY:0}` «LUNES», `{short:-18}` «29/10» (days from today), `{nextMonth:1}` «diciembre» (months from today, for plans) and `{longDate:-34M}` «1 de enero de 2024» (a relative day, for contracts). An unknown token fails `check:data`.
 - **Answer key kept apart.** What the model *should* find (expected category, contract trap…) goes in an `answerKey` field that the CMS never shows and the "Copiar para el prompt" button never copies. It is exported to a separate answer-key file per case.
 - **Made-up personal data:** `@example.com` emails, test phone numbers, no well-known names.
 
@@ -37,7 +40,8 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | `Country` | `ES` · `MX` · `CO` · `PE` · `AR` |
 | `Currency` | `EUR` · `MXN` · `COP` · `PEN` · `ARS` (one per country) |
 | `Species` | `dog` · `cat` |
-| `IsoDate` | `2026-11-24` or `2026-11-24T09:15:00` (country's local time) |
+| Relative day | `-22d` · `+6d` · `0d` · `+2M-1d` (see Principles); the CMS turns it into `2026-10-25` |
+| Time ago | `-1d3h10m`, only for a ticket's `receivedAt`; the CMS turns it into the country's local time |
 | Amounts | A number in the country's currency, with decimals (`45`, `849.5`) |
 
 ## Entities
@@ -98,7 +102,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | `startDate`, `cancelDate` | | `cancelDate` only when cancelled |
 | `monthlyPrice`, `currency` | `47.5`, `EUR` | Depends on the pet's size |
 | `productIds` | | What ships every 4 weeks |
-| `nextShipment` | `2026-11-28` | |
+| `nextShipment` | `+4d` | |
 
 ### Order (~2,600, generated)
 
@@ -106,7 +110,7 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 | --- | --- | --- |
 | `id` | `ORD-2026-118734` | |
 | `subscriptionId`, `customerId` | | |
-| `date` | `2026-11-02` | Every 4 weeks from the subscription's `startDate`; only since August 2026 are kept |
+| `date` | `-22d` | Every 4 weeks from the subscription's `startDate`; only the last ~4 months are kept |
 | `lines` | `[{ productId, quantity }]` | |
 | `amount`, `currency` | | |
 | `status` | `delivered` | `preparing` · `shipped` · `delivered` · `issue` · `returned` |
@@ -117,8 +121,8 @@ The case customers' subscriptions and the orders their tickets talk about are ha
 
 | Field | Example | Note |
 | --- | --- | --- |
-| `id` | `TCK-20261124-0031` | |
-| `receivedAt` | `2026-11-24T08:47:00` | |
+| `id` | `TCK-0031` | No date in it: `TCK-0…` latest day, `TCK-1…` the day before, `TCK-2…` two days before |
+| `receivedAt` | `-9h13m` | Time ago |
 | `country` | `ES` | |
 | `channel` | `email` | `email` · `form` · `app` · `whatsapp` |
 | `customerId`, `orderId` | | Optional: some tickets come from someone we cannot identify |
@@ -149,7 +153,7 @@ A ticket's `answerKey`: `category` (`shipping` · `billing` · `plan_change` · 
 | `id`, `supplierId` | `CTR-NUTRICAN-2024`, `SUP-NUTRICAN` | |
 | `title` | Contrato de fabricación y suministro | |
 | `signedOn`, `startDate` | | |
-| `expiryOnRecord` | `2026-12-31` | **What the team believes**, not what the text says. That gap is the auto-renewal trap |
+| `expiryOnRecord` | `+2M-1d` | **What the team believes**, not what the text says. That gap is the auto-renewal trap |
 | `file` | `contracts/nutrican.md` | Full text, 4–6 pages |
 | `answerKey` | `{ traps: [{ kind, clause, explanation }] }` | `kind`: `auto_renewal` · `hidden_penalty` · `missing_clause`. `clause` is the paragraph number as written (`14.2`, `II.6`) or, for `missing_clause`, its name («Protección de datos»). `pnpm check:data` checks the paragraph exists, or that a missing clause's name appears nowhere in the text |
 
@@ -158,7 +162,7 @@ A ticket's `answerKey`: `category` (`shipping` · `billing` · `plan_change` · 
 | Field | Example | Note |
 | --- | --- | --- |
 | `id` | `REV-2026-0412` | |
-| `date` | `2026-11-20` | Within the last month |
+| `date` | `-4d` | Within the last month |
 | `channel` | `google` | `web` · `app` · `google` |
 | `country` | `MX` | |
 | `customerId` | | Optional: on Google we don't always know who it is |

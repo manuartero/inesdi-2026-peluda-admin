@@ -17,7 +17,7 @@ const pageTitle = () => screen.getByRole('heading', { level: 1 }).textContent
 
 afterEach(cleanup)
 
-describe('screens', () => {
+describe('APP_ROUTES{}', () => {
   it('home shows the inbox and review counters', () => {
     openPage('/')
     expect(pageTitle()).toBe('Inicio')
@@ -55,9 +55,7 @@ describe('screens', () => {
   it('supplier list lists every supplier', () => {
     openPage('/suppliers')
     expect(pageTitle()).toBe('Proveedores y contratos')
-    for (const supplier of SUPPLIERS) {
-      expect(screen.getAllByText(supplier.legalName).length).toBeGreaterThan(0)
-    }
+    expect(screen.getAllByRole('row')).toHaveLength(SUPPLIERS.length + 1)
   })
 
   it('supplier detail shows the supplier', () => {

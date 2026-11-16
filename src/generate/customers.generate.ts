@@ -1,15 +1,16 @@
-import { COUNTRIES, CURRENCY_BY_COUNTRY, DATA_DATE } from '../data/model.types.ts'
-import type { Country, Customer, IsoDate, Pet, Plan, Species, Subscription } from '../data/model.types.ts'
-import { addDays, daysBetween, earliest, latest, nextCycleAfter } from './generate.dates.ts'
+import { COUNTRIES, CURRENCY_BY_COUNTRY } from '../data/model.types.ts'
+import type { Country, Customer, Pet, Plan, Species, Subscription } from '../data/model.types.ts'
+import { dayOf, nextCycleAfter, relativeDay } from './generate.dates.ts'
+import type { Day } from './generate.dates.ts'
 import { POOLS } from './generate.pools.ts'
 import { subscriptionPrice } from './generate.prices.ts'
 import type { Random } from './generate.random.ts'
 
 // ~600 customers split like the dossier's subscribers: 9.812 · 3.947 · 1.836 · 1.429 · 540.
 const CUSTOMER_COUNT: Record<Country, number> = { ES: 333, MX: 132, CO: 60, PE: 51, AR: 24 }
-// Peluda opens in Spain in 2021, Mexico in 2023, Peru in 2024, Colombia in 2025 and Argentina in 2026.
-const LAUNCH_DATE: Record<Country, IsoDate> = { ES: '2021-09-01', MX: '2023-04-01', PE: '2024-03-01', CO: '2025-02-01', AR: '2026-03-01' }
-const LAST_SIGNUP: IsoDate = '2026-11-10'
+// Days from today: Peluda opened in Spain about 5 years ago, then Mexico, Peru, Colombia and, 9 months ago, Argentina.
+const LAUNCH_DAY: Record<Country, Day> = { ES: -1910, MX: -1333, PE: -998, CO: -661, AR: -268 }
+const LAST_SIGNUP: Day = -14
 // Handwritten customers go from CUS-00101 to CUS-00599.
 const FIRST_CUSTOMER_NUMBER = 1000
 const DOG_SHARE = 0.75
@@ -38,9 +39,9 @@ function phoneFor({ country, number }: { country: Country; number: string }) {
 }
 
 // Signups lean towards recent months: the company keeps growing.
-function signupDate({ random, country }: { random: Random; country: Country }) {
-  const span = daysBetween({ from: LAUNCH_DATE[country], to: LAST_SIGNUP })
-  return addDays({ date: LAUNCH_DATE[country], days: Math.floor(span * random.next() ** 0.6) })
+function signupDay({ random, country }: { random: Random; country: Country }) {
+  const span = LAST_SIGNUP - LAUNCH_DAY[country]
+  return LAUNCH_DAY[country] + Math.floor(span * random.next() ** 0.6)
 }
 
 export function personName({ random, country }: { random: Random; country: Country }) {
@@ -63,7 +64,7 @@ function uniqueEmail({ firstName, lastName, taken }: { firstName: string; lastNa
 }
 
 function customerDraft({ random, country }: { random: Random; country: Country }) {
-  return { country, signupDate: signupDate({ random, country }), ...personName({ random, country }) }
+  return { country, signupDay: signupDay({ random, country }), ...personName({ random, country }) }
 }
 
 type CustomerDraft = ReturnType<typeof customerDraft>
@@ -78,7 +79,7 @@ function toCustomer({ random, draft, index, taken }: { random: Random; draft: Cu
     phone: phoneFor({ country: draft.country, number }),
     country: draft.country,
     city: random.weighted(POOLS.cities[draft.country]),
-    signupDate: draft.signupDate,
+    signupDate: relativeDay(draft.signupDay),
   }
   if (random.chance(0.06)) {
     customer.notes = random.pick(POOLS.customerNotes)
@@ -118,7 +119,7 @@ function generatePet({ random, customer, index, usedNames }: { random: Random; c
     name,
     species,
     breed: breed.name,
-    birthDate: addDays({ date: DATA_DATE, days: -Math.round(ageMonths * 30.4) - random.int({ min: 0, max: 20 }) }),
+    birthDate: relativeDay(-Math.round(ageMonths * 30.4) - random.int({ min: 0, max: 20 })),
     weightKg: roundWeight(adultKg * growth),
     activity: petActivity({ random, ageMonths }),
     allergies: random.chance(0.12) ? [random.pick(POOLS.allergies)] : [],
@@ -170,25 +171,26 @@ function productIdsFor({ plan, pet, country, ageMonths }: { plan: Plan['id']; pe
 
 // The first pet subscribes at signup; a second one joins later. Nobody starts in the last 20 days, so everyone has an order.
 function startDate({ random, customer, pet, index }: { random: Random; customer: Customer; pet: Pet; index: number }) {
-  const joined = index === 0 ? customer.signupDate : addDays({ date: customer.signupDate, days: random.int({ min: 30, max: 540 }) })
-  const weaned = addDays({ date: pet.birthDate, days: 60 })
-  const latestStart = latest([addDays({ date: DATA_DATE, days: -20 }), customer.signupDate])
-  return earliest([latest([joined, weaned]), latestStart])
+  const signup = dayOf(customer.signupDate)
+  const joined = index === 0 ? signup : signup + random.int({ min: 30, max: 540 })
+  const weaned = dayOf(pet.birthDate) + 60
+  const latestStart = Math.max(-20, signup)
+  return Math.min(Math.max(joined, weaned), latestStart)
 }
 
-type Lifecycle = { status: Subscription['status']; cancelDate?: IsoDate; pausedSince?: IsoDate }
+type Lifecycle = { status: Subscription['status']; cancelDay?: Day; pausedSince?: Day }
 
 // About 10 % cancelled in the last year and 5 % paused; the rest active.
-function lifecycle({ random, start }: { random: Random; start: IsoDate }): Lifecycle {
-  const age = daysBetween({ from: start, to: DATA_DATE })
+function lifecycle({ random, start }: { random: Random; start: Day }): Lifecycle {
+  const age = -start
   const roll = random.next()
   if (age > 90 && roll < 0.1) {
-    const from = latest([addDays({ date: start, days: 56 }), addDays({ date: DATA_DATE, days: -365 })])
-    const span = daysBetween({ from, to: addDays({ date: DATA_DATE, days: -5 }) })
-    return { status: 'cancelled', cancelDate: addDays({ date: from, days: random.int({ min: 0, max: span }) }) }
+    const from = Math.max(start + 56, -365)
+    const span = -5 - from
+    return { status: 'cancelled', cancelDay: from + random.int({ min: 0, max: span }) }
   }
   if (age > 60 && roll < 0.15) {
-    const pausedSince = latest([addDays({ date: DATA_DATE, days: -random.int({ min: 10, max: 90 }) }), addDays({ date: start, days: 30 })])
+    const pausedSince = Math.max(-random.int({ min: 10, max: 90 }), start + 30)
     return { status: 'paused', pausedSince }
   }
   return { status: 'active' }
@@ -207,19 +209,19 @@ function generateSubscription(input: { random: Random; plans: Plan[]; customer: 
   const country = customer.country
   const planId = choosePlan({ random, pet, country, ageMonths })
   const start = startDate({ random, customer, pet, index })
-  const { status, cancelDate, pausedSince } = lifecycle({ random, start })
+  const { status, cancelDay, pausedSince } = lifecycle({ random, start })
   const subscription: Subscription = {
     id: `SUB-${pet.id.slice(4)}`,
     customerId: customer.id,
     petId: pet.id,
     planId,
     status,
-    startDate: start,
-    cancelDate,
+    startDate: relativeDay(start),
+    cancelDate: cancelDay === undefined ? undefined : relativeDay(cancelDay),
     monthlyPrice: subscriptionPrice({ plan: findPlan({ plans, id: planId }), country, weightKg: pet.weightKg }),
     currency: CURRENCY_BY_COUNTRY[country],
     productIds: productIdsFor({ plan: planId, pet, country, ageMonths }),
-    nextShipment: status === 'active' ? nextCycleAfter({ start, date: DATA_DATE }) : undefined,
+    nextShipment: status === 'active' ? relativeDay(nextCycleAfter({ start, day: 0 })) : undefined,
   }
   return { subscription, pausedSince }
 }
@@ -233,13 +235,13 @@ export function generateCustomerBase({ random, plans, takenEmails }: CustomerBas
   const drafts = COUNTRIES.flatMap((country) =>
     Array.from({ length: CUSTOMER_COUNT[country] }, () => customerDraft({ random, country })),
   )
-  drafts.sort((a, b) => a.signupDate.localeCompare(b.signupDate))
+  drafts.sort((a, b) => a.signupDay - b.signupDay)
   const taken = new Set(takenEmails)
   const customers = drafts.map((draft, index) => toCustomer({ random, draft, index, taken }))
 
   const pets: Pet[] = []
   const subscriptions: Subscription[] = []
-  const pausedSince = new Map<string, IsoDate>()
+  const pausedSince = new Map<string, Day>()
   for (const customer of customers) {
     const petCount = random.weighted([
       { value: 1, weight: 78 },

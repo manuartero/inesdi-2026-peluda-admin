@@ -3,7 +3,11 @@
 
 type Row = Record<string, unknown>
 
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2})?$/
+// Dates in the data files count from now (see model.relative.ts).
+// - A day: `-22d` (22 days ago), `+6d`, `0d` (today); `-34M` is the 1st of the month 34 months ago, `+2M-1d` the last day of next month.
+// - A ticket's arrival: `-1d3h10m` is 1 day, 3 hours and 10 minutes ago.
+export const RELATIVE_DAY = /^(?=.)(?:([+-]\d+)M)?(?:([+-]?\d+)d)?$/
+export const RELATIVE_AGO = /^-(?=\d)(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?$/
 
 export function dataError(message: string) {
   const error = new Error(message)
@@ -27,7 +31,7 @@ export function asList({ json, where }: { json: unknown; where: string }) {
 }
 
 // rowReader({ raw, where: 'tickets.handwritten.json #3' }).text('subject') fails with
-// `tickets.handwritten.json #3 (TCK-20261124-0012) › subject: expected a non-empty string, got 42`.
+// `tickets.handwritten.json #3 (TCK-0012) › subject: expected a non-empty string, got 42`.
 export function rowReader({ raw, where }: { raw: unknown; where: string }) {
   if (!isRow(raw)) {
     throw dataError(`${where}: expected an object`)
@@ -64,10 +68,18 @@ export function rowReader({ raw, where }: { raw: unknown; where: string }) {
     return value
   }
 
-  const date = (key: string) => {
+  const day = (key: string) => {
     const value = text(key)
-    if (!ISO_DATE.test(value)) {
-      return fail({ key, expected: 'a date like 2026-11-24 or 2026-11-24T09:15:00' })
+    if (!RELATIVE_DAY.test(value)) {
+      return fail({ key, expected: 'a relative day like -22d, +6d, 0d or +2M-1d' })
+    }
+    return value
+  }
+
+  const ago = (key: string) => {
+    const value = text(key)
+    if (!RELATIVE_AGO.test(value)) {
+      return fail({ key, expected: 'a time ago like -1d3h10m or -45m' })
     }
     return value
   }
@@ -121,7 +133,7 @@ export function rowReader({ raw, where }: { raw: unknown; where: string }) {
     return read(key)
   }
 
-  return { has, text, number, flag, date, oneOf, texts, listOf, child, list, optional }
+  return { has, text, number, flag, day, ago, oneOf, texts, listOf, child, list, optional }
 }
 
 export type RowReader = ReturnType<typeof rowReader>

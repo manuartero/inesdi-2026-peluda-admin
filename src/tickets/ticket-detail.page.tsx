@@ -12,7 +12,7 @@ import { findCustomer, ordersOf, petsOf, subscriptionsOf } from '@/customers/cus
 import { OrderHistory } from '@/customers/order-history.component.tsx'
 import { PetCard } from '@/customers/pet-card.component.tsx'
 import { SubscriptionCard } from '@/customers/subscription-card.component.tsx'
-import { formatDate, formatTime } from '@/data/model.dates.ts'
+import { formatAgo, formatDate, formatTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { ticketPromptText } from './ticket.prompt.ts'
 import { INBOX, findTicket } from './tickets.data.ts'
@@ -31,10 +31,12 @@ function MessageCard({ ticket }: { ticket: InboxTicket }) {
           <Field label="Canal">{LABELS.ticketChannel[ticket.channel]}</Field>
           <Field label="País">{countryWithFlag(ticket.country)}</Field>
           <Field label="Recibido">
-            {formatDate(ticket.receivedAt)} {formatTime(ticket.receivedAt)}
-            {isLocalTimeDifferent && (
-              <span className="text-muted-foreground"> (hora local; {formatTime(ticket.receivedAtMadrid)} en Madrid)</span>
-            )}
+            {formatAgo(ticket.minutesAgo)}
+            <span className="text-muted-foreground">
+              {' '}
+              · {formatDate(ticket.receivedAt)} {formatTime(ticket.receivedAt)}
+              {isLocalTimeDifferent && ` hora local; ${formatTime(ticket.receivedAtMadrid)} en Madrid`}
+            </span>
           </Field>
         </dl>
         <div className="rounded-lg border-[1.5px] bg-muted p-4 text-sm leading-relaxed whitespace-pre-wrap">{ticket.message}</div>

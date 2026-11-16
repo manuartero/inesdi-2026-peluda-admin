@@ -6,8 +6,8 @@ import { Field } from '@/app/field.component.tsx'
 import { MarkdownText } from '@/app/markdown-text.component.tsx'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag } from '@/data/model.labels.ts'
 import { ContractExpiry } from './contract-expiry.component.tsx'
 import { findSupplier } from './suppliers.data.ts'
@@ -25,8 +25,8 @@ function ContractCard({ contract }: { contract: ShownContract }) {
             <span className="font-mono text-xs">{contract.id}</span>
           </Field>
           <Field label="Título">{contract.title}</Field>
-          <Field label="Firmado">{formatDate(contract.signedOn)}</Field>
-          <Field label="Inicio">{formatDate(contract.startDate)}</Field>
+          <Field label="Firmado"><RelativeDay iso={contract.signedOn} /></Field>
+          <Field label="Inicio"><RelativeDay iso={contract.startDate} /></Field>
           <Field label="Vencimiento">
             <ContractExpiry expiry={contract.expiryOnRecord} />
           </Field>

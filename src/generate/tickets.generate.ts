@@ -1,25 +1,25 @@
 import type { RowReader } from '../data/json-row.reader.ts'
-import { UTC_OFFSET_HOURS } from '../data/model.dates.ts'
 import { parseList } from '../data/model.parse.ts'
-import { COUNTRIES, DATA_DATE, SPECIES, TICKET_CATEGORIES, URGENCIES } from '../data/model.types.ts'
-import type { Country, IsoDate, Ticket } from '../data/model.types.ts'
+import { COUNTRIES, SPECIES, TICKET_CATEGORIES, URGENCIES } from '../data/model.types.ts'
+import type { Country, Ticket } from '../data/model.types.ts'
 import { personName } from './customers.generate.ts'
 import { fillIn, pickHousehold } from './generate.people.ts'
 import type { Household } from './generate.people.ts'
 import type { Random } from './generate.random.ts'
-import { addDays, daysBetween, withTime } from './generate.dates.ts'
+import type { Day } from './generate.dates.ts'
 import templatesJson from './tickets.templates.json' with { type: 'json' }
 
-// ~150 tickets a day, split like the subscribers, by days from DATA_DATE. Today the handwritten 30 are on top of these 121.
+// ~150 tickets a day, split like the subscribers, by days from today. Today the handwritten 30 are on top of these 121.
 // With a 26 h first response, the inbox still holds the two days before today: 143 + 157 + 151 = 451 unclassified tickets.
 const FILLER_COUNT_BY_DAY: Record<number, Record<Country, number>> = {
   [-2]: { ES: 77, MX: 34, CO: 14, PE: 13, AR: 5 },
   [-1]: { ES: 85, MX: 38, CO: 16, PE: 13, AR: 5 },
   0: { ES: 66, MX: 29, CO: 12, PE: 10, AR: 4 },
 }
-const BACKLOG_DAYS = 2
+const BACKLOG_DAYS = [-2, -1, 0]
 const DAY_MINUTES = 24 * 60
-// The last ticket lands at 17:50 Madrid time, ten minutes before session 1 starts.
+// Arrival times are laid out on a Madrid clock where «now» is 18:00, so the last ticket landed ten minutes ago.
+const NOW_MINUTES = 18 * 60
 const LAST_ARRIVAL_MINUTES = 17 * 60 + 50
 const WORKDAY_START_MINUTES = 7 * 60
 const IDENTIFIED_SHARE = 0.88
@@ -52,10 +52,13 @@ function madridMinutes({ random, lastArrival }: { random: Random; lastArrival: n
   return random.int({ min: WORKDAY_START_MINUTES, max: lastArrival - 1 })
 }
 
-// localTime({ date: '2026-11-24', country: 'MX', madrid: 600 }) is '2026-11-24T03:00:00': 10:00 in Madrid is 03:00 in Mexico City.
-function localTime({ date, country, madrid }: { date: IsoDate; country: Country; madrid: number }) {
-  const shiftMinutes = (UTC_OFFSET_HOURS.ES - UTC_OFFSET_HOURS[country]) * 60
-  return withTime({ date, minutes: madrid - shiftMinutes })
+// receivedAgo({ day: -1, madrid: 600 }) is '-1d8h': 10:00 yesterday on a clock where now is 18:00.
+function receivedAgo({ day, madrid }: { day: Day; madrid: number }) {
+  const minutes = -day * DAY_MINUTES + NOW_MINUTES - madrid
+  const days = Math.floor(minutes / DAY_MINUTES)
+  const hours = Math.floor((minutes % DAY_MINUTES) / 60)
+  const rest = minutes % 60
+  return `-${days ? `${days}d` : ''}${hours ? `${hours}h` : ''}${rest ? `${rest}m` : ''}`
 }
 
 function unknownPhone({ random, country }: { random: Random; country: Country }) {
@@ -91,11 +94,11 @@ function senderFor({ random, writer, channel, country }: { random: Random; write
   return writer.customerId === undefined ? unknownPhone({ random, country }) : writer.firstName
 }
 
-type TicketSlot = { date: IsoDate; country: Country; madrid: number }
+type TicketSlot = { day: Day; country: Country; madrid: number }
 
 function draftTicket(input: { random: Random; households: Household[]; slot: TicketSlot; template: TicketTemplate }) {
   const { random, households, slot, template } = input
-  const { date, country, madrid } = slot
+  const { day, country, madrid } = slot
   const channel = random.weighted<Ticket['channel']>([
     { value: 'email', weight: 35 },
     { value: 'form', weight: 20 },
@@ -105,9 +108,9 @@ function draftTicket(input: { random: Random; households: Household[]; slot: Tic
   const writer = chooseWriter({ random, households, country, template })
   const values = { firstName: writer.firstName, pet: writer.pet ?? '' }
   return {
-    date,
+    day,
     madrid,
-    receivedAt: localTime({ date, country, madrid }),
+    receivedAt: receivedAgo({ day, madrid }),
     country,
     channel,
     customerId: writer.customerId,
@@ -119,13 +122,13 @@ function draftTicket(input: { random: Random; households: Household[]; slot: Tic
   }
 }
 
-// Handwritten tickets keep their numbers (0004, 0009…); filler takes the free ones, in arrival order.
-// freeTicketNumbers({ date: '2026-11-23', count: 3, taken }) is TCK-20261123-0001, 0002 and 0003.
-function freeTicketNumbers({ date, count, taken }: { date: IsoDate; count: number; taken: Set<string> }) {
-  const day = date.replaceAll('-', '')
+// IDs never carry a date, so a ticket number in a slide or a demo stays valid: today's are TCK-0001 on, yesterday's TCK-1001 on,
+// the day before's TCK-2001 on. Handwritten tickets keep their numbers (0004, 0009…); filler takes the free ones, in arrival order.
+// freeTicketNumbers({ day: -1, count: 3, taken }) is TCK-1001, TCK-1002 and TCK-1003.
+function freeTicketNumbers({ day, count, taken }: { day: Day; count: number; taken: Set<string> }) {
   const ids: string[] = []
   for (let number = 1; ids.length < count; number++) {
-    const id = `TCK-${day}-${String(number).padStart(4, '0')}`
+    const id = `TCK-${String(-day * 1000 + number).padStart(4, '0')}`
     if (!taken.has(id)) {
       ids.push(id)
     }
@@ -134,30 +137,27 @@ function freeTicketNumbers({ date, count, taken }: { date: IsoDate; count: numbe
 }
 
 // The slots of one day: when and from where each ticket arrives. Today's first Spanish one is the 17:50 ticket.
-function daySlots({ random, date }: { random: Random; date: IsoDate }) {
-  const isToday = date === DATA_DATE
-  const counts = FILLER_COUNT_BY_DAY[daysBetween({ from: DATA_DATE, to: date })]
+function daySlots({ random, day }: { random: Random; day: Day }) {
+  const isToday = day === 0
+  const counts = FILLER_COUNT_BY_DAY[day]
   const lastArrival = isToday ? LAST_ARRIVAL_MINUTES : DAY_MINUTES
   return COUNTRIES.flatMap((country) =>
     Array.from({ length: counts[country] }, (_, index): TicketSlot => {
       const isLastOfToday = isToday && country === 'ES' && index === 0
       const madrid = isLastOfToday ? LAST_ARRIVAL_MINUTES : madridMinutes({ random, lastArrival })
-      return { date, country, madrid }
+      return { day, country, madrid }
     }),
   )
 }
 
-type DayInput = { random: Random; households: Household[]; decks: Record<string, () => TicketTemplate>; date: IsoDate; taken: Set<string> }
+type DayInput = { random: Random; households: Household[]; decks: Record<string, () => TicketTemplate>; day: Day; taken: Set<string> }
 
-function dayTickets({ random, households, decks, date, taken }: DayInput) {
-  const drafts = daySlots({ random, date }).map((slot) => draftTicket({ random, households, slot, template: decks[regionOf(slot.country)]() }))
+function dayTickets({ random, households, decks, day, taken }: DayInput) {
+  const drafts = daySlots({ random, day }).map((slot) => draftTicket({ random, households, slot, template: decks[regionOf(slot.country)]() }))
   drafts.sort((a, b) => a.madrid - b.madrid)
-  const ids = freeTicketNumbers({ date, count: drafts.length, taken })
-  return drafts.map(({ date: _date, madrid: _madrid, ...ticket }, index): Ticket => ({ id: ids[index], ...ticket }))
+  const ids = freeTicketNumbers({ day, count: drafts.length, taken })
+  return drafts.map(({ day: _day, madrid: _madrid, ...ticket }, index): Ticket => ({ id: ids[index], ...ticket }))
 }
-
-// backlogDates() is ['2026-11-22', '2026-11-23', '2026-11-24'].
-const backlogDates = () => Array.from({ length: BACKLOG_DAYS + 1 }, (_, index) => addDays({ date: DATA_DATE, days: index - BACKLOG_DAYS }))
 
 /**
  * The filler tickets of the inbox: 421 on top of the 30 handwritten ones, 451 in all.
@@ -168,5 +168,5 @@ const backlogDates = () => Array.from({ length: BACKLOG_DAYS + 1 }, (_, index) =
 export function generateTickets({ random, households, handwrittenIds }: { random: Random; households: Household[]; handwrittenIds: string[] }) {
   const decks = Object.fromEntries(REGIONS.map((region) => [region, random.deck(TEMPLATES.filter((t) => t.region === region))]))
   const taken = new Set(handwrittenIds)
-  return backlogDates().flatMap((date) => dayTickets({ random, households, decks, date, taken }))
+  return BACKLOG_DAYS.flatMap((day) => dayTickets({ random, households, decks, day, taken }))
 }

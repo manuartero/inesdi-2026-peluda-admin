@@ -2,7 +2,7 @@
 
 Referencia: CTR-VETAMIGA-2025
 
-En Madrid, a 10 de febrero de 2025.
+En Madrid, a {longDate:-21M+9d}.
 
 ## Reunidos
 
@@ -98,7 +98,7 @@ III. Que las Partes desean colaborar para que los suscriptores del plan Cuidado 
 
 ### Décima. Duración
 
-10.1. El presente acuerdo entrará en vigor el 1 de marzo de 2025 y tendrá una duración de dos (2) años, hasta el 28 de febrero de 2027.
+10.1. El presente acuerdo entrará en vigor el {longDate:-20M} y tendrá una duración de dos (2) años, hasta el {longDate:+4M-1d}.
 
 10.2. Las Partes podrán renovarlo por acuerdo expreso y por escrito. Las revisiones con cita confirmada antes del vencimiento se realizarán y abonarán conforme a este acuerdo.
 

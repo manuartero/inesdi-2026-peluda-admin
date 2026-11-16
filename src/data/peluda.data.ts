@@ -2,7 +2,16 @@ import { GENERATED } from './generated.data.ts'
 import { HANDWRITTEN } from './handwritten.data.ts'
 import { dataError } from './json-row.reader.ts'
 import type { Order, Pet, Subscription, Supplier } from './model.types.ts'
-import { shiftCustomer, shiftOrder, shiftPet, shiftProduct, shiftReview, shiftSubscription, shiftTicket } from './model.shift.ts'
+import {
+  resolveContract,
+  resolveCustomer,
+  resolveOrder,
+  resolvePet,
+  resolveProduct,
+  resolveReview,
+  resolveSubscription,
+  resolveTicket,
+} from './model.relative.ts'
 
 type Identified = { id: string }
 
@@ -18,7 +27,7 @@ function idsOf({ items, what }: { items: Identified[]; what: string }) {
   return ids
 }
 
-// checkReference({ from: 'TCK-20261124-0004', field: 'customerId', id: 'CUS-00999', ids }) fails:
+// checkReference({ from: 'TCK-0004', field: 'customerId', id: 'CUS-00999', ids }) fails:
 // the ticket would show an empty customer card in the demo.
 function checkReference({ from, field, id, ids }: { from: string; field: string; id?: string; ids: Set<string> }) {
   if (id === undefined || ids.has(id)) {
@@ -63,15 +72,15 @@ const ownerById = <T extends { id: string; customerId: string }>(items: T[]) =>
   new Map(items.map((item) => [item.id, item.customerId]))
 
 function loadData() {
-  // Contracts keep their dates: they are signed documents, and their expiry is meant to be compared with the real today.
-  const { plans, suppliers, contracts, company } = HANDWRITTEN
-  const products = HANDWRITTEN.products.map(shiftProduct)
-  const customers = [...HANDWRITTEN.customers, ...GENERATED.customers].map(shiftCustomer)
-  const pets: Pet[] = [...HANDWRITTEN.pets, ...GENERATED.pets].map(shiftPet)
-  const subscriptions = [...HANDWRITTEN.subscriptions, ...GENERATED.subscriptions].map(shiftSubscription)
-  const orders: Order[] = [...HANDWRITTEN.orders, ...GENERATED.orders].map(shiftOrder)
-  const tickets = [...HANDWRITTEN.tickets, ...GENERATED.tickets].map(shiftTicket)
-  const reviews = [...HANDWRITTEN.reviews, ...GENERATED.reviews].map(shiftReview)
+  const { plans, suppliers, company } = HANDWRITTEN
+  const contracts = HANDWRITTEN.contracts.map(resolveContract)
+  const products = HANDWRITTEN.products.map(resolveProduct)
+  const customers = [...HANDWRITTEN.customers, ...GENERATED.customers].map(resolveCustomer)
+  const pets: Pet[] = [...HANDWRITTEN.pets, ...GENERATED.pets].map(resolvePet)
+  const subscriptions = [...HANDWRITTEN.subscriptions, ...GENERATED.subscriptions].map(resolveSubscription)
+  const orders: Order[] = [...HANDWRITTEN.orders, ...GENERATED.orders].map(resolveOrder)
+  const tickets = [...HANDWRITTEN.tickets, ...GENERATED.tickets].map(resolveTicket)
+  const reviews = [...HANDWRITTEN.reviews, ...GENERATED.reviews].map(resolveReview)
 
   const planIds = idsOf({ items: plans, what: 'plans' })
   const productIds = idsOf({ items: products, what: 'products' })
@@ -135,5 +144,5 @@ function loadData() {
   return { plans, products, suppliers, contracts, company, customers, pets, subscriptions, orders, tickets, reviews }
 }
 
-// Handwritten case content plus the generated filler, moved to today's dates and checked as one data set.
+// Handwritten case content plus the generated filler, with their relative dates resolved from now and checked as one data set.
 export const DATA = loadData()

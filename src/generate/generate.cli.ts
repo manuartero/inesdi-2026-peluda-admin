@@ -8,6 +8,7 @@ import { generateOrders } from './orders.generate.ts'
 import { generateReviews } from './reviews.generate.ts'
 import { generateTickets } from './tickets.generate.ts'
 
+// Just a number, not a date: changing it reshuffles all the filler, and the demos cite filler tickets (0020, 0062…).
 const SEED = 20261124
 const GENERATED_DIR = new URL('../../data/generated/', import.meta.url)
 

@@ -2,9 +2,10 @@ import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { StepLinks } from '@/app/step-links.component.tsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { formatDate, formatTime } from '@/data/model.dates.ts'
+import { formatAgo } from '@/data/model.dates.ts'
 import type { Customer, Pet } from '@/data/model.types.ts'
 import { ReviewStars } from '@/reviews/review-stars.component.tsx'
 import { reviewsOf } from '@/reviews/reviews.data.ts'
@@ -30,7 +31,7 @@ function TicketsCard({ customerId }: { customerId: string }) {
           {tickets.map((ticket) => (
             <li key={ticket.id} className="flex gap-3 py-2">
               <span className="shrink-0 tabular-nums text-muted-foreground">
-                {formatDate(ticket.receivedAtMadrid)} {formatTime(ticket.receivedAtMadrid)}
+                {formatAgo(ticket.minutesAgo)}
               </span>
               <Link to={`/tickets/${ticket.id}`} className="truncate font-medium hover:underline">
                 {ticket.subject}
@@ -57,7 +58,7 @@ function ReviewsCard({ customerId }: { customerId: string }) {
         <ul className="divide-y text-sm">
           {reviews.map((review) => (
             <li key={review.id} className="flex items-center gap-3 py-2">
-              <span className="shrink-0 tabular-nums text-muted-foreground">{formatDate(review.date)}</span>
+              <span className="shrink-0 tabular-nums text-muted-foreground"><RelativeDay iso={review.date} /></span>
               <ReviewStars stars={review.stars} />
               <Link to={`/reviews/${review.id}`} className="truncate hover:underline">
                 {review.title ?? review.text}

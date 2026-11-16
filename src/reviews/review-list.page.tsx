@@ -1,10 +1,10 @@
 import { Link, useNavigate, useSearchParams } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { PageHeader } from '@/app/page-header.component.tsx'
+import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { COUNTRIES, REVIEW_STATUSES, TODAY } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
@@ -33,7 +33,7 @@ function ReviewRow({ review }: { review: ShownReview }) {
   const isUnanswered = review.status === 'unanswered'
   return (
     <TableRow className="cursor-pointer" onClick={() => navigate(`/reviews/${review.id}`)}>
-      <TableCell className="tabular-nums text-muted-foreground">{formatDate(review.date)}</TableCell>
+      <TableCell className="tabular-nums text-muted-foreground"><RelativeDay iso={review.date} /></TableCell>
       <TableCell>
         <ReviewStars stars={review.stars} />
       </TableCell>
