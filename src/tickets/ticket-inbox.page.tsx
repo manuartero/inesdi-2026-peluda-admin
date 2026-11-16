@@ -1,21 +1,16 @@
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { CountryFilter, FilterGroup } from '@/app/list-filters.component.tsx'
-import { countryFromParam, useListParams } from '@/app/list-filters.params.ts'
+import { useListParams } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { formatAgo, formatDateTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { exportFileName } from '@/lib/csv.ts'
-import type { Country } from '@/data/model.types.ts'
 import { ticketsCsv } from './tickets.csv.ts'
-import { ageInDays, INBOX, INBOX_AGES, LAST_24_HOURS } from './tickets.data.ts'
-import type { InboxTicket } from './tickets.data.ts'
-
-type Filters = { country?: Country; age?: number }
-
-const ageFromParam = (param: string | null) => INBOX_AGES.find((age) => String(age) === param)
+import { ageFromParam, INBOX, INBOX_AGES, LAST_24_HOURS, matchesTicket, ticketFilters } from './tickets.data.ts'
+import type { InboxTicket, TicketFilters } from './tickets.data.ts'
 
 // ageLabel(0) is 'Últimas 24 h'; ageLabel(2) is 'Hace 2 días'.
 const ageLabel = (age: number) => (age === 0 ? 'Últimas 24 h' : `Hace ${age} ${age === 1 ? 'día' : 'días'}`)
@@ -28,20 +23,16 @@ function ageFileName(age: number | undefined) {
   return age === 0 ? 'ultimas-24h' : `hace-${age}-dias`
 }
 
-function matches({ ticket, filters }: { ticket: InboxTicket; filters: Filters }) {
-  const countryMatches = !filters.country || ticket.country === filters.country
-  const ageMatches = filters.age === undefined || ageInDays(ticket) === filters.age
-  return countryMatches && ageMatches
-}
-
 function preview(message: string) {
   return message.replace(/\s+/g, ' ').trim()
 }
 
 function TicketRow({ ticket }: { ticket: InboxTicket }) {
   const navigate = useNavigate()
+  // The filters travel with the link, so the detail page's arrows stay inside them.
+  const path = `/tickets/${ticket.id}${useLocation().search}`
   return (
-    <TableRow className="cursor-pointer" onClick={() => navigate(`/tickets/${ticket.id}`)}>
+    <TableRow className="cursor-pointer" onClick={() => navigate(path)}>
       <TableCell className="tabular-nums whitespace-nowrap text-muted-foreground">
         <time dateTime={ticket.receivedAtMadrid} title={`${formatDateTime(ticket.receivedAtMadrid)} en Madrid`}>
           {formatAgo(ticket.minutesAgo)}
@@ -51,7 +42,7 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
       <TableCell>{LABELS.ticketChannel[ticket.channel]}</TableCell>
       <TableCell className="max-w-44 truncate">{ticket.sender}</TableCell>
       <TableCell className="max-w-0 w-full">
-        <Link to={`/tickets/${ticket.id}`} className="block truncate font-medium hover:underline">
+        <Link to={path} className="block truncate font-medium hover:underline">
           {ticket.subject}
         </Link>
         <div className="truncate text-xs text-muted-foreground">{preview(ticket.message)}</div>
@@ -64,15 +55,12 @@ function TicketRow({ ticket }: { ticket: InboxTicket }) {
 }
 
 export function TicketInboxPage() {
-  const { searchParams, setParam } = useListParams<keyof Filters>()
-  const filters = {
-    country: countryFromParam(searchParams.get('country')),
-    age: ageFromParam(searchParams.get('age')),
-  }
-  const tickets = INBOX.filter((ticket) => matches({ ticket, filters }))
+  const { searchParams, setParam } = useListParams<keyof TicketFilters>()
+  const filters = ticketFilters(searchParams)
+  const tickets = INBOX.filter((ticket) => matchesTicket({ ticket, filters }))
   const backlogCount = INBOX.length - LAST_24_HOURS.length
 
-  const countOf = (filter: Filters) => INBOX.filter((ticket) => matches({ ticket, filters: { ...filters, ...filter } })).length
+  const countOf = (filter: TicketFilters) => INBOX.filter((ticket) => matchesTicket({ ticket, filters: { ...filters, ...filter } })).length
 
   return (
     <>

@@ -1,5 +1,6 @@
+import { countryFromParam } from '@/app/list-filters.params.ts'
+import type { Country, Customer, Order } from '@/data/model.types.ts'
 import { DATA } from '@/data/peluda.data.ts'
-import type { Order } from '@/data/model.types.ts'
 
 // By ID: the handwritten case customers (CUS-00101…) come first, then the generated ones (CUS-01000…).
 export const CUSTOMERS = [...DATA.customers].sort((a, b) => a.id.localeCompare(b.id))
@@ -19,3 +20,37 @@ export const ordersOf = (customerId: string | undefined) =>
 export const findPlan = (id: string) => DATA.plans.find((plan) => plan.id === id)
 
 export const productName = (id: string) => DATA.products.find((product) => product.id === id)?.name ?? id
+
+// normalized('  Lucía NAVARRO ') is 'lucia navarro', so «lucia» finds «Lucía».
+export const normalized = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase()
+    .trim()
+
+// One string per customer with everything the search box looks at: name, ID, email, city and pet names.
+function searchableText(customer: Customer) {
+  const petNames = petsOf(customer.id).map((pet) => pet.name)
+  return normalized([customer.firstName, customer.lastName, customer.id, customer.email, customer.city, ...petNames].join(' '))
+}
+
+const SEARCHABLE = new Map(CUSTOMERS.map((customer) => [customer.id, searchableText(customer)]))
+
+export type CustomerFilters = { country?: Country; query: string }
+
+export const customerFilters = (params: URLSearchParams) => ({
+  country: countryFromParam(params.get('country')),
+  query: normalized(params.get('q') ?? ''),
+})
+
+export function matchesCustomer({ customer, filters }: { customer: Customer; filters: CustomerFilters }) {
+  const countryMatches = !filters.country || customer.country === filters.country
+  const queryMatches = !filters.query || (SEARCHABLE.get(customer.id) ?? '').includes(filters.query)
+  return countryMatches && queryMatches
+}
+
+export const filterCustomers = (params: URLSearchParams) => {
+  const filters = customerFilters(params)
+  return CUSTOMERS.filter((customer) => matchesCustomer({ customer, filters }))
+}

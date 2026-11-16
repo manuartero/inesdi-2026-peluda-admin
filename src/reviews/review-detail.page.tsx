@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import { CopyPromptButton } from '@/app/copy-prompt-button.component.tsx'
 import { Field } from '@/app/field.component.tsx'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
+import { useListSteps } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { StepLinks } from '@/app/step-links.component.tsx'
@@ -15,7 +16,7 @@ import { formatDate } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { reviewPromptText } from './review.prompt.ts'
 import { ReviewStars } from './review-stars.component.tsx'
-import { REVIEWS, findReview } from './reviews.data.ts'
+import { REVIEWS, filterReviews, findReview } from './reviews.data.ts'
 import type { ShownReview } from './reviews.data.ts'
 
 function ReviewCard({ review }: { review: ShownReview }) {
@@ -53,12 +54,10 @@ function ReplyCard({ reply }: { reply: string }) {
   )
 }
 
-const reviewPath = (review: ShownReview | undefined) => review && `/reviews/${review.id}`
-
 function ReviewDetail({ review }: { review: ShownReview }) {
   const customer = findCustomer(review.customerId)
   const pets = petsOf(customer?.id)
-  const index = REVIEWS.indexOf(review)
+  const steps = useListSteps({ item: review, all: REVIEWS, filter: filterReviews, listPath: '/reviews', pathOf: (other) => `/reviews/${other.id}` })
   const promptText = reviewPromptText({ review, customer, pets })
 
   return (
@@ -71,13 +70,13 @@ function ReviewDetail({ review }: { review: ShownReview }) {
           </span>
         }
         description={
-          <Link to="/reviews" className="inline-flex items-center gap-1 hover:text-foreground">
-            <ArrowLeft className="size-3.5" /> Reseñas · {index + 1} de {REVIEWS.length}
+          <Link to={steps.back} className="inline-flex items-center gap-1 hover:text-foreground">
+            <ArrowLeft className="size-3.5" /> Reseñas · {steps.position} de {steps.total}
           </Link>
         }
         actions={
           <div className="flex items-center gap-2">
-            <StepLinks previous={reviewPath(REVIEWS[index - 1])} next={reviewPath(REVIEWS[index + 1])} noun="Reseña" />
+            <StepLinks previous={steps.previous} next={steps.next} noun="Reseña" />
             <CopyPromptButton text={promptText} />
           </div>
         }

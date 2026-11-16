@@ -1,6 +1,7 @@
 import { ArrowLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
+import { useListSteps } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { StepLinks } from '@/app/step-links.component.tsx'
@@ -11,7 +12,7 @@ import { ReviewStars } from '@/reviews/review-stars.component.tsx'
 import { reviewsOf } from '@/reviews/reviews.data.ts'
 import { ticketsOf } from '@/tickets/tickets.data.ts'
 import { CustomerCard } from './customer-card.component.tsx'
-import { CUSTOMERS, findCustomer, ordersOf, petsOf, subscriptionsOf } from './customers.data.ts'
+import { CUSTOMERS, filterCustomers, findCustomer, ordersOf, petsOf, subscriptionsOf } from './customers.data.ts'
 import { OrderHistory } from './order-history.component.tsx'
 import { PetCard } from './pet-card.component.tsx'
 import { SubscriptionCard } from './subscription-card.component.tsx'
@@ -73,12 +74,10 @@ function ReviewsCard({ customerId }: { customerId: string }) {
 
 const petOf = ({ pets, petId }: { pets: Pet[]; petId: string }) => pets.find((pet) => pet.id === petId)
 
-const customerPath = (customer: Customer | undefined) => customer && `/customers/${customer.id}`
-
 function CustomerDetail({ customer }: { customer: Customer }) {
   const pets = petsOf(customer.id)
   const subscriptions = subscriptionsOf(customer.id)
-  const index = CUSTOMERS.indexOf(customer)
+  const steps = useListSteps({ item: customer, all: CUSTOMERS, filter: filterCustomers, listPath: '/customers', pathOf: (other) => `/customers/${other.id}` })
 
   return (
     <>
@@ -90,13 +89,13 @@ function CustomerDetail({ customer }: { customer: Customer }) {
           </span>
         }
         description={
-          <Link to="/customers" className="inline-flex items-center gap-1 hover:text-foreground">
-            <ArrowLeft className="size-3.5" /> Clientes · {index + 1} de {CUSTOMERS.length}
+          <Link to={steps.back} className="inline-flex items-center gap-1 hover:text-foreground">
+            <ArrowLeft className="size-3.5" /> Clientes · {steps.position} de {steps.total}
           </Link>
         }
         actions={
           <div className="flex items-center gap-2">
-            <StepLinks previous={customerPath(CUSTOMERS[index - 1])} next={customerPath(CUSTOMERS[index + 1])} noun="Cliente" />
+            <StepLinks previous={steps.previous} next={steps.next} noun="Cliente" />
           </div>
         }
       />

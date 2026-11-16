@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import { CopyPromptButton } from '@/app/copy-prompt-button.component.tsx'
 import { Field } from '@/app/field.component.tsx'
 import { NotFoundPage } from '@/app/not-found.page.tsx'
+import { useListSteps } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { StepLinks } from '@/app/step-links.component.tsx'
 import { Badge } from '@/components/ui/badge'
@@ -15,7 +16,7 @@ import { SubscriptionCard } from '@/customers/subscription-card.component.tsx'
 import { formatAgo, formatDateTime, formatTime } from '@/data/model.dates.ts'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { ticketPromptText } from './ticket.prompt.ts'
-import { INBOX, findTicket } from './tickets.data.ts'
+import { INBOX, filterInbox, findTicket } from './tickets.data.ts'
 import type { InboxTicket } from './tickets.data.ts'
 
 function MessageCard({ ticket }: { ticket: InboxTicket }) {
@@ -45,14 +46,12 @@ function MessageCard({ ticket }: { ticket: InboxTicket }) {
   )
 }
 
-const ticketPath = (ticket: InboxTicket | undefined) => ticket && `/tickets/${ticket.id}`
-
 function TicketDetail({ ticket }: { ticket: InboxTicket }) {
   const customer = findCustomer(ticket.customerId)
   const pets = petsOf(customer?.id)
   const subscriptions = subscriptionsOf(customer?.id)
   const orders = ordersOf(customer?.id)
-  const index = INBOX.indexOf(ticket)
+  const steps = useListSteps({ item: ticket, all: INBOX, filter: filterInbox, listPath: '/tickets', pathOf: (other) => `/tickets/${other.id}` })
   const promptText = ticketPromptText({ ticket, history: { customer, pets, subscriptions, orders } })
 
   return (
@@ -65,13 +64,13 @@ function TicketDetail({ ticket }: { ticket: InboxTicket }) {
           </span>
         }
         description={
-          <Link to="/tickets" className="inline-flex items-center gap-1 hover:text-foreground">
-            <ArrowLeft className="size-3.5" /> Bandeja de tickets · {index + 1} de {INBOX.length}
+          <Link to={steps.back} className="inline-flex items-center gap-1 hover:text-foreground">
+            <ArrowLeft className="size-3.5" /> Bandeja de tickets · {steps.position} de {steps.total}
           </Link>
         }
         actions={
           <div className="flex items-center gap-2">
-            <StepLinks previous={ticketPath(INBOX[index - 1])} next={ticketPath(INBOX[index + 1])} noun="Ticket" />
+            <StepLinks previous={steps.previous} next={steps.next} noun="Ticket" />
             <CopyPromptButton text={promptText} />
           </div>
         }

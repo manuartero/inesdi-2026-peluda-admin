@@ -1,37 +1,27 @@
-import { Link, useNavigate } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { ExportCsvButton } from '@/app/download-button.component.tsx'
 import { CountryFilter, FilterGroup } from '@/app/list-filters.component.tsx'
-import { countryFromParam, useListParams } from '@/app/list-filters.params.ts'
+import { useListParams } from '@/app/list-filters.params.ts'
 import { PageHeader } from '@/app/page-header.component.tsx'
 import { RelativeDay } from '@/app/relative-day.component.tsx'
 import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { countryWithFlag, LABELS } from '@/data/model.labels.ts'
 import { REVIEW_STATUSES, TODAY } from '@/data/model.types.ts'
-import type { Country } from '@/data/model.types.ts'
 import { exportFileName } from '@/lib/csv.ts'
 import { reviewsCsv } from './reviews.csv.ts'
 import { ReviewStars } from './review-stars.component.tsx'
-import { REVIEWS, UNANSWERED } from './reviews.data.ts'
-import type { ShownReview } from './reviews.data.ts'
-
-type Filters = { country?: Country; status?: ShownReview['status'] }
-
-const statusFromParam = (param: string | null) => REVIEW_STATUSES.find((status) => status === param)
+import { REVIEWS, UNANSWERED, matchesReview, reviewFilters, statusFromParam } from './reviews.data.ts'
+import type { ReviewFilters, ShownReview } from './reviews.data.ts'
 
 const preview = (text: string) => text.replace(/\s+/g, ' ').trim()
 
-function matches({ review, filters }: { review: ShownReview; filters: Filters }) {
-  const countryMatches = !filters.country || review.country === filters.country
-  const statusMatches = !filters.status || review.status === filters.status
-  return countryMatches && statusMatches
-}
-
 function ReviewRow({ review }: { review: ShownReview }) {
   const navigate = useNavigate()
+  const path = `/reviews/${review.id}${useLocation().search}`
   const isUnanswered = review.status === 'unanswered'
   return (
-    <TableRow className="cursor-pointer" onClick={() => navigate(`/reviews/${review.id}`)}>
+    <TableRow className="cursor-pointer" onClick={() => navigate(path)}>
       <TableCell className="tabular-nums text-muted-foreground"><RelativeDay iso={review.date} /></TableCell>
       <TableCell>
         <ReviewStars stars={review.stars} />
@@ -40,7 +30,7 @@ function ReviewRow({ review }: { review: ShownReview }) {
       <TableCell>{countryWithFlag(review.country)}</TableCell>
       <TableCell className="max-w-36 truncate">{review.author}</TableCell>
       <TableCell className="max-w-0 w-full">
-        <Link to={`/reviews/${review.id}`} className="block truncate hover:underline">
+        <Link to={path} className="block truncate hover:underline">
           {review.title && <span className="font-medium">{review.title} · </span>}
           {preview(review.text)}
         </Link>
@@ -54,14 +44,11 @@ function ReviewRow({ review }: { review: ShownReview }) {
 }
 
 export function ReviewListPage() {
-  const { searchParams, setParam } = useListParams<keyof Filters>()
-  const filters = {
-    country: countryFromParam(searchParams.get('country')),
-    status: statusFromParam(searchParams.get('status')),
-  }
-  const reviews = REVIEWS.filter((review) => matches({ review, filters }))
+  const { searchParams, setParam } = useListParams<keyof ReviewFilters>()
+  const filters = reviewFilters(searchParams)
+  const reviews = REVIEWS.filter((review) => matchesReview({ review, filters }))
 
-  const countOf = (filter: Filters) => REVIEWS.filter((review) => matches({ review, filters: { ...filters, ...filter } })).length
+  const countOf = (filter: ReviewFilters) => REVIEWS.filter((review) => matchesReview({ review, filters: { ...filters, ...filter } })).length
 
   return (
     <>
