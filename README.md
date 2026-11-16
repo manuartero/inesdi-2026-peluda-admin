@@ -23,11 +23,9 @@ Tickets, customers, contracts and reviews to practise prompt engineering on.
 ## What this is
 
 > [!WARNING]
-> **Peluda is fictional.** The company, its customers, suppliers, contracts, tickets and reviews are all invented for a classroom. No real person, email, phone or tax ID is in here.
+> **Peluda is fictional.** Its company, customers, contracts, tickets and reviews were invented for a classroom.
 
-Peluda Admin is teaching material for the workshop *Prompt engineering estratégico* of the **Máster de FP en Inteligencia Artificial Aplicada a la Empresa** at **INESDI** (2026 edition). Students open it like a real support team would, copy a ticket, a contract or a review with **«Copiar para el prompt»**, paste it into a chat assistant and practise writing the prompt that handles it: classify the inbox, spot the trap in a contract clause, answer a review in the brand's voice.
-
-The UI and the content are in Spanish; the code is in English.
+Teaching material for the *Prompt engineering estratégico* workshop of INESDI's **Máster de FP en Inteligencia Artificial Aplicada a la Empresa** (2026). Students copy a ticket, a contract or a review with **«Copiar para el prompt»**, paste it into a chat assistant and practise the prompt that handles it.
 
 ## Screens
 
