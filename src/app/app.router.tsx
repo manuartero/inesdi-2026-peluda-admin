@@ -19,7 +19,8 @@ const comingSoonRoutes = APP_NAV.filter((entry) => entry.comingSoon).map((entry)
   element: <ComingSoonPage title={entry.label} />,
 }))
 
-export const APP_ROUTER = createBrowserRouter([
+// Exported apart from the router so the tests can mount them in a memory router.
+export const APP_ROUTES = [
   {
     element: <AppLayout />,
     children: [
@@ -37,4 +38,6 @@ export const APP_ROUTER = createBrowserRouter([
       { path: '*', element: <NotFoundPage /> },
     ],
   },
-])
+]
+
+export const APP_ROUTER = createBrowserRouter(APP_ROUTES)

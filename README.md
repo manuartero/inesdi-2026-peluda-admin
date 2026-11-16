@@ -14,6 +14,8 @@ pnpm generate     # rewrites data/generated/ (fixed seed: same output every run)
 pnpm check:data   # validates data/ and the UI labels (also run by pnpm build)
 pnpm build
 pnpm lint
+pnpm test:unit     # vitest: a happy-path test per screen
+pnpm blue-ball     # lint + test:unit + build (build runs check:data): run before every commit
 ```
 
 The CMS "today" is the real (UTC) today: the data is written for 24/11/2026 and every date moves to today when the page loads (`src/data/model.shift.ts`). Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`), so the deployed site never ships the workshop's solutions.
