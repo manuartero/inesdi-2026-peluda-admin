@@ -12,10 +12,7 @@
     "cms",
     "react",
     "vite",
-    "typescript",
-    "tailwindcss",
-    "shadcn-ui",
-    "vitest"
+    "shadcn-ui"
   ],
   "homepage": "https://inesdi-2026-peluda-admin.vercel.app",
   "bugs": {

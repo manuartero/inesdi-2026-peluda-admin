@@ -9,17 +9,12 @@ Tickets, customers, contracts and reviews to practise prompt engineering on.
 
 [![Fake CMS: for teaching only](https://img.shields.io/badge/%E2%9A%A0%EF%B8%8F%20fake%20CMS-for%20teaching%20only-d9773b?style=for-the-badge)](#what-this-is)
 [![INESDI 2026: Máster de FP en IA aplicada a la empresa](https://img.shields.io/badge/INESDI%202026-M%C3%A1ster%20FP%20en%20IA%20aplicada%20a%20la%20empresa-1f2937?style=for-the-badge)](#what-this-is)
-[![Data: 100 % made up](https://img.shields.io/badge/data-100%25%20made%20up-6b7280?style=for-the-badge)](#the-data)
 
-[![Live demo](https://img.shields.io/badge/live%20demo-vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://inesdi-2026-peluda-admin.vercel.app)
+[![Vercel](https://img.shields.io/badge/-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://inesdi-2026-peluda-admin.vercel.app)
 ![Node 24](https://img.shields.io/badge/node-24-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white)
 ![React 19](https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=black)
 ![Vite 8](https://img.shields.io/badge/vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)
-![TypeScript 7](https://img.shields.io/badge/typescript-7-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Tailwind CSS 4](https://img.shields.io/badge/tailwind-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
-![Vitest 5](https://img.shields.io/badge/vitest-5-6E9F18?style=flat-square&logo=vitest&logoColor=white)
 ![Coverage 84 %](https://img.shields.io/badge/coverage-84%25-4c1?style=flat-square)
-[![License: MIT](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
 
 <img src="docs/screenshots/home.png" alt="Peluda Admin home: unclassified tickets, unanswered reviews and company indicators" width="900" />
 
