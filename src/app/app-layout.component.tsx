@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router'
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 import { TODAY } from '@/data/model.types.ts'
 import { formatLongDate } from '@/data/model.dates.ts'
 import { UNANSWERED } from '@/reviews/reviews.data.ts'

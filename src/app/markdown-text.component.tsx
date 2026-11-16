@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from 'cn'
 
 // Renders the small Markdown subset our hand-written documents use (contracts, brand voice guide):
 // `#`/`##`/`###` headings, `- ` and `1. ` lists, `> ` quotes, `| a | b |` tables, `**bold**` and plain paragraphs.
