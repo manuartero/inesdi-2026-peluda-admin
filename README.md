@@ -53,37 +53,9 @@ The UI and the content are in Spanish; the code is in English.
   </tr>
 </table>
 
-## The data
+## Contributing
 
-- **Handwritten cases** (`data/handwritten/`): the tickets, contracts and reviews the workshop exercises are built on, each with an `answerKey` (category, urgency, the trap). Demos cite them by ID (`TCK-0004`, `CTR-NUTRICAN-2024`…).
-- **Generated filler** (`data/generated/`): ~600 customers with their pets and subscriptions, ~2,600 orders, ~420 tickets and 300 reviews, from a fixed seed, so `pnpm generate` always writes the same files.
-- **Always today.** Dates are stored relative (`-22d`, a ticket `-1d3h10m` ago) and resolved from the real UTC now when the page loads, so the inbox is always fresh. Ticket IDs carry no date.
-- **No spoilers.** Every `answerKey` is stripped from the bundle at build time (`vite.config.ts`): the deployed site never ships the solutions.
-- **Checked at build.** `pnpm check:data` validates every file, cross-reference and trap; a typo breaks the build.
-
-Field by field: [`data/schema.md`](data/schema.md). The original plan: [`init.plan.md`](init.plan.md).
-
-## Run it
-
-```sh
-pnpm install
-pnpm dev          # http://localhost:5173
-pnpm blue-ball    # lint + unit tests + build (the build runs check:data): run before every commit
-```
-
-| Command | What it does |
-| --- | --- |
-| `pnpm generate` | Rewrites `data/generated/` (fixed seed), then `check:data` |
-| `pnpm check:data` | Validates `data/` and the UI labels |
-| `pnpm test:unit` | Vitest: a happy-path test per screen, plus the relative-date rules |
-| `pnpm lint` | oxlint |
-| `pnpm build` | `check:data`, type check, Vite build |
-
-## Stack
-
-React 19 · React Router · Vite 8 · TypeScript 7 · Tailwind CSS 4 · shadcn/ui on Radix · Lucide icons · Vitest + Testing Library · oxlint · deployed on Vercel.
-
-The coverage badge is a snapshot: 84 % of lines in `src/` (generator and CLIs excluded), measured with `@vitest/coverage-v8` on 16/11/2026. It is not measured in CI.
+How to run it, the commands, the data model and the stack: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
