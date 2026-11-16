@@ -1,20 +1,18 @@
-import { TODAY } from './model.types.ts'
+import { DAY_MINUTES, DAY_MS, TODAY } from './model.types.ts'
 import type { IsoDate } from './model.types.ts'
-
-const HOUR_MS = 60 * 60 * 1000
 
 // Dates in the data are wall-clock times without a zone. Treating them as UTC keeps the browser's own zone out of it.
 function wallClock(iso: IsoDate) {
   return new Date(iso.length === 10 ? `${iso}T00:00:00Z` : `${iso}Z`)
 }
 
-function formatter(options: Intl.DateTimeFormatOptions) {
+export function utcFormatter(options: Intl.DateTimeFormatOptions) {
   return new Intl.DateTimeFormat('es-ES', { ...options, timeZone: 'UTC' })
 }
 
-const DATE = formatter({ day: '2-digit', month: '2-digit', year: 'numeric' })
-const TIME = formatter({ hour: '2-digit', minute: '2-digit' })
-const LONG_DATE = formatter({ weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+const DATE = utcFormatter({ day: '2-digit', month: '2-digit', year: 'numeric' })
+const TIME = utcFormatter({ hour: '2-digit', minute: '2-digit' })
+const LONG_DATE = utcFormatter({ weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
 export const formatDate = (iso: IsoDate) => DATE.format(wallClock(iso))
 export const formatTime = (iso: IsoDate) => TIME.format(wallClock(iso))
@@ -38,10 +36,8 @@ export function formatAge(birthDate: IsoDate) {
   return years === 1 ? '1 año' : `${years} años`
 }
 
-const DAY_MS = 24 * HOUR_MS
-
 // daysBetween({ from: '2026-11-16', to: '2026-12-31' }) is 45; an earlier `to` is negative. Times of day are ignored.
-export const daysBetween = ({ from, to }: { from: IsoDate; to: IsoDate }) =>
+const daysBetween = ({ from, to }: { from: IsoDate; to: IsoDate }) =>
   Math.round((wallClock(to.slice(0, 10)).getTime() - wallClock(from.slice(0, 10)).getTime()) / DAY_MS)
 
 // On 2026-11-16, daysFromToday('2026-12-31') is 45.
@@ -72,8 +68,8 @@ export function formatAgo(minutes: number) {
   if (minutes < 60) {
     return RELATIVE.format(-minutes, 'minute')
   }
-  if (minutes < 24 * 60) {
+  if (minutes < DAY_MINUTES) {
     return RELATIVE.format(-Math.floor(minutes / 60), 'hour')
   }
-  return RELATIVE.format(-Math.floor(minutes / (24 * 60)), 'day')
+  return RELATIVE.format(-Math.floor(minutes / DAY_MINUTES), 'day')
 }

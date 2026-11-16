@@ -1,13 +1,11 @@
 import { RELATIVE_AGO, RELATIVE_DAY, dataError } from './json-row.reader.ts'
-import { NOW_MS, TODAY } from './model.types.ts'
+import { utcFormatter } from './model.dates.ts'
+import { DAY_MINUTES, DAY_MS, MINUTE_MS, NOW_MS, TODAY } from './model.types.ts'
 import type { Contract, Country, Customer, Order, Pet, Product, Review, Subscription, Ticket, WithoutAnswerKey } from './model.types.ts'
 
 // The data files never name a day: every date counts from now (formats in json-row.reader.ts), so the CMS always looks current.
 
-const MINUTE_MS = 60 * 1000
-const DAY_MS = 24 * 60 * MINUTE_MS
-
-export const TIME_ZONE: Record<Country, string> = {
+const TIME_ZONE: Record<Country, string> = {
   ES: 'Europe/Madrid',
   MX: 'America/Mexico_City',
   CO: 'America/Bogota',
@@ -41,7 +39,7 @@ export function minutesAgo(relative: string) {
     throw dataError(`expected a time ago like -1d3h10m, got ${relative}`)
   }
   const [, days, hours, minutes] = match.map(Number)
-  return (days || 0) * 24 * 60 + (hours || 0) * 60 + (minutes || 0)
+  return (days || 0) * DAY_MINUTES + (hours || 0) * 60 + (minutes || 0)
 }
 
 const WALL_CLOCK = new Map<string, Intl.DateTimeFormat>()
@@ -63,18 +61,14 @@ export function wallClockIn({ ms, zone }: { ms: number; zone: string }) {
   return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`
 }
 
-function textFormatter(options: Intl.DateTimeFormatOptions) {
-  return new Intl.DateTimeFormat('es-ES', { ...options, timeZone: 'UTC' })
-}
-
 const DATE_FORMATS = {
-  date: textFormatter({ day: 'numeric', month: 'long' }),
-  month: textFormatter({ month: 'long' }),
-  weekday: textFormatter({ weekday: 'long' }),
-  WEEKDAY: textFormatter({ weekday: 'long' }),
-  short: textFormatter({ day: 'numeric', month: 'numeric' }),
-  nextMonth: textFormatter({ month: 'long' }),
-  longDate: textFormatter({ day: 'numeric', month: 'long', year: 'numeric' }),
+  date: utcFormatter({ day: 'numeric', month: 'long' }),
+  month: utcFormatter({ month: 'long' }),
+  weekday: utcFormatter({ weekday: 'long' }),
+  WEEKDAY: utcFormatter({ weekday: 'long' }),
+  short: utcFormatter({ day: 'numeric', month: 'numeric' }),
+  nextMonth: utcFormatter({ month: 'long' }),
+  longDate: utcFormatter({ day: 'numeric', month: 'long', year: 'numeric' }),
 }
 type DateFormat = keyof typeof DATE_FORMATS
 

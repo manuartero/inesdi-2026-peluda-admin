@@ -1,7 +1,7 @@
 import { GENERATED } from './generated.data.ts'
 import { HANDWRITTEN } from './handwritten.data.ts'
 import { dataError } from './json-row.reader.ts'
-import type { Order, Pet, Subscription, Supplier } from './model.types.ts'
+import type { Subscription, Supplier } from './model.types.ts'
 import {
   resolveContract,
   resolveCustomer,
@@ -76,9 +76,9 @@ function loadData() {
   const contracts = HANDWRITTEN.contracts.map(resolveContract)
   const products = HANDWRITTEN.products.map(resolveProduct)
   const customers = [...HANDWRITTEN.customers, ...GENERATED.customers].map(resolveCustomer)
-  const pets: Pet[] = [...HANDWRITTEN.pets, ...GENERATED.pets].map(resolvePet)
+  const pets = [...HANDWRITTEN.pets, ...GENERATED.pets].map(resolvePet)
   const subscriptions = [...HANDWRITTEN.subscriptions, ...GENERATED.subscriptions].map(resolveSubscription)
-  const orders: Order[] = [...HANDWRITTEN.orders, ...GENERATED.orders].map(resolveOrder)
+  const orders = [...HANDWRITTEN.orders, ...GENERATED.orders].map(resolveOrder)
   const tickets = [...HANDWRITTEN.tickets, ...GENERATED.tickets].map(resolveTicket)
   const reviews = [...HANDWRITTEN.reviews, ...GENERATED.reviews].map(resolveReview)
 

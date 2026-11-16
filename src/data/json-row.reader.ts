@@ -15,10 +15,6 @@ export function dataError(message: string) {
   return error
 }
 
-export function isDataError(error: unknown) {
-  return error instanceof Error && error.name === 'DataError'
-}
-
 function isRow(value: unknown): value is Row {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }

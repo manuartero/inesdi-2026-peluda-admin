@@ -15,7 +15,9 @@ export const CURRENCY_BY_COUNTRY: Record<Country, Currency> = {
   PE: 'PEN',
   AR: 'ARS',
 }
-const MINUTE_MS = 60 * 1000
+export const MINUTE_MS = 60 * 1000
+export const DAY_MINUTES = 24 * 60
+export const DAY_MS = DAY_MINUTES * MINUTE_MS
 // The minute the page (or check:data) loads: every relative date in the data counts from it.
 export const NOW_MS = Math.floor(Date.now() / MINUTE_MS) * MINUTE_MS
 // Today's UTC date.

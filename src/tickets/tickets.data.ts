@@ -1,8 +1,7 @@
+import { DAY_MINUTES } from '@/data/model.types.ts'
 import { DATA } from '@/data/peluda.data.ts'
 
 export type InboxTicket = (typeof DATA.tickets)[number]
-
-const DAY_MINUTES = 24 * 60
 
 const byArrival = (a: InboxTicket, b: InboxTicket) => b.minutesAgo - a.minutesAgo
 
