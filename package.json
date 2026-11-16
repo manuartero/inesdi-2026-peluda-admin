@@ -1,8 +1,41 @@
 {
   "name": "peluda-admin",
+  "version": "1.0.0",
+  "description": "Fake backoffice for Peluda, the fictional pet-food company of the INESDI 2026 prompt engineering workshop. Teaching material: all data is made up.",
+  "keywords": [
+    "prompt-engineering",
+    "education",
+    "workshop",
+    "inesdi",
+    "fake-data",
+    "backoffice",
+    "cms",
+    "react",
+    "vite",
+    "typescript",
+    "tailwindcss",
+    "shadcn-ui",
+    "vitest"
+  ],
+  "homepage": "https://inesdi-2026-peluda-admin.vercel.app",
+  "bugs": {
+    "url": "https://github.com/manuartero/inesdi-2026-peluda-admin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuartero/inesdi-2026-peluda-admin.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Manuel Artero Anguita",
+    "email": "manutero.developer@gmail.com",
+    "url": "https://github.com/manuartero"
+  },
   "private": true,
-  "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "vite",
     "check:data": "node src/data/data-check.cli.ts",
